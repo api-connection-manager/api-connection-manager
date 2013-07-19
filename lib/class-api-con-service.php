@@ -1,5 +1,5 @@
 <?php
 
-class API_Con_Service{
+interface API_Con_Service{
 	
 }
