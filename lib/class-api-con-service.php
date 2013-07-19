@@ -1,5 +1,42 @@
 <?php
 
-interface API_Con_Service{
+class API_Con_Service{
 	
+	/** @var string Default custom. Either: oauth1, oauth2, custom */
+	public $auth_type = 'custom';
+	/** @var string The name of this service. Declared in factory method API_Con_Manager::get_service() */
+	public $name;
+
+	/**
+	 * When extending this class you must specify params
+	 * @param array $args Parameters
+	 */
+	function __construct( array $args ){
+
+		//set config
+		foreach( $args as $field => $val )
+			@$this->$field = $val;
+	}
+
+
+	/**
+	 * Return the login url
+	 * @return string the full `URI` to login this service
+	 */
+	public function get_login_url(){
+		return admin_url('admin-ajax.php') . '?action=api-con-login&service=' . $this->name;
+	}
+
+	/**
+	 * Make a request to the remote api
+	 * @param  string $url    endpoint
+	 * @param  array  $params parameters to be sent
+	 * @param  string $method Default GET
+	 * @return API_Con_Consumer Returns API_Con_Error on error.
+	 */
+	public function request( $url, $params=array(), $method='GET' ){
+
+		//setup consumer
+		$consumer = API_Con_Consumer::get_consumer( $this );
+	}
 }

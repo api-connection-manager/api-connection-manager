@@ -9,6 +9,15 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->obj = new API_Con_Manager();
 	}
 
+	function test_factory(){
+		$api = API_Con_Manager::factory();
+
+		$this->assertInstanceOf(
+			'API_Con_Manager',
+			$api
+		);
+	}
+
 	function test_get_service() {
 		$service = API_Con_Manager::get_service( 'dropbox' );
 		
