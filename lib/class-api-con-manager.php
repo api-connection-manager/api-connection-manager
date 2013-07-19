@@ -28,4 +28,5 @@ class API_Con_Manager{
 
 		return $service;
 	}
+
 }

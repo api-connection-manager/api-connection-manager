@@ -17,4 +17,5 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 			$service
 		);
 	}
+
 }
