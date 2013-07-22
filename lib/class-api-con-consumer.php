@@ -8,9 +8,11 @@ class API_Con_Consumer{
 
 			case 'oauth1':
 				require_once( dirname( __FILE__ ) . '/../vendor/OAuth.php' );
+				break;
 
 			default:
 				die('oops');
+				break;
 		}
 	}
 
