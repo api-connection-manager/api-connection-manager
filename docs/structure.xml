@@ -3,7 +3,7 @@
   <file path="lib/class-api-con-error.php" hash="2e78d9cde9e8d420f06f1fe9708c427f" package="Default">
     <docblock line="2">
       <description>File for the API_Con_Error class</description>
-      <long-description></long-description>
+      <long-description/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="12" package="api-connection-manager">
       <extends>\WP_Error</extends>
@@ -20,8 +20,8 @@
         <name>$code</name>
         <default>'API Con Manager Error'</default>
         <docblock line="14">
-          <description></description>
-          <long-description></long-description>
+          <description/>
+          <long-description/>
           <tag line="14" name="var" description="The WP_Error::code string. Default 'API Con Manager Error'" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -32,7 +32,7 @@
         <full_name>__construct</full_name>
         <docblock line="17">
           <description>Pass the error string.</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="17" name="param" description="The error produced" type="string" variable="$msg">
             <type by_reference="false">string</type>
           </tag>
@@ -45,16 +45,23 @@
       </method>
     </class>
   </file>
-  <file path="lib/class-api-con-view.php" hash="8292c0d684ca5f140cd4a60e952114f6" package="Default">
-    <class final="false" abstract="false" namespace="global" line="3" package="Default">
+  <file path="lib/class-api-con-view.php" hash="7fceda31096c4a6d5e077b983f489c62" package="Default">
+    <docblock line="2">
+      <description>File for the API_Con_View class</description>
+      <long-description></long-description>
+    </docblock>
+    <class final="false" abstract="false" namespace="global" line="12" package="api-connection-manager">
       <extends/>
       <name>API_Con_View</name>
       <full_name>\API_Con_View</full_name>
+      <docblock line="6">
+        <description>Class for handling all view actions, such as login forms etc.</description>
+        <long-description></long-description>
+        <tag line="6" name="package" description="api-connection-manager"/>
+        <tag line="6" name="todo" description="integrate API_Con_View with bootstrap"/>
+        <tag line="6" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
+      </docblock>
     </class>
-    <parse_markers>
-      <error line="0" code="50007">No page-level DocBlock was found in file lib/class-api-con-view.php</error>
-      <error line="3" code="50000">No DocBlock was found for \API_Con_View</error>
-    </parse_markers>
   </file>
   <file path="lib/class-api-con-consumer.php" hash="ce18b1181ecb29088abdeae82a019871" package="Default">
     <include line="10" type="Require Once" package="Default">
@@ -421,7 +428,7 @@ to the __construct $config param&lt;/p&gt;</long-description>
   <package name="Default" full_name="Default"/>
   <package name="api-connection-manager" full_name="api-connection-manager"/>
   <namespace name="global" full_name="global"/>
-  <marker count="1">todo</marker>
+  <marker count="2">todo</marker>
   <marker count="0">fixme</marker>
   <deprecated count="0"/>
 </project>
