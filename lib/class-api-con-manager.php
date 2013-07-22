@@ -42,4 +42,16 @@ class API_Con_Manager{
 		return $service;
 	}
 
+	/**
+	 * Check if a url is valid.
+	 * Fix for php 5.2 bug with FILTER_VALIDATE_URL '-' are replaced in urls
+	 * before check is done.
+	 * @param  string $url The url to test
+	 * @return mixed      Returns string( $url ) if valid or false if not
+	 */
+	public static function valid_url( $url ){
+
+		$url = str_replace("-", "", $url);
+		return filter_var($url, FILTER_VALIDATE_URL);
+	}
 }

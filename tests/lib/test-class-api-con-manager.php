@@ -27,4 +27,9 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		);
 	}
 
+	function test_valid_url(){
+		$this->assertFalse( API_Con_Manager::valid_url( 'slkdfj' ) );
+		$this->assertEquals( 'http://examplefoo.com', API_Con_Manager::valid_url( 'http://example-foo.com' ) );
+	}
+
 }

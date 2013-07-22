@@ -34,7 +34,11 @@ class API_Con_Service{
 	 * @param  string $method Default GET
 	 * @return API_Con_Consumer Returns API_Con_Error on error.
 	 */
-	public function request( $url, $params=array(), $method='GET' ){
+	public function request( $url=null, $params=array(), $method='GET' ){
+
+		//test params
+		if(!$url) 
+			return new API_Con_Error('Please provide a url');
 
 		//setup consumer
 		$consumer = API_Con_Consumer::get_consumer( $this );
