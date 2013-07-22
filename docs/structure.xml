@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project version="2.0.0a12" title="">
+  <file path="class-api-con-error.php" hash="afb9ad4cd8fed3edf9ae9f2ba0d3c70f" package="Default">
+    <class final="false" abstract="false" namespace="global" line="3" package="Default">
+      <extends>\WP_Error</extends>
+      <name>API_Con_Error</name>
+      <full_name>\API_Con_Error</full_name>
+      <property final="false" static="false" visibility="protected" line="5" namespace="global" package="Default">
+        <name>$code</name>
+        <default>'API Con Manager Error'</default>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="7" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <argument line="7">
+          <name>$msg</name>
+          <default>''</default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file class-api-con-error.php</error>
+      <error line="3" code="50000">No DocBlock was found for \API_Con_Error</error>
+      <error line="5" code="50018">No DocBlock was found for property $code</error>
+      <error line="7" code="50010">No DocBlock was found for method __construct()</error>
+    </parse_markers>
+  </file>
+  <file path="class-api-con-view.php" hash="8292c0d684ca5f140cd4a60e952114f6" package="Default">
+    <class final="false" abstract="false" namespace="global" line="3" package="Default">
+      <extends/>
+      <name>API_Con_View</name>
+      <full_name>\API_Con_View</full_name>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file class-api-con-view.php</error>
+      <error line="3" code="50000">No DocBlock was found for \API_Con_View</error>
+    </parse_markers>
+  </file>
+  <file path="class-api-con-consumer.php" hash="ce18b1181ecb29088abdeae82a019871" package="Default">
+    <include line="10" type="Require Once" package="Default">
+      <name/>
+    </include>
+    <class final="false" abstract="false" namespace="global" line="3" package="Default">
+      <extends/>
+      <name>API_Con_Consumer</name>
+      <full_name>\API_Con_Consumer</full_name>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="5" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <argument line="5">
+          <name>$service</name>
+          <default></default>
+          <type>\API_Con_Service</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="22" package="Default">
+        <name>get_consumer</name>
+        <full_name>get_consumer</full_name>
+        <argument line="22">
+          <name>$service</name>
+          <default></default>
+          <type>\API_Con_Service</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file class-api-con-consumer.php</error>
+      <error line="3" code="50000">No DocBlock was found for \API_Con_Consumer</error>
+      <error line="5" code="50010">No DocBlock was found for method __construct()</error>
+      <error line="22" code="50010">No DocBlock was found for method get_consumer()</error>
+    </parse_markers>
+  </file>
+  <file path="class-api-con-manager.php" hash="12f9f72595689ae486049c8330e89ad0" package="API\Con\Manager">
+    <docblock line="2">
+      <description></description>
+      <long-description></long-description>
+      <tag line="2" name="package" description="API_Con_Manager"/>
+      <tag line="2" name="author" description="Daithi Coombes &lt;webeire@gmail.com&gt;"/>
+    </docblock>
+    <include line="47" type="Require Once" package="Default">
+      <name/>
+    </include>
+    <class final="false" abstract="false" namespace="global" line="10" package="Default">
+      <extends/>
+      <name>API_Con_Manager</name>
+      <full_name>\API_Con_Manager</full_name>
+      <docblock line="7">
+        <description>The main class for the API Connection Manager plugin</description>
+        <long-description></long-description>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="18" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="12">
+          <description>Pass array('bootstrap'=&gt;true) if bootstrapping the API Connection Manager.</description>
+          <long-description>&lt;p&gt;This
+needs to be done only once&lt;/p&gt;</long-description>
+          <tag line="12" name="see" description="\index.php" refers="\index.php"/>
+          <tag line="12" name="param" description="An array of key value pairs." type="array" variable="$config">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="18">
+          <name>$config</name>
+          <default>null</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="31" package="Default">
+        <name>factory</name>
+        <full_name>factory</full_name>
+        <docblock line="25">
+          <description>Factory method to get API Connection Manager object</description>
+          <long-description></long-description>
+          <tag line="25" name="param" description="Deprecated, for now." type="array" variable="$config">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="25" name="todo" description="see if $config param is needed"/>
+          <tag line="25" name="return" description="" type="\API_Con_Manager">
+            <type by_reference="false">\API_Con_Manager</type>
+          </tag>
+        </docblock>
+        <argument line="31">
+          <name>$config</name>
+          <default>null</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="40" package="Default">
+        <name>get_service</name>
+        <full_name>get_service</full_name>
+        <docblock line="35">
+          <description>Factory method to get service object</description>
+          <long-description></long-description>
+          <tag line="35" name="param" description="The service name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="35" name="return" description="Will return API_Con_Error when no service found" type="\API_Con_Service">
+            <type by_reference="false">\API_Con_Service</type>
+          </tag>
+        </docblock>
+        <argument line="40">
+          <name>$name</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="63" package="Default">
+        <name>response_listener</name>
+        <full_name>response_listener</full_name>
+        <docblock line="57">
+          <description>Handles callbacks such as ajax requests.</description>
+          <long-description>&lt;p&gt;Can be used outside of ajax by passing object type API_Con_DTO with
+necessary data.&lt;/p&gt;</long-description>
+          <tag line="57" name="return" description="Returns API_Con_DTO if all ok, or API_Con_Error if error" type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="63">
+          <name>$dto</name>
+          <default>null</default>
+          <type>\API_Con_DTO</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="94" package="Default">
+        <name>valid_url</name>
+        <full_name>valid_url</full_name>
+        <docblock line="87">
+          <description>Check if a url is valid.</description>
+          <long-description>&lt;p&gt;Fix for php 5.2 bug with FILTER_VALIDATE_URL '-' are replaced in urls
+before check is done.&lt;/p&gt;</long-description>
+          <tag line="87" name="param" description="The url to test" type="string" variable="$url">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="87" name="return" description="Returns string( $url ) if valid or false if not" type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="94">
+          <name>$url</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="106" package="Default">
+        <name>bootstrap</name>
+        <full_name>bootstrap</full_name>
+        <docblock line="100">
+          <description>Bootstraps the API Connection Manager.</description>
+          <long-description>&lt;p&gt;This should only be called once
+and currently is only called from index.php by passing 'bootstrap' =&gt; true
+to the __construct $config param&lt;/p&gt;</long-description>
+          <tag line="100" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="118" package="Default">
+        <name>response</name>
+        <full_name>response</full_name>
+        <docblock line="111">
+          <description>Handles ajax callbacks to the redirect_url</description>
+          <long-description></long-description>
+          <tag line="111" name="see" description="\API_Con_Service::redirect_uri" refers="\API_Con_Service::redirect_uri"/>
+          <tag line="111" name="see" description="\API_Con_Manager::response_listener()" refers="\API_Con_Manager::response_listener()"/>
+          <tag line="111" name="param" description="The data transport object" type="\API_Con_DTO" variable="$dto">
+            <type by_reference="false">\API_Con_DTO</type>
+          </tag>
+          <tag line="111" name="return" description="Returns the dto" type="\API_Con_DTO">
+            <type by_reference="false">\API_Con_DTO</type>
+          </tag>
+        </docblock>
+        <argument line="118">
+          <name>$dto</name>
+          <default></default>
+          <type>\API_Con_DTO</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <critical line="2" code="50008">No short description for file class-api-con-manager.php</critical>
+      <error line="57" code="50015">Argument $dto is missing from the Docblock of response_listener()</error>
+    </parse_markers>
+  </file>
+  <file path="class-api-con-service.php" hash="1d12183b93cbdebb04b6d1cf0bd0b4af" package="Default">
+    <class final="false" abstract="false" namespace="global" line="3" package="Default">
+      <extends/>
+      <name>API_Con_Service</name>
+      <full_name>\API_Con_Service</full_name>
+      <property final="false" static="false" visibility="public" line="6" namespace="global" package="Default">
+        <name>$auth_type</name>
+        <default>'custom'</default>
+        <docblock line="5">
+          <description></description>
+          <long-description></long-description>
+          <tag line="5" name="var" description="Default custom. Either: oauth1, oauth2, custom" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="public" line="8" namespace="global" package="Default">
+        <name>$auth_url</name>
+        <default></default>
+        <docblock line="7">
+          <description></description>
+          <long-description></long-description>
+          <tag line="7" name="var" description="The authorize url. @see API_Con_Service::get_authorize_url()" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="public" line="10" namespace="global" package="Default">
+        <name>$name</name>
+        <default></default>
+        <docblock line="9">
+          <description></description>
+          <long-description></long-description>
+          <tag line="9" name="var" description="The name of this service. Declared in factory method API_Con_Manager::get_service()" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="12" namespace="global" package="Default">
+        <name>$redirect_uri</name>
+        <default></default>
+        <docblock line="11">
+          <description></description>
+          <long-description></long-description>
+          <tag line="11" name="var" description="The redirect URI for this blog. @see API_Con_Service::__construct()" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="18" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="14">
+          <description>When extending this class you must specify params</description>
+          <long-description></long-description>
+          <tag line="14" name="param" description="Parameters" type="array" variable="$args">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="18">
+          <name>$args</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="33" package="Default">
+        <name>get_authorize_url</name>
+        <full_name>get_authorize_url</full_name>
+        <docblock line="28">
+          <description>Returns the authorize url.</description>
+          <long-description></long-description>
+          <tag line="28" name="uses" description="API_Con_Service::auth_url" refers="string"/>
+          <tag line="28" name="return" description="Will return API_Con_Error if invalid or missing authorize url." type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="43" package="Default">
+        <name>get_login_url</name>
+        <full_name>get_login_url</full_name>
+        <docblock line="39">
+          <description>Return the login url</description>
+          <long-description></long-description>
+          <tag line="39" name="return" description="the full `URI` to login this service" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="47" package="Default">
+        <name>get_redirect_uri</name>
+        <full_name>get_redirect_uri</full_name>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="58" package="Default">
+        <name>request</name>
+        <full_name>request</full_name>
+        <docblock line="51">
+          <description>Make a request to the remote api</description>
+          <long-description></long-description>
+          <tag line="51" name="param" description="endpoint" type="string" variable="$url">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="51" name="param" description="parameters to be sent" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="51" name="param" description="Default GET" type="string" variable="$method">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="51" name="return" description="Returns API_Con_Error on error." type="\API_Con_Consumer">
+            <type by_reference="false">\API_Con_Consumer</type>
+          </tag>
+        </docblock>
+        <argument line="58">
+          <name>$url</name>
+          <default>null</default>
+          <type/>
+        </argument>
+        <argument line="58">
+          <name>$params</name>
+          <default>array()</default>
+          <type/>
+        </argument>
+        <argument line="58">
+          <name>$method</name>
+          <default>'GET'</default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file class-api-con-service.php</error>
+      <error line="3" code="50000">No DocBlock was found for \API_Con_Service</error>
+      <error line="47" code="50010">No DocBlock was found for method get_redirect_uri()</error>
+    </parse_markers>
+  </file>
+  <file path="class-api-con-dto.php" hash="91b7dc325ca20975f25ca2ca1c66de46" package="Default">
+    <class final="false" abstract="false" namespace="global" line="3" package="Default">
+      <extends/>
+      <name>API_Con_DTO</name>
+      <full_name>\API_Con_DTO</full_name>
+      <property final="false" static="false" visibility="public" line="5" namespace="global" package="Default">
+        <name>$data</name>
+        <default></default>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="7" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <argument line="7">
+          <name>$data</name>
+          <default>null</default>
+          <type>array</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file class-api-con-dto.php</error>
+      <error line="3" code="50000">No DocBlock was found for \API_Con_DTO</error>
+      <error line="5" code="50018">No DocBlock was found for property $data</error>
+      <error line="7" code="50010">No DocBlock was found for method __construct()</error>
+    </parse_markers>
+  </file>
+  <package name="API" full_name="API">
+    <package name="Con" full_name="API\Con">
+      <package name="Manager" full_name="API\Con\Manager"/>
+    </package>
+  </package>
+  <package name="Default" full_name="Default"/>
+  <namespace name="global" full_name="global"/>
+  <marker count="1">todo</marker>
+  <marker count="0">fixme</marker>
+  <deprecated count="0"/>
+</project>
