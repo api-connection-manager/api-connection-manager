@@ -37,10 +37,12 @@ class API_Con_Service{
 	public function request( $url=null, $params=array(), $method='GET' ){
 
 		//test params
-		if(!$url) 
-			return new API_Con_Error('Please provide a url');
+		if( !API_Con_Manager::valid_url( $url ) ) 
+			return new API_Con_Error('Please provide a valid url');
 
 		//setup consumer
 		$consumer = API_Con_Consumer::get_consumer( $this );
+
+		return $consumer;
 	}
 }
