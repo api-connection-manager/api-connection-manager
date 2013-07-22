@@ -9,6 +9,15 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->obj = new API_Con_Manager();
 	}
 
+	function test_factory(){
+		$api = API_Con_Manager::factory();
+
+		$this->assertInstanceOf(
+			'API_Con_Manager',
+			$api
+		);
+	}
+
 	function test_get_service() {
 		$service = API_Con_Manager::get_service( 'dropbox' );
 		
@@ -16,6 +25,19 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 			'API_Con_Service',
 			$service
 		);
+	}
+
+	function test_response_listener(){
+		$this->assertInstanceOf( 'API_Con_Error', $this->obj->response_listener() );
+		$dto = new API_Con_DTO( array(
+			'api-con-action' => 'response'
+			) );
+		$this->assertInstanceOf( 'API_Con_DTO', $this->obj->response_listener( $dto ) );
+	}
+
+	function test_valid_url(){
+		$this->assertFalse( API_Con_Manager::valid_url( 'slkdfj' ) );
+		$this->assertEquals( 'http://examplefoo.com', API_Con_Manager::valid_url( 'http://example-foo.com' ) );
 	}
 
 }
