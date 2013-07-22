@@ -15,6 +15,12 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 		$this->assertInstanceOf( 'API_Con_Error', $this->obj->get_authorize_url() );
 	}
 
+	function test_get_redirect_uri(){
+		$test = $this->obj->get_redirect_uri();
+		$redirect_uri = admin_url( 'admin-ajax.php' ) . '?action=api-con&api-con-action=request';
+			$this->assertEquals( $test, $redirect_uri );
+	}
+
 	function test_login_url(){
 		$this->obj->name = 'dropbox';
 		$test = admin_url('admin-ajax.php') . '?action=api-con-login&service=' . $this->obj->name;

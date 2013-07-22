@@ -8,6 +8,8 @@ class API_Con_Service{
 	public $auth_url;
 	/** @var string The name of this service. Declared in factory method API_Con_Manager::get_service() */
 	public $name;
+	/** @var string The redirect URI for this blog. @see API_Con_Service::__construct() */
+	protected $redirect_uri;
 
 	/**
 	 * When extending this class you must specify params
@@ -18,6 +20,9 @@ class API_Con_Service{
 		//set config
 		foreach( $args as $field => $val )
 			@$this->$field = $val;
+
+		//set protected/private fields
+		$this->redirect_uri = admin_url( 'admin-ajax.php' ) . '?action=api-con&api-con-action=request';
 	}
 
 	/**
@@ -37,6 +42,10 @@ class API_Con_Service{
 	 */
 	public function get_login_url(){
 		return admin_url('admin-ajax.php') . '?action=api-con-login&service=' . $this->name;
+	}
+
+	public function get_redirect_uri(){
+		return $this->redirect_uri;
 	}
 
 	/**
