@@ -1,7 +1,7 @@
 <?php
 
 class API_Con_Consumer{
-
+	
 	function __construct( API_Con_Service $service ){
 
 		switch( $service->auth_type ){
@@ -19,4 +19,5 @@ class API_Con_Consumer{
 	public static function get_consumer( API_Con_Service $service ){
 		return new API_Con_Consumer( $service );
 	}
+
 }

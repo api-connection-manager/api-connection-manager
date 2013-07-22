@@ -4,6 +4,8 @@ class API_Con_Service{
 	
 	/** @var string Default custom. Either: oauth1, oauth2, custom */
 	public $auth_type = 'custom';
+	/** @var string The authorize url. @see API_Con_Service::get_authorize_url() */
+	public $auth_url;
 	/** @var string The name of this service. Declared in factory method API_Con_Manager::get_service() */
 	public $name;
 
@@ -18,6 +20,16 @@ class API_Con_Service{
 			@$this->$field = $val;
 	}
 
+	/**
+	 * Returns the authorize url. 
+	 * @uses string API_Con_Service::auth_url
+	 * @return mixed Will return API_Con_Error if invalid or missing authorize url.
+	 */
+	public function get_authorize_url(){
+		if( ! API_Con_Manager::valid_url( $this->auth_url ) )
+			return new API_Con_Error( 'Invalid authorize url' );
+		return $this->auth_url;
+	}
 
 	/**
 	 * Return the login url
