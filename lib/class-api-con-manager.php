@@ -1,6 +1,6 @@
 <?php
 /**
- * The main class for the API Connection Manager Plugin
+ * The main file for the API Connection Manager Plugin
  * @author Daithi Coombes <webeire@gmail.com>
  */
 
