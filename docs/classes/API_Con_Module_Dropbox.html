@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>phpDocumentor » \API_Con_Service</title>
+<title>phpDocumentor » \API_Con_Module_Dropbox</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -60,34 +60,34 @@
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
 <li class="method public "><a href="#method___construct" title="__construct :: When extending this class you must specify params"><span class="description">When extending this class you must specify params</span><pre>__construct()</pre></a></li>
-<li class="method public "><a href="#method_get_authorize_url" title="get_authorize_url :: Returns the authorize url."><span class="description">Returns the authorize url.</span><pre>get_authorize_url()</pre></a></li>
-<li class="method public "><a href="#method_get_login_url" title="get_login_url :: Return the login url"><span class="description">Return the login url</span><pre>get_login_url()</pre></a></li>
-<li class="method public "><a href="#method_get_redirect_uri" title="get_redirect_uri :: "><span class="description">get_redirect_uri()
+<li class="method public inherited"><a href="#method_get_authorize_url" title="get_authorize_url :: Returns the authorize url."><span class="description">Returns the authorize url.</span><pre>get_authorize_url()</pre></a></li>
+<li class="method public inherited"><a href="#method_get_login_url" title="get_login_url :: Return the login url"><span class="description">Return the login url</span><pre>get_login_url()</pre></a></li>
+<li class="method public inherited"><a href="#method_get_redirect_uri" title="get_redirect_uri :: "><span class="description">get_redirect_uri()
         </span><pre>get_redirect_uri()</pre></a></li>
-<li class="method public "><a href="#method_request" title="request :: Make a request to the remote api"><span class="description">Make a request to the remote api</span><pre>request()</pre></a></li>
+<li class="method public inherited"><a href="#method_request" title="request :: Make a request to the remote api"><span class="description">Make a request to the remote api</span><pre>request()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
 <i class="icon-custom icon-property"></i> Properties
                     <ul>
-<li class="property public "><a href="#property_auth_type" title="$auth_type :: "><span class="description">Default custom. Either: oauth1, oauth2, custom</span><pre>$auth_type</pre></a></li>
-<li class="property public "><a href="#property_auth_url" title="$auth_url :: "><span class="description">The authorize url. @see API_Con_Service::get_authorize_url()</span><pre>$auth_url</pre></a></li>
-<li class="property public "><a href="#property_name" title="$name :: "><span class="description">The name of this service. Declared in factory method API_Con_Manager::get_service()</span><pre>$name</pre></a></li>
+<li class="property public inherited"><a href="#property_auth_type" title="$auth_type :: "><span class="description">Default custom. Either: oauth1, oauth2, custom</span><pre>$auth_type</pre></a></li>
+<li class="property public inherited"><a href="#property_auth_url" title="$auth_url :: "><span class="description">The authorize url. @see API_Con_Service::get_authorize_url()</span><pre>$auth_url</pre></a></li>
+<li class="property public inherited"><a href="#property_name" title="$name :: "><span class="description">The name of this service. Declared in factory method API_Con_Manager::get_service()</span><pre>$name</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
-                    <ul><li class="property protected "><a href="#property_redirect_uri" title="$redirect_uri :: "><span class="description">The redirect URI for this blog. @see API_Con_Service::__construct()</span><pre>$redirect_uri</pre></a></li></ul>
+                    <ul><li class="property protected inherited"><a href="#property_redirect_uri" title="$redirect_uri :: "><span class="description">The redirect URI for this blog. @see API_Con_Service::__construct()</span><pre>$redirect_uri</pre></a></li></ul>
 </li>
 </ul>
 </div>
 <div class="span8">
-<a id="\API_Con_Service"></a><ul class="breadcrumb">
+<a id="\API_Con_Module_Dropbox"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
 <li><a href="../namespaces/global.html">global</a></li>
 <li class="active">
-<span class="divider">\</span><a href="../classes/API_Con_Service.html">API_Con_Service</a>
+<span class="divider">\</span><a href="../classes/API_Con_Module_Dropbox.html">API_Con_Module_Dropbox</a>
 </li>
 </ul>
 <div class="element class"><div class="details">
@@ -95,26 +95,26 @@
 <i class="icon-custom icon-method"></i> Methods</h3>
 <a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
 <h2>When extending this class you must specify params</h2>
-<pre>__construct(array $args) </pre>
+<pre>__construct() </pre>
 <div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$args</h4>
-<code>array</code><p>Parameters</p></div>
-</div></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 <a id="method_get_authorize_url"></a><div class="element clickable method public method_get_authorize_url" data-toggle="collapse" data-target=".method_get_authorize_url .collapse">
 <h2>Returns the authorize url.</h2>
 <pre>get_authorize_url() : mixed</pre>
-<div class="labels"></div>
+<div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<table class="table table-bordered">
+<tr>
 <th>uses</th>
 <td>API_Con_Service::auth_url</td>
-</tr></table>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::get_authorize_url()</td>
+</tr>
+</table>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>Will return API_Con_Error if invalid or missing authorize url.</div>
@@ -123,9 +123,13 @@
 <a id="method_get_login_url"></a><div class="element clickable method public method_get_login_url" data-toggle="collapse" data-target=".method_get_login_url .collapse">
 <h2>Return the login url</h2>
 <pre>get_login_url() : string</pre>
-<div class="labels"></div>
+<div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::get_login_url()</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>string</code>the full `URI` to login this service</div>
@@ -135,15 +139,25 @@
 <h2>get_redirect_uri()
         </h2>
 <pre>get_redirect_uri() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::get_redirect_uri()</td>
+</tr></table>
+</div></div>
 </div>
 <a id="method_request"></a><div class="element clickable method public method_request" data-toggle="collapse" data-target=".method_request .collapse">
 <h2>Make a request to the remote api</h2>
 <pre>request(string $url, array $params, string $method) : <a href="../classes/API_Con_Consumer.html">\API_Con_Consumer</a></pre>
-<div class="labels"></div>
+<div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::request()</td>
+</tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$url</h4>
@@ -164,26 +178,50 @@
 <a id="property_auth_type"> </a><div class="element clickable property public property_auth_type" data-toggle="collapse" data-target=".property_auth_type .collapse">
 <h2>Default custom. Either: oauth1, oauth2, custom</h2>
 <pre>$auth_type : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::$$auth_type</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_auth_url"> </a><div class="element clickable property public property_auth_url" data-toggle="collapse" data-target=".property_auth_url .collapse">
 <h2>The authorize url. @see API_Con_Service::get_authorize_url()</h2>
 <pre>$auth_url : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::$$auth_url</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_name"> </a><div class="element clickable property public property_name" data-toggle="collapse" data-target=".property_name .collapse">
 <h2>The name of this service. Declared in factory method API_Con_Manager::get_service()</h2>
 <pre>$name : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::$$name</td>
+</tr></table>
+</div></div>
 </div>
 <a id="property_redirect_uri"> </a><div class="element clickable property protected property_redirect_uri" data-toggle="collapse" data-target=".property_redirect_uri .collapse">
 <h2>The redirect URI for this blog. @see API_Con_Service::__construct()</h2>
 <pre>$redirect_uri : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::$$redirect_uri</td>
+</tr></table>
+</div></div>
 </div>
 </div></div>
 </div>
