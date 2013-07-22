@@ -48,7 +48,7 @@
   <file path="lib/class-api-con-view.php" hash="7fceda31096c4a6d5e077b983f489c62" package="Default">
     <docblock line="2">
       <description>File for the API_Con_View class</description>
-      <long-description></long-description>
+      <long-description/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="12" package="api-connection-manager">
       <extends/>
@@ -56,46 +56,68 @@
       <full_name>\API_Con_View</full_name>
       <docblock line="6">
         <description>Class for handling all view actions, such as login forms etc.</description>
-        <long-description></long-description>
+        <long-description/>
         <tag line="6" name="package" description="api-connection-manager"/>
         <tag line="6" name="todo" description="integrate API_Con_View with bootstrap"/>
         <tag line="6" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
       </docblock>
     </class>
   </file>
-  <file path="lib/class-api-con-consumer.php" hash="ce18b1181ecb29088abdeae82a019871" package="Default">
-    <include line="10" type="Require Once" package="Default">
+  <file path="lib/class-api-con-consumer.php" hash="e1ca1b8cad465b75fd8c856d023ab84f" package="Default">
+    <docblock line="2">
+      <description>File for the API_Con_View class</description>
+      <long-description></long-description>
+    </docblock>
+    <include line="23" type="Require Once" package="Default">
       <name/>
     </include>
-    <class final="false" abstract="false" namespace="global" line="3" package="Default">
+    <class final="false" abstract="false" namespace="global" line="12" package="api-connection-manager">
       <extends/>
       <name>API_Con_Consumer</name>
       <full_name>\API_Con_Consumer</full_name>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="5" package="Default">
+      <docblock line="6">
+        <description>Class for handling all view actions, such as login forms etc.</description>
+        <long-description></long-description>
+        <tag line="6" name="package" description="api-connection-manager"/>
+        <tag line="6" name="todo" description="integrate API_Con_View with bootstrap"/>
+        <tag line="6" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="18" package="api-connection-manager">
         <name>__construct</name>
         <full_name>__construct</full_name>
-        <argument line="5">
+        <docblock line="14">
+          <description>Construct.</description>
+          <long-description></long-description>
+          <tag line="14" name="param" description="The service to build the consumer around." type="\API_Con_Service" variable="$service">
+            <type by_reference="false">\API_Con_Service</type>
+          </tag>
+        </docblock>
+        <argument line="18">
           <name>$service</name>
-          <default/>
+          <default></default>
           <type>\API_Con_Service</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="22" package="Default">
+      <method final="false" abstract="false" static="true" visibility="public" namespace="global" line="40" package="api-connection-manager">
         <name>get_consumer</name>
         <full_name>get_consumer</full_name>
-        <argument line="22">
+        <docblock line="35">
+          <description>Factory method.</description>
+          <long-description>&lt;p&gt;Builds a new API_Con_Consumer&lt;/p&gt;</long-description>
+          <tag line="35" name="param" description="The service to build the consumer around." type="\API_Con_Service" variable="$service">
+            <type by_reference="false">\API_Con_Service</type>
+          </tag>
+          <tag line="35" name="return" description="" type="\API_Con_Consumer">
+            <type by_reference="false">\API_Con_Consumer</type>
+          </tag>
+        </docblock>
+        <argument line="40">
           <name>$service</name>
-          <default/>
+          <default></default>
           <type>\API_Con_Service</type>
         </argument>
       </method>
     </class>
-    <parse_markers>
-      <error line="0" code="50007">No page-level DocBlock was found in file lib/class-api-con-consumer.php</error>
-      <error line="3" code="50000">No DocBlock was found for \API_Con_Consumer</error>
-      <error line="5" code="50010">No DocBlock was found for method __construct()</error>
-      <error line="22" code="50010">No DocBlock was found for method get_consumer()</error>
-    </parse_markers>
   </file>
   <file path="lib/class-api-con-manager.php" hash="9c27fb304b814d56a594e51595ed3f12" package="Default">
     <docblock line="2">
@@ -428,7 +450,7 @@ to the __construct $config param&lt;/p&gt;</long-description>
   <package name="Default" full_name="Default"/>
   <package name="api-connection-manager" full_name="api-connection-manager"/>
   <namespace name="global" full_name="global"/>
-  <marker count="2">todo</marker>
+  <marker count="3">todo</marker>
   <marker count="0">fixme</marker>
   <deprecated count="0"/>
 </project>
