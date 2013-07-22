@@ -24,5 +24,7 @@ spl_autoload_register( 'api_con_autoload' );
 /**
  * Bootstrap API_Con_Manager
  */
-$API_Con_Manager = new API_Con_Manager();
+$API_Con_Manager = new API_Con_Manager( array(
+  'bootstrap' => true
+) );
 //end Bootstrap API_Con_Manager
