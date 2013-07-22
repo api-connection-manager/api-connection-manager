@@ -10,14 +10,26 @@
 class API_Con_Manager{
 
 	/**
+	 * Pass array('bootstrap'=>true) if bootstrapping the API Connection Manager. This
+	 * needs to be done only once 
+	 * @see index.php
+	 * @param array $config An array of key value pairs.
+	 */
+	function __construct( $config=null ){
+
+		//if bootstrapping
+		if( @$config['bootstrap'] )
+			$this->bootstrap();
+	}
+
+	/**
 	 * Factory method to get API Connection Manager object
 	 * @param  array $config Deprecated, for now.
 	 * @todo see if $config param is needed
 	 * @return API_Con_Manager
 	 */
 	public static function factory( $config=null ){
-
-		return new API_Con_Manager();
+		return new API_Con_Manager( $config );
 	}
 
 	/**
@@ -43,6 +55,36 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Handles callbacks such as ajax requests.
+	 * Can be used outside of ajax by passing object type API_Con_DTO with
+	 * necessary data.
+	 * @return mixed Returns API_Con_DTO if all ok, or API_Con_Error if error
+	 */
+	public function response_listener( API_Con_DTO $dto=null ){
+
+		//construct DTO
+		if( !$dto )
+			$dto = new API_Con_DTO( $_REQUEST );
+
+		/**
+		 * Security.
+		 * Check valid api-con-action
+		 */
+		$valid_actions = array(
+			'response'
+		);
+		if( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
+			return new API_Con_Error( 'Invalid request' );
+		//end Security
+		
+		//run method
+		$method = $dto->data['api-con-action'];
+		$dto = $this->$method( $dto );
+
+		return $dto;
+	}
+
+	/**
 	 * Check if a url is valid.
 	 * Fix for php 5.2 bug with FILTER_VALIDATE_URL '-' are replaced in urls
 	 * before check is done.
@@ -53,5 +95,29 @@ class API_Con_Manager{
 
 		$url = str_replace("-", "", $url);
 		return filter_var($url, FILTER_VALIDATE_URL);
+	}
+
+	/**
+	 * Bootstraps the API Connection Manager. This should only be called once
+	 * and currently is only called from index.php by passing 'bootstrap' => true
+	 * to the __construct $config param
+	 * @return void
+	 */
+	private function bootstrap(){
+
+		add_action('wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
+	}
+
+	/**
+	 * Handles ajax callbacks to the redirect_url
+	 * @see  API_Con_Service::redirect_uri
+	 * @see  API_Con_Manager::response_listener()
+	 * @param  API_Con_DTO $dto The data transport object
+	 * @return API_Con_DTO           Returns the dto
+	 */
+	private function response( API_Con_DTO $dto ){
+
+		
+		return $dto;
 	}
 }

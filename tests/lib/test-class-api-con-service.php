@@ -17,7 +17,7 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 
 	function test_get_redirect_uri(){
 		$test = $this->obj->get_redirect_uri();
-		$redirect_uri = admin_url( 'admin-ajax.php' ) . '?action=api-con&api-con-action=request';
+		$redirect_uri = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request';
 			$this->assertEquals( $test, $redirect_uri );
 	}
 

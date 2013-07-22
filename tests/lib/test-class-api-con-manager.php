@@ -27,6 +27,14 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		);
 	}
 
+	function test_response_listener(){
+		$this->assertInstanceOf( 'API_Con_Error', $this->obj->response_listener() );
+		$dto = new API_Con_DTO( array(
+			'api-con-action' => 'response'
+			) );
+		$this->assertInstanceOf( 'API_Con_DTO', $this->obj->response_listener( $dto ) );
+	}
+
 	function test_valid_url(){
 		$this->assertFalse( API_Con_Manager::valid_url( 'slkdfj' ) );
 		$this->assertEquals( 'http://examplefoo.com', API_Con_Manager::valid_url( 'http://example-foo.com' ) );
