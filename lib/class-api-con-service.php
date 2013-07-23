@@ -1,15 +1,27 @@
 <?php
+/**
+ * File for the API_Con_Service class
+ */
 
+/**
+ * Class for handling all view actions, such as login forms etc.
+ * @package  api-connection-manager
+ * @author Daithi Coobmes <webeire@gmail.com>
+ */
 class API_Con_Service{
 	
 	/** @var string Default custom. Either: oauth1, oauth2, custom */
 	public $auth_type = 'custom';
 	/** @var string The authorize url. @see API_Con_Service::get_authorize_url() */
 	public $auth_url;
+	/** @var string The client key/id */
+	public $key;
 	/** @var string The name of this service. Declared in factory method API_Con_Manager::get_service() */
 	public $name;
+	/** @var string The client secret */
+	public $secret;
 	/** @var string The redirect URI for this blog. @see API_Con_Service::__construct() */
-	protected $redirect_uri;
+	protected $redirect_url;
 
 	/**
 	 * When extending this class you must specify params
@@ -22,7 +34,7 @@ class API_Con_Service{
 			@$this->$field = $val;
 
 		//set protected/private fields
-		$this->redirect_uri = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request';
+		$this->redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request';
 	}
 
 	/**
@@ -44,8 +56,12 @@ class API_Con_Service{
 		return admin_url('admin-ajax.php') . '?action=api-con-login&service=' . $this->name;
 	}
 
-	public function get_redirect_uri(){
-		return $this->redirect_uri;
+	/**
+	 * Get redirect url for this service
+	 * @return string
+	 */
+	public function get_redirect_url(){
+		return $this->redirect_url;
 	}
 
 	/**
@@ -62,7 +78,7 @@ class API_Con_Service{
 			return new API_Con_Error('Please provide a valid url');
 
 		//setup consumer
-		$consumer = API_Con_Consumer::get_consumer( $this );
+		$consumer = API_Con_Manager::get_consumer( $this );
 
 		return $consumer;
 	}
