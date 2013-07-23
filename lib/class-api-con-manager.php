@@ -35,6 +35,15 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Factory method. Builds a new API_Con_Consumer
+	 * @param  API_Con_Service $service The service to build the consumer around.
+	 * @return API_Con_Consumer
+	 */
+	public static function get_consumer( API_Con_Service $service ){
+		return new API_Con_Consumer( $service );
+	}
+
+	/**
 	 * Factory method to get service object
 	 * @param  string $name The service name
 	 * @return API_Con_Service       Will return API_Con_Error when no service found

@@ -43,13 +43,4 @@ class API_Con_Consumer{
 		}
 	}
 
-	/**
-	 * Factory method. Builds a new API_Con_Consumer
-	 * @param  API_Con_Service $service The service to build the consumer around.
-	 * @return API_Con_Consumer
-	 */
-	public static function get_consumer( API_Con_Service $service ){
-		return new API_Con_Consumer( $service );
-	}
-
 }
