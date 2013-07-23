@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+  <parser>
+    <target>docs</target>
+    <default-package-name>API Connection Manager</default-package-name>
+  </parser>
+  
+  <transformer>
+    <target>docs</target>
+  </transformer>
+  <files>
+    <directory>lib</directory>
+    <directory>modules</directory>
+  </files>
+</phpdoc>

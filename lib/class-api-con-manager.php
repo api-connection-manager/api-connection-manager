@@ -1,11 +1,13 @@
 <?php
 /**
- * @package API_Con_Manager
+ * The main file for the API Connection Manager Plugin
  * @author Daithi Coombes <webeire@gmail.com>
  */
 
 /**
  * The main class for the API Connection Manager plugin
+ * @package  api-connection-manager
+ * @author Daithi Coobmes <webeire@gmail.com>
  */
 class API_Con_Manager{
 
@@ -30,6 +32,19 @@ class API_Con_Manager{
 	 */
 	public static function factory( $config=null ){
 		return new API_Con_Manager( $config );
+	}
+
+	/**
+	 * Factory method. Builds a new API_Con_Consumer
+	 * @param  API_Con_Service $service The service to build the consumer around.
+	 * @return API_Con_Consumer
+	 */
+	public static function get_consumer( API_Con_Service $service ){
+		//validate params
+		if( !$service->key || !$service->secret )
+			return new API_Con_Error( 'Service missing client key or client secret' );
+
+		return new API_Con_Consumer( $service );
 	}
 
 	/**
@@ -58,6 +73,7 @@ class API_Con_Manager{
 	 * Handles callbacks such as ajax requests.
 	 * Can be used outside of ajax by passing object type API_Con_DTO with
 	 * necessary data.
+	 * @param  API_Con_DTO $dto Default null. If used outside ajax pass a valid API_Con_DTO here
 	 * @return mixed Returns API_Con_DTO if all ok, or API_Con_Error if error
 	 */
 	public function response_listener( API_Con_DTO $dto=null ){
