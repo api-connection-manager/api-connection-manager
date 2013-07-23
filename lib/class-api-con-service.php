@@ -9,7 +9,7 @@ class API_Con_Service{
 	/** @var string The name of this service. Declared in factory method API_Con_Manager::get_service() */
 	public $name;
 	/** @var string The redirect URI for this blog. @see API_Con_Service::__construct() */
-	protected $redirect_uri;
+	protected $redirect_url;
 
 	/**
 	 * When extending this class you must specify params
@@ -22,7 +22,7 @@ class API_Con_Service{
 			@$this->$field = $val;
 
 		//set protected/private fields
-		$this->redirect_uri = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request';
+		$this->redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request';
 	}
 
 	/**
@@ -44,8 +44,8 @@ class API_Con_Service{
 		return admin_url('admin-ajax.php') . '?action=api-con-login&service=' . $this->name;
 	}
 
-	public function get_redirect_uri(){
-		return $this->redirect_uri;
+	public function get_redirect_url(){
+		return $this->redirect_url;
 	}
 
 	/**

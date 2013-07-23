@@ -16,14 +16,25 @@ class API_Con_Consumer{
 	 * @param API_Con_Service $service The service to build the consumer around.
 	 */
 	function __construct( API_Con_Service $service ){
+		require_once( dirname( __FILE__ ) . '/../vendor/OAuth.php' );
 
 		switch( $service->auth_type ){
 
 			case 'oauth1':
-				require_once( dirname( __FILE__ ) . '/../vendor/OAuth.php' );
 				break;
 
 			case 'oauth2':
+
+				//validate params
+				if( !$service->key || !$service->secret )
+					return new API_Con_Error( 'Service missing client key or client secret' );
+
+				//build consumer
+				$consumer = new OAuthConsumer(
+					$service->key,
+					$service->secret,
+					$service->get_redirect_url()
+				);
 				break;
 
 			default:
