@@ -25,10 +25,6 @@ class API_Con_Consumer{
 
 			case 'oauth2':
 
-				//validate params
-				if( !$service->key || !$service->secret )
-					return new API_Con_Error( 'Service missing client key or client secret' );
-
 				//build consumer
 				$consumer = new OAuthConsumer(
 					$service->key,

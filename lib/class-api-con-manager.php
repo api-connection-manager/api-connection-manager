@@ -40,6 +40,10 @@ class API_Con_Manager{
 	 * @return API_Con_Consumer
 	 */
 	public static function get_consumer( API_Con_Service $service ){
+		//validate params
+		if( !$service->key || !$service->secret )
+			return new API_Con_Error( 'Service missing client key or client secret' );
+
 		return new API_Con_Consumer( $service );
 	}
 

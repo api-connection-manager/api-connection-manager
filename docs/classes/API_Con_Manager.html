@@ -32,7 +32,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">10</span></a></li>
+                <span class="label label-info">4</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul><li>todo 
                 <span class="label label-info">3</span>
@@ -61,6 +61,7 @@
                     <ul>
 <li class="method public "><a href="#method___construct" title="__construct :: Pass array('bootstrap'=&gt;true) if bootstrapping the API Connection Manager."><span class="description">Pass array('bootstrap'=&gt;true) if bootstrapping the API Connection Manager.</span><pre>__construct()</pre></a></li>
 <li class="method public "><a href="#method_factory" title="factory :: Factory method to get API Connection Manager object"><span class="description">Factory method to get API Connection Manager object</span><pre>factory()</pre></a></li>
+<li class="method public "><a href="#method_get_consumer" title="get_consumer :: Factory method."><span class="description">Factory method.</span><pre>get_consumer()</pre></a></li>
 <li class="method public "><a href="#method_get_service" title="get_service :: Factory method to get service object"><span class="description">Factory method to get service object</span><pre>get_service()</pre></a></li>
 <li class="method public "><a href="#method_response_listener" title="response_listener :: Handles callbacks such as ajax requests."><span class="description">Handles callbacks such as ajax requests.</span><pre>response_listener()</pre></a></li>
 <li class="method public "><a href="#method_valid_url" title="valid_url :: Check if a url is valid."><span class="description">Check if a url is valid.</span><pre>valid_url()</pre></a></li>
@@ -133,6 +134,20 @@ needs to be done only once</p></div>
 <code>array</code><p>Deprecated, for now.</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code><a href="../classes/API_Con_Manager.html">\API_Con_Manager</a></code></div>
+</div></div>
+</div>
+<a id="method_get_consumer"></a><div class="element clickable method public method_get_consumer" data-toggle="collapse" data-target=".method_get_consumer .collapse">
+<h2>Factory method.</h2>
+<pre>get_consumer(\API_Con_Service $service) : <a href="../classes/API_Con_Consumer.html">\API_Con_Consumer</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Builds a new API_Con_Consumer</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$service</h4>
+<code><a href="../classes/API_Con_Service.html">\API_Con_Service</a></code><p>The service to build the consumer around.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/API_Con_Consumer.html">\API_Con_Consumer</a></code></div>
 </div></div>
 </div>
 <a id="method_get_service"></a><div class="element clickable method public method_get_service" data-toggle="collapse" data-target=".method_get_service .collapse">
@@ -222,7 +237,7 @@ to the __construct $config param</p></div></div></div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-07-22T20:38:46+01:00.<br></footer></div>
+            generated on 2013-07-23T11:18:57+01:00.<br></footer></div>
 </div>
 </body>
 </html>
