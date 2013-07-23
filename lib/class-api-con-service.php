@@ -20,6 +20,8 @@ class API_Con_Service{
 	public $name;
 	/** @var string The client secret */
 	public $secret;
+	/** @var string The endpoint url */
+	protected $endpoint;
 	/** @var string The redirect URI for this blog. @see API_Con_Service::__construct() */
 	protected $redirect_url;
 
@@ -73,13 +75,26 @@ class API_Con_Service{
 	 */
 	public function request( $url=null, $params=array(), $method='GET' ){
 
-		//test params
-		if( !API_Con_Manager::valid_url( $url ) ) 
-			return new API_Con_Error('Please provide a valid url');
+		//get full target url or return API_Con_Error
+		$url = $this->get_endpoint_http_url( $target );
+		if( is_wp_error( $url ) )
+			return $url;
 
 		//setup consumer
 		$consumer = API_Con_Manager::get_consumer( $this );
 
 		return $consumer;
+	}
+	
+	protected function get_endpoint_http_url( $target=null ){
+
+		//build full url
+		if( @$this->endpoint )
+			$url = $this->endpoint . $target;
+		else
+			$url = $target;
+
+		if( !API_Con_Manager::valid_url( $url ) ) 
+			return new API_Con_Error('Please provide a valid url');
 	}
 }
