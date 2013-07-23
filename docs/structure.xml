@@ -439,36 +439,11 @@ to the __construct $config param&lt;/p&gt;</long-description>
       </method>
     </class>
   </file>
-  <file path="lib/class-api-con-dto.php" hash="91b7dc325ca20975f25ca2ca1c66de46" package="Default">
-    <class final="false" abstract="false" namespace="global" line="3" package="Default">
-      <extends/>
-      <name>API_Con_DTO</name>
-      <full_name>\API_Con_DTO</full_name>
-      <property final="false" static="false" visibility="public" line="5" namespace="global" package="Default">
-        <name>$data</name>
-        <default/>
-      </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="7" package="Default">
-        <name>__construct</name>
-        <full_name>__construct</full_name>
-        <argument line="7">
-          <name>$data</name>
-          <default>null</default>
-          <type>array</type>
-        </argument>
-      </method>
-    </class>
-    <parse_markers>
-      <error line="0" code="50007">No page-level DocBlock was found in file lib/class-api-con-dto.php</error>
-      <error line="3" code="50000">No DocBlock was found for \API_Con_DTO</error>
-      <error line="5" code="50018">No DocBlock was found for property $data</error>
-      <error line="7" code="50010">No DocBlock was found for method __construct()</error>
-    </parse_markers>
-  </file>
+  <file path="lib/class-api-con-dto.php" hash="cbb96db7bcf4d31987bf95af3c1d0612" package="Default"/>
   <file path="modules/class-dropbox.php" hash="966207528f098b5225adf6fde938e0eb" package="Default">
     <docblock line="2">
       <description>File for the Dropbox module</description>
-      <long-description></long-description>
+      <long-description/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="13" package="api-connection-manager\module">
       <extends>\API_Con_Service</extends>
@@ -476,7 +451,7 @@ to the __construct $config param&lt;/p&gt;</long-description>
       <full_name>\API_Con_Module_Dropbox</full_name>
       <docblock line="7">
         <description>Class for defining the dropbox module parameters</description>
-        <long-description></long-description>
+        <long-description/>
         <tag line="7" name="package" description="api-connection-manager"/>
         <tag line="7" name="subpackage" description="module"/>
         <tag line="7" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
@@ -486,7 +461,7 @@ to the __construct $config param&lt;/p&gt;</long-description>
         <full_name>__construct</full_name>
         <docblock line="15">
           <description>Construct by passing module details to the parent class</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="15" name="see" description="\API_Con_Service" refers="\API_Con_Service"/>
         </docblock>
       </method>
