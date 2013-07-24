@@ -82,10 +82,27 @@ class API_Con_Service{
 
 		//setup consumer
 		$consumer = API_Con_Manager::get_consumer( $this );
+		var_dump($consumer);
+		debug_print_backtrace();
+		if( !API_Con_Manager::is_connected( $this ) )
+			$this->connect();
 
 		return $consumer;
 	}
-	
+
+	protected function connect(){
+
+		//OAuth2 connections
+		if( $this->auth_type=='oauth2' ){
+
+		}
+	}
+
+	/**
+	 * Builds the endpoint url
+	 * @param  string $target Default null. The target to append to $this->endpoint
+	 * @return mixed         Returns (string) $url or API_Con_Error if error
+	 */
 	protected function get_endpoint_http_url( $target=null ){
 
 		//build full url

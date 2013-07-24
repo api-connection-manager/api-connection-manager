@@ -70,6 +70,30 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Check if a service is connected.
+	 * @todo  Design system for checking if services are connected or not.
+	 * @deprecated This method is not designed yet. See the todo.
+	 * @param  API_Con_Service $service The service module.
+	 * @return boolean Default false;
+	 */
+	public static function is_connected( API_Con_Service $service ){
+		return false;
+	}
+
+	/**
+	 * Check if a url is valid.
+	 * Fix for php 5.2 bug with FILTER_VALIDATE_URL '-' are replaced in urls
+	 * before check is done.
+	 * @param  string $url The url to test
+	 * @return mixed      Returns string( $url ) if valid or false if not
+	 */
+	public static function valid_url( $url ){
+
+		$url = str_replace("-", "", $url);
+		return filter_var($url, FILTER_VALIDATE_URL);
+	}
+
+	/**
 	 * Handles callbacks such as ajax requests.
 	 * Can be used outside of ajax by passing object type API_Con_DTO with
 	 * necessary data.
@@ -101,19 +125,6 @@ class API_Con_Manager{
 	}
 
 	/**
-	 * Check if a url is valid.
-	 * Fix for php 5.2 bug with FILTER_VALIDATE_URL '-' are replaced in urls
-	 * before check is done.
-	 * @param  string $url The url to test
-	 * @return mixed      Returns string( $url ) if valid or false if not
-	 */
-	public static function valid_url( $url ){
-
-		$url = str_replace("-", "", $url);
-		return filter_var($url, FILTER_VALIDATE_URL);
-	}
-
-	/**
 	 * Bootstraps the API Connection Manager. This should only be called once
 	 * and currently is only called from index.php by passing 'bootstrap' => true
 	 * to the __construct $config param
@@ -122,18 +133,5 @@ class API_Con_Manager{
 	private function bootstrap(){
 
 		add_action('wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
-	}
-
-	/**
-	 * Handles ajax callbacks to the redirect_url
-	 * @see  API_Con_Service::redirect_uri
-	 * @see  API_Con_Manager::response_listener()
-	 * @param  API_Con_DTO $dto The data transport object
-	 * @return API_Con_DTO           Returns the dto
-	 */
-	private function response( API_Con_DTO $dto ){
-
-		
-		return $dto;
 	}
 }
