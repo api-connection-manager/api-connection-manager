@@ -20,6 +20,8 @@ class API_Con_Service{
 	public $name;
 	/** @var string The client secret */
 	public $secret;
+	/** @var OAuthConsumer @see API_Con_Consumer */
+	protected $consumer;
 	/** @var string The endpoint url */
 	protected $endpoint;
 	/** @var string The redirect URI for this blog. @see API_Con_Service::__construct() */

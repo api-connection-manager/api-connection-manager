@@ -26,7 +26,7 @@ class API_Con_Consumer{
 			case 'oauth2':
 
 				//build consumer
-				$consumer = new OAuthConsumer(
+				$this->service->cosumer = new OAuthConsumer(
 					$service->key,
 					$service->secret,
 					$service->get_redirect_url()
