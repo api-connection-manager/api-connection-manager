@@ -72,7 +72,6 @@ class API_Con_Manager{
 	/**
 	 * Check if a service is connected.
 	 * @todo  Design system for checking if services are connected or not.
-	 * @deprecated This method is not designed yet. See the todo.
 	 * @param  API_Con_Service $service The service module.
 	 * @return boolean Default false;
 	 */
