@@ -37,14 +37,14 @@ class API_Con_Manager{
 	/**
 	 * Factory method. Builds a new API_Con_Consumer
 	 * @param  API_Con_Service $service The service to build the consumer around.
-	 * @return API_Con_Consumer
+	 * @return OAuthConsumer
 	 */
 	public static function get_consumer( API_Con_Service $service ){
 		//validate params
 		if( !$service->key || !$service->secret )
 			return new API_Con_Error( 'Service missing client key or client secret' );
 
-		return new API_Con_Consumer( $service );
+		return new OAuthConsumer( $service->key, $service->secret, $service->get_redirect_url() );
 	}
 
 	/**
@@ -53,6 +53,9 @@ class API_Con_Manager{
 	 * @return API_Con_Service       Will return API_Con_Error when no service found
 	 */
 	public static function get_service( $name ){
+
+		if( empty($name) )
+			return new API_Con_Error( 'No service name specified' );
 
 		//load file
 		$service_path = dirname( __FILE__ ) . '/../modules/class-' . $name . '.php';
@@ -70,34 +73,13 @@ class API_Con_Manager{
 	}
 
 	/**
-	 * Handles callbacks such as ajax requests.
-	 * Can be used outside of ajax by passing object type API_Con_DTO with
-	 * necessary data.
-	 * @param  API_Con_DTO $dto Default null. If used outside ajax pass a valid API_Con_DTO here
-	 * @return mixed Returns API_Con_DTO if all ok, or API_Con_Error if error
+	 * Check if a service is connected.
+	 * @todo  Design system for checking if services are connected or not.
+	 * @param  API_Con_Service $service The service module.
+	 * @return boolean Default false;
 	 */
-	public function response_listener( API_Con_DTO $dto=null ){
-
-		//construct DTO
-		if( !$dto )
-			$dto = new API_Con_DTO( $_REQUEST );
-
-		/**
-		 * Security.
-		 * Check valid api-con-action
-		 */
-		$valid_actions = array(
-			'response'
-		);
-		if( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
-			return new API_Con_Error( 'Invalid request' );
-		//end Security
-		
-		//run method
-		$method = $dto->data['api-con-action'];
-		$dto = $this->$method( $dto );
-
-		return $dto;
+	public static function is_connected( API_Con_Service $service ){
+		return false;
 	}
 
 	/**
@@ -114,6 +96,43 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Handles callbacks such as ajax requests.
+	 * Can be used outside of ajax by passing object type API_Con_DTO with
+	 * necessary data.
+	 * @param  mixed $dto Default null. If used outside ajax pass a valid API_Con_DTO here
+	 * @return mixed Returns API_Con_DTO if all ok, or API_Con_Error if error
+	 */
+	public function response_listener( $dto=null ){
+
+		//if used outside wp_ajax, make sure API_Con_DTO is passed
+		if( $dto && !is_string($dto) )
+			if( !get_class( $dto ) == 'API_Con_DTO' )
+				return new API_Con_Error( 'API_Con_Manager::response_listener() takes API_Con_DTO as a parameter' );
+
+		//construct DTO
+		if( !$dto )
+			$dto = new API_Con_DTO( $_REQUEST );
+
+		/**
+		 * Security.
+		 * Check valid api-con-action
+		 */
+		$valid_actions = array(
+			'request_token',
+			'service_login'
+		);
+		if( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
+			return new API_Con_Error( 'Invalid request' );
+		//end Security
+		
+		//run method
+		$method = $dto->data['api-con-action'];
+		$dto = $this->$method( $dto );
+
+		return $dto;
+	}
+
+	/**
 	 * Bootstraps the API Connection Manager. This should only be called once
 	 * and currently is only called from index.php by passing 'bootstrap' => true
 	 * to the __construct $config param
@@ -122,18 +141,50 @@ class API_Con_Manager{
 	private function bootstrap(){
 
 		add_action('wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
+		add_action('wp_ajax_nopriv_api-con-manager', array( &$this, 'response_listener' ) );
 	}
 
 	/**
-	 * Handles ajax callbacks to the redirect_url
-	 * @see  API_Con_Service::redirect_uri
+	 * Oauth 1/2 callback to request token.
 	 * @see  API_Con_Manager::response_listener()
-	 * @param  API_Con_DTO $dto The data transport object
-	 * @return API_Con_DTO           Returns the dto
+	 * @param  API_Con_DTO $dto The dto.
+	 * @return API_Con_DTO           Returns the DTO
 	 */
-	private function response( API_Con_DTO $dto ){
+	private function request_token( API_Con_DTO $dto ){
 
+		$key = __CLASS__ . '::service_login';
+		$service = API_Con_Manager::get_service( API_Con_Model::get( $key, true ) );
+
+		if( is_wp_error( $service ) )
+			die( $service->get_error_message() );
+
+		$token = $service->get_token( $dto );
+		var_dump( $token );
+
+		die('process finished');
+	}
+
+	/**
+	 * Redirects to remote authorization server. Service name is taken from $dto->data['service']
+	 * and stored in db.
+	 * @uses  API_Con_Service::get_authorize_url() The url to redirect to
+	 * @param  API_Con_DTO $dto The data transport object
+	 */
+	private function service_login( API_Con_DTO $dto ){
 		
-		return $dto;
+		//vars
+		$service = API_Con_Manager::get_service( $dto->data['service'] );
+		$url = $service->get_authorize_url();
+
+		//store service in db
+		$key = __CLASS__ . '::service_login';
+		API_Con_Model::set( 
+			$key, 
+			$service->name
+		);
+
+		//redirect & die
+		wp_redirect( $url );
+		die();
 	}
 }

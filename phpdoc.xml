@@ -2,7 +2,9 @@
 <phpdoc>
   <parser>
     <target>docs</target>
-    <default-package-name>API Connection Manager</default-package-name>
+    <markers>TODO</markers>
+    <default-package-name>api-connection-manager</default-package-name>
+    <parseprivate>on</parseprivate>
   </parser>
   
   <transformer>
