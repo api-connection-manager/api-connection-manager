@@ -13,11 +13,15 @@
 
 function api_con_autoload( $class ){
   
+  //check /lib
 	$file = strtolower( 'class-' . str_replace( '_', '-', $class ) . '.php' );
 	$path = dirname( __FILE__ ) . '/lib/' . $file;
-
 	if( file_exists( $path ) )
 		require_once( $path );
+
+  //check /vendor
+  if( preg_match('/OAuth/', $class ) )
+    require_once( dirname( __FILE__ ) . '/vendor/OAuth.php' );
 }
 spl_autoload_register( 'api_con_autoload' );
 

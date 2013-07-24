@@ -37,14 +37,14 @@ class API_Con_Manager{
 	/**
 	 * Factory method. Builds a new API_Con_Consumer
 	 * @param  API_Con_Service $service The service to build the consumer around.
-	 * @return API_Con_Consumer
+	 * @return OAuthConsumer
 	 */
 	public static function get_consumer( API_Con_Service $service ){
 		//validate params
 		if( !$service->key || !$service->secret )
 			return new API_Con_Error( 'Service missing client key or client secret' );
 
-		return new API_Con_Consumer( $service );
+		return new OAuthConsumer( $service->key, $service->secret, $service->get_redirect_url() );
 	}
 
 	/**

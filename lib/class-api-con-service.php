@@ -78,14 +78,13 @@ class API_Con_Service{
 	public function request( $url=null, $params=array(), $method='GET' ){
 
 		//get full target url or return API_Con_Error
-		$url = $this->get_endpoint_http_url( $target );
+		$url = $this->get_endpoint_http_url( $url );
 		if( is_wp_error( $url ) )
 			return $url;
-
+		
 		//setup consumer
 		$consumer = API_Con_Manager::get_consumer( $this );
-		var_dump($consumer);
-		debug_print_backtrace();
+		
 		if( !API_Con_Manager::is_connected( $this ) )
 			$this->connect();
 
@@ -120,5 +119,7 @@ class API_Con_Service{
 
 		if( !API_Con_Manager::valid_url( $url ) ) 
 			return new API_Con_Error('Please provide a valid url');
+
+		return $url;
 	}
 }

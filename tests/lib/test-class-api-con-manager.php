@@ -20,7 +20,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 
 	function test_get_consumer(){
 		$service = API_Con_Manager::get_service( 'dropbox' );
-		$this->assertInstanceOf( 'API_Con_Consumer', API_Con_Manager::get_consumer( $service ) );
+		$this->assertInstanceOf( 'OAuthConsumer', API_Con_Manager::get_consumer( $service ) );
 		
 		$service->key = null;
 		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::get_consumer( $service ) );
@@ -38,7 +38,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 	function test_response_listener(){
 		$this->assertInstanceOf( 'API_Con_Error', $this->obj->response_listener() );
 		$dto = new API_Con_DTO( array(
-			'api-con-action' => 'response'
+			'api-con-action' => 'request_token'
 			) );
 		$this->assertInstanceOf( 'API_Con_DTO', $this->obj->response_listener( $dto ) );
 	}

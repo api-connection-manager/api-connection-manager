@@ -30,7 +30,6 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 
 	function test_request(){
 
-		$this->assertInstanceOf( 'WP_Error', $this->obj->request() );
-		$this->assertInstanceOf( 'API_Con_Consumer', $this->obj->request( 'http://example-foo.com/bar?x=z' ) );
+		$this->assertInstanceOf( 'OAuthConsumer', $this->obj->request( 'http://example-foo.com/bar?x=z' ) );
 	}
 }
