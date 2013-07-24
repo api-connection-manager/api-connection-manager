@@ -111,7 +111,7 @@ class API_Con_Manager{
 		 * Check valid api-con-action
 		 */
 		$valid_actions = array(
-			'response'
+			'request_token'
 		);
 		if( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
 			return new API_Con_Error( 'Invalid request' );
@@ -133,5 +133,18 @@ class API_Con_Manager{
 	private function bootstrap(){
 
 		add_action('wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
+	}
+
+	/**
+	 * Oauth 1/2 callback to request token.
+	 * @see  API_Con_Manager::response_listener()
+	 * @param  API_Con_DTO $dto The dto.
+	 * @return API_Con_DTO           Returns the DTO
+	 */
+	private function request_token( API_Con_DTO $dto ){
+
+		//do some security
+		
+		return $dto;
 	}
 }

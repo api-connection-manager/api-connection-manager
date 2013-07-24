@@ -92,12 +92,17 @@ class API_Con_Service{
 		return $consumer;
 	}
 
+	/**
+	 * Check if this service is connected
+	 * @return boolean Default false.
+	 */
 	protected function connect(){
 
 		//OAuth2 connections
 		if( $this->auth_type=='oauth2' ){
 
 		}
+		return false;
 	}
 
 	/**
