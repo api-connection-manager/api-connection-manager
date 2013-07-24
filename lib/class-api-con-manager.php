@@ -54,6 +54,9 @@ class API_Con_Manager{
 	 */
 	public static function get_service( $name ){
 
+		if( empty($name) )
+			return new API_Con_Error( 'No service name specified' );
+
 		//load file
 		$service_path = dirname( __FILE__ ) . '/../modules/class-' . $name . '.php';
 		if( !file_exists( $service_path ) )
@@ -151,7 +154,14 @@ class API_Con_Manager{
 
 		$key = __CLASS__ . '::service_login';
 		$service = API_Con_Manager::get_service( API_Con_Model::get( $key, true ) );
-		die();
+
+		if( is_wp_error( $service ) )
+			die( $service->get_error_message() );
+
+		$token = $service->get_token( $dto );
+		var_dump( $token );
+
+		die('process finished');
 	}
 
 	/**

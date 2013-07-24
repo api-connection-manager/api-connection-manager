@@ -34,10 +34,10 @@
                 <span class="label label-info">0</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul><li>todo 
-                <span class="label label-info">4</span>
+                <span class="label label-info">5</span>
 </li></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">1</span></a></li>
+                <span class="label label-info">0</span></a></li>
 </ul>
 </li>
 </ul></div>
@@ -62,6 +62,7 @@
 <li class="method public inherited"><a href="#method_get_authorize_url" title="get_authorize_url :: Returns the authorize url."><span class="description">Returns the authorize url.</span><pre>get_authorize_url()</pre></a></li>
 <li class="method public inherited"><a href="#method_get_login_url" title="get_login_url :: Return the login url"><span class="description">Return the login url</span><pre>get_login_url()</pre></a></li>
 <li class="method public inherited"><a href="#method_get_redirect_url" title="get_redirect_url :: Get redirect url for this service"><span class="description">Get redirect url for this service</span><pre>get_redirect_url()</pre></a></li>
+<li class="method public inherited"><a href="#method_get_token" title="get_token :: Get an access token"><span class="description">Get an access token</span><pre>get_token()</pre></a></li>
 <li class="method public inherited"><a href="#method_request" title="request :: Make a request to the remote api."><span class="description">Make a request to the remote api.</span><pre>request()</pre></a></li>
 </ul>
 </li>
@@ -83,6 +84,7 @@
 <li class="property protected inherited"><a href="#property_consumer" title="$consumer :: "><span class="description">@see API_Con_Consumer</span><pre>$consumer</pre></a></li>
 <li class="property protected inherited"><a href="#property_endpoint" title="$endpoint :: "><span class="description">The endpoint url</span><pre>$endpoint</pre></a></li>
 <li class="property protected inherited"><a href="#property_redirect_url" title="$redirect_url :: "><span class="description">The redirect URI for this blog. @see API_Con_Service::__construct()</span><pre>$redirect_url</pre></a></li>
+<li class="property protected inherited"><a href="#property_token_url" title="$token_url :: "><span class="description">The URI for requesting an access token</span><pre>$token_url</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -179,9 +181,28 @@
 <div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
+<a id="method_get_token"></a><div class="element clickable method public method_get_token" data-toggle="collapse" data-target=".method_get_token .collapse">
+<h2>Get an access token</h2>
+<pre>get_token(\API_Con_DTO $dto) : \OAuthToken</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::get_token()</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$dto</h4>
+<code><a href="../classes/API_Con_DTO.html">\API_Con_DTO</a></code><p>The data transport object containing the code value</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\OAuthToken</code>Returns API_Con_Error if error</div>
+</div></div>
+</div>
 <a id="method_request"></a><div class="element clickable method public method_request" data-toggle="collapse" data-target=".method_request .collapse">
 <h2>Make a request to the remote api.</h2>
-<pre>request(string $url, array $params, string $method, boolean $die) : <a href="http://php.net/manual/en/class.stdclass.php">\stdClass</a></pre>
+<pre>request(string $url, array $params, string $method, boolean $die, boolean $check_connect) : <a href="http://php.net/manual/en/class.stdclass.php">\stdClass</a></pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>If not connected will die() with login link, or return login url.</p></div>
@@ -202,6 +223,9 @@
 <div class="subelement argument">
 <h4>$die</h4>
 <code>boolean</code><p>Default true. Wether to die with html login link or return login url, if not connected.</p></div>
+<div class="subelement argument">
+<h4>$check_connect</h4>
+<code>boolean</code><p>Default true. Whether to test if connected or not.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code><a href="http://php.net/manual/en/class.stdclass.php">\stdClass</a></code>Returns API_Con_Error on error.</div>
@@ -325,6 +349,18 @@
 </tr></table>
 </div></div>
 </div>
+<a id="property_token_url"> </a><div class="element clickable property protected property_token_url" data-toggle="collapse" data-target=".property_token_url .collapse">
+<h2>The URI for requesting an access token</h2>
+<pre>$token_url : string</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>inherited_from</th>
+<td>\API_Con_Service::$$token_url</td>
+</tr></table>
+</div></div>
+</div>
 </div>
 </div>
 </div>
@@ -332,7 +368,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-07-24T22:18:52+01:00.<br></footer></div>
+            generated on 2013-07-24T23:21:00+01:00.<br></footer></div>
 </div>
 </body>
 </html>

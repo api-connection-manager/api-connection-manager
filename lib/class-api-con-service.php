@@ -26,6 +26,8 @@ class API_Con_Service{
 	protected $endpoint;
 	/** @var string The redirect URI for this blog. @see API_Con_Service::__construct() */
 	protected $redirect_url;
+	/** @var string The URI for requesting an access token */
+	protected $token_url;
 
 	/**
 	 * When extending this class you must specify params
@@ -89,15 +91,39 @@ class API_Con_Service{
 	}
 
 	/**
+	 * Get an access token
+	 * @param  API_Con_DTO $dto The data transport object containing the code value
+	 * @todo  write unit tests for this method
+	 * @return OAuthToken Returns API_Con_Error if error
+	 */
+	public function get_token( API_Con_DTO $dto ){
+
+		$code = $dto->data['code'];
+
+		$res = $this->request( $this->token_url, array(
+			'client_id' => $this->key,
+			'client_secret' => $this->secret,
+			'redirect_uri' => $this->get_redirect_url(),
+			'code' => $code
+			), 'POST', false, false );
+		if( is_wp_error( $res ) )
+			return $res;
+
+		parse_str( $res['body'], $body );
+		return new OAuthToken( $body['access_token'], null );
+	}
+
+	/**
 	 * Make a request to the remote api.
 	 * If not connected will die() with login link, or return login url.
 	 * @param  string $url    endpoint
 	 * @param  array  $params parameters to be sent
 	 * @param  string $method Default GET
 	 * @param boolean $die Default true. Wether to die with html login link or return login url, if not connected.
+	 * @param boolean $check_connect Default true. Whether to test if connected or not.
 	 * @return stdClass Returns API_Con_Error on error.
 	 */
-	public function request( $url=null, $params=array(), $method='GET', $die=true ){
+	public function request( $url=null, $params=array(), $method='GET', $die=true, $check_connect=true ){
 
 		//get full target url or return API_Con_Error
 		$url = $this->get_endpoint_http_url( $url );
@@ -105,12 +131,22 @@ class API_Con_Service{
 			return $url;
 		
 		//check if connected
-		if( !API_Con_Manager::is_connected( $this ) )
+		if( 
+			!API_Con_Manager::is_connected( $this ) &&
+			$check_connect
+		)
 			if( $die )
 				die( '<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>' );
 			else return $this->get_login_url();
 
-		return new stdClass;
+		var_dump( $url );
+
+		if( strtolower( $method )==='get' )
+			$res = wp_remote_get( $url, $params );
+		else
+			$res = wp_remote_post( $url, array( 'body' => $params ) );
+
+		return $res;
 	}
 
 	/**
@@ -119,6 +155,9 @@ class API_Con_Service{
 	 * @return mixed         Returns (string) $url or API_Con_Error if error
 	 */
 	protected function get_endpoint_http_url( $target=null ){
+
+		if( preg_match('/^http/', $target) )
+			return $target;
 
 		//build full url
 		if( @$this->endpoint )
