@@ -62,14 +62,11 @@
 <li class="method public inherited"><a href="#method_get_authorize_url" title="get_authorize_url :: Returns the authorize url."><span class="description">Returns the authorize url.</span><pre>get_authorize_url()</pre></a></li>
 <li class="method public inherited"><a href="#method_get_login_url" title="get_login_url :: Return the login url"><span class="description">Return the login url</span><pre>get_login_url()</pre></a></li>
 <li class="method public inherited"><a href="#method_get_redirect_url" title="get_redirect_url :: Get redirect url for this service"><span class="description">Get redirect url for this service</span><pre>get_redirect_url()</pre></a></li>
-<li class="method public inherited"><a href="#method_request" title="request :: Make a request to the remote api"><span class="description">Make a request to the remote api</span><pre>request()</pre></a></li>
+<li class="method public inherited"><a href="#method_request" title="request :: Make a request to the remote api."><span class="description">Make a request to the remote api.</span><pre>request()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header protected">» Protected
-                    <ul>
-<li class="method protected inherited"><a href="#method_connect" title="connect :: Check if this service is connected"><span class="description">Check if this service is connected</span><pre>connect()</pre></a></li>
-<li class="method protected inherited"><a href="#method_get_endpoint_http_url" title="get_endpoint_http_url :: Builds the endpoint url"><span class="description">Builds the endpoint url</span><pre>get_endpoint_http_url()</pre></a></li>
-</ul>
+                    <ul><li class="method protected inherited"><a href="#method_get_endpoint_http_url" title="get_endpoint_http_url :: Builds the endpoint url"><span class="description">Builds the endpoint url</span><pre>get_endpoint_http_url()</pre></a></li></ul>
 </li>
 <li class="nav-header">
 <i class="icon-custom icon-property"></i> Properties
@@ -183,11 +180,11 @@
 </div></div>
 </div>
 <a id="method_request"></a><div class="element clickable method public method_request" data-toggle="collapse" data-target=".method_request .collapse">
-<h2>Make a request to the remote api</h2>
-<pre>request(string $url, array $params, string $method) : <a href="../classes/API_Con_Consumer.html">\API_Con_Consumer</a></pre>
+<h2>Make a request to the remote api.</h2>
+<pre>request(string $url, array $params, string $method, boolean $die) : <a href="http://php.net/manual/en/class.stdclass.php">\stdClass</a></pre>
 <div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
+<div class="long_description"><p>If not connected will die() with login link, or return login url.</p></div>
 <table class="table table-bordered"><tr>
 <th>inherited_from</th>
 <td>\API_Con_Service::request()</td>
@@ -202,24 +199,12 @@
 <div class="subelement argument">
 <h4>$method</h4>
 <code>string</code><p>Default GET</p></div>
+<div class="subelement argument">
+<h4>$die</h4>
+<code>boolean</code><p>Default true. Wether to die with html login link or return login url, if not connected.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code><a href="../classes/API_Con_Consumer.html">\API_Con_Consumer</a></code>Returns API_Con_Error on error.</div>
-</div></div>
-</div>
-<a id="method_connect"></a><div class="element clickable method protected method_connect" data-toggle="collapse" data-target=".method_connect .collapse">
-<h2>Check if this service is connected</h2>
-<pre>connect() : boolean</pre>
-<div class="labels"><span class="label">Inherited</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>inherited_from</th>
-<td>\API_Con_Service::connect()</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>boolean</code>Default false.</div>
+<code><a href="http://php.net/manual/en/class.stdclass.php">\stdClass</a></code>Returns API_Con_Error on error.</div>
 </div></div>
 </div>
 <a id="method_get_endpoint_http_url"></a><div class="element clickable method protected method_get_endpoint_http_url" data-toggle="collapse" data-target=".method_get_endpoint_http_url .collapse">
@@ -347,7 +332,7 @@
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-07-24T13:05:02+01:00.<br></footer></div>
+            generated on 2013-07-24T20:15:00+01:00.<br></footer></div>
 </div>
 </body>
 </html>

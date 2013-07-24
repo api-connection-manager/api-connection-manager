@@ -71,6 +71,7 @@
                     <ul>
 <li class="method private "><a href="#method_bootstrap" title="bootstrap :: Bootstraps the API Connection Manager."><span class="description">Bootstraps the API Connection Manager.</span><pre>bootstrap()</pre></a></li>
 <li class="method private "><a href="#method_request_token" title="request_token :: Oauth 1/2 callback to request token."><span class="description">Oauth 1/2 callback to request token.</span><pre>request_token()</pre></a></li>
+<li class="method private "><a href="#method_service_login" title="service_login :: Redirects to remote authorization service"><span class="description">Redirects to remote authorization service</span><pre>service_login()</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -138,7 +139,7 @@ needs to be done only once</p></div>
 </div>
 <a id="method_get_consumer"></a><div class="element clickable method public method_get_consumer" data-toggle="collapse" data-target=".method_get_consumer .collapse">
 <h2>Factory method.</h2>
-<pre>get_consumer(\API_Con_Service $service) : <a href="../classes/API_Con_Consumer.html">\API_Con_Consumer</a></pre>
+<pre>get_consumer(\API_Con_Service $service) : \OAuthConsumer</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>Builds a new API_Con_Consumer</p></div>
@@ -147,7 +148,7 @@ needs to be done only once</p></div>
 <h4>$service</h4>
 <code><a href="../classes/API_Con_Service.html">\API_Con_Service</a></code><p>The service to build the consumer around.</p></div>
 <h3>Returns</h3>
-<div class="subelement response"><code><a href="../classes/API_Con_Consumer.html">\API_Con_Consumer</a></code></div>
+<div class="subelement response"><code>\OAuthConsumer</code></div>
 </div></div>
 </div>
 <a id="method_get_service"></a><div class="element clickable method public method_get_service" data-toggle="collapse" data-target=".method_get_service .collapse">
@@ -192,7 +193,7 @@ needs to be done only once</p></div>
 </div>
 <a id="method_response_listener"></a><div class="element clickable method public method_response_listener" data-toggle="collapse" data-target=".method_response_listener .collapse">
 <h2>Handles callbacks such as ajax requests.</h2>
-<pre>response_listener(\API_Con_DTO $dto) : mixed</pre>
+<pre>response_listener(mixed $dto) : mixed</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>Can be used outside of ajax by passing object type API_Con_DTO with
@@ -200,7 +201,7 @@ necessary data.</p></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$dto</h4>
-<code><a href="../classes/API_Con_DTO.html">\API_Con_DTO</a></code><p>Default null. If used outside ajax pass a valid API_Con_DTO here</p></div>
+<code>mixed</code><p>Default null. If used outside ajax pass a valid API_Con_DTO here</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>Returns API_Con_DTO if all ok, or API_Con_Error if error</div>
@@ -249,6 +250,22 @@ to the __construct $config param</p></div></div></div>
 <code><a href="../classes/API_Con_DTO.html">\API_Con_DTO</a></code>Returns the DTO</div>
 </div></div>
 </div>
+<a id="method_service_login"></a><div class="element clickable method private method_service_login" data-toggle="collapse" data-target=".method_service_login .collapse">
+<h2>Redirects to remote authorization service</h2>
+<pre>service_login(\API_Con_DTO $dto) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>uses</th>
+<td>The url to redirect to</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$dto</h4>
+<code><a href="../classes/API_Con_DTO.html">\API_Con_DTO</a></code><p>The data transport object</p></div>
+</div></div>
+</div>
 </div>
 </div>
 </div>
@@ -256,7 +273,7 @@ to the __construct $config param</p></div></div></div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-07-24T13:05:02+01:00.<br></footer></div>
+            generated on 2013-07-24T20:15:00+01:00.<br></footer></div>
 </div>
 </body>
 </html>

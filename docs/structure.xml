@@ -3,7 +3,7 @@
   <file path="lib/class-api-con-error.php" hash="2e78d9cde9e8d420f06f1fe9708c427f" package="Default">
     <docblock line="2">
       <description>File for the API_Con_Error class</description>
-      <long-description></long-description>
+      <long-description/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="12" package="api-connection-manager">
       <extends>\WP_Error</extends>
@@ -20,8 +20,8 @@
         <name>$code</name>
         <default>'API Con Manager Error'</default>
         <docblock line="14">
-          <description></description>
-          <long-description></long-description>
+          <description/>
+          <long-description/>
           <tag line="14" name="var" description="The WP_Error::code string. Default 'API Con Manager Error'" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -32,7 +32,7 @@
         <full_name>__construct</full_name>
         <docblock line="17">
           <description>Pass the error string.</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="17" name="param" description="The error produced" type="string" variable="$msg">
             <type by_reference="false">string</type>
           </tag>
@@ -48,7 +48,7 @@
   <file path="lib/class-api-con-view.php" hash="7fceda31096c4a6d5e077b983f489c62" package="Default">
     <docblock line="2">
       <description>File for the API_Con_View class</description>
-      <long-description></long-description>
+      <long-description/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="12" package="api-connection-manager">
       <extends/>
@@ -56,54 +56,17 @@
       <full_name>\API_Con_View</full_name>
       <docblock line="6">
         <description>Class for handling all view actions, such as login forms etc.</description>
-        <long-description></long-description>
+        <long-description/>
         <tag line="6" name="package" description="api-connection-manager"/>
         <tag line="6" name="todo" description="integrate API_Con_View with bootstrap"/>
         <tag line="6" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
       </docblock>
     </class>
   </file>
-  <file path="lib/class-api-con-consumer.php" hash="26338bdf6e3dfcdc6aa60d4d4a717b9a" package="Default">
-    <docblock line="2">
-      <description>File for the API_Con_View class</description>
-      <long-description></long-description>
-    </docblock>
-    <include line="19" type="Require Once" package="Default">
-      <name/>
-    </include>
-    <class final="false" abstract="false" namespace="global" line="12" package="api-connection-manager">
-      <extends/>
-      <name>API_Con_Consumer</name>
-      <full_name>\API_Con_Consumer</full_name>
-      <docblock line="6">
-        <description>Class for handling all view actions, such as login forms etc.</description>
-        <long-description></long-description>
-        <tag line="6" name="package" description="api-connection-manager"/>
-        <tag line="6" name="todo" description="integrate API_Con_View with bootstrap"/>
-        <tag line="6" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
-      </docblock>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="18" package="api-connection-manager">
-        <name>__construct</name>
-        <full_name>__construct</full_name>
-        <docblock line="14">
-          <description>Construct.</description>
-          <long-description></long-description>
-          <tag line="14" name="param" description="The service to build the consumer around." type="\API_Con_Service" variable="$service">
-            <type by_reference="false">\API_Con_Service</type>
-          </tag>
-        </docblock>
-        <argument line="18">
-          <name>$service</name>
-          <default></default>
-          <type>\API_Con_Service</type>
-        </argument>
-      </method>
-    </class>
-  </file>
-  <file path="lib/class-api-con-manager.php" hash="70020daf08367cff39e08dd1a4326073" package="Default">
+  <file path="lib/class-api-con-manager.php" hash="19c5e800aa62d95a800425336420625e" package="Default">
     <docblock line="2">
       <description>The main file for the API Connection Manager Plugin</description>
-      <long-description></long-description>
+      <long-description/>
       <tag line="2" name="author" description="Daithi Coombes &lt;webeire@gmail.com&gt;"/>
     </docblock>
     <include line="62" type="Require Once" package="Default">
@@ -115,7 +78,7 @@
       <full_name>\API_Con_Manager</full_name>
       <docblock line="7">
         <description>The main class for the API Connection Manager plugin</description>
-        <long-description></long-description>
+        <long-description/>
         <tag line="7" name="package" description="api-connection-manager"/>
         <tag line="7" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
       </docblock>
@@ -142,7 +105,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         <full_name>factory</full_name>
         <docblock line="27">
           <description>Factory method to get API Connection Manager object</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="27" name="param" description="Deprecated, for now." type="array" variable="$config">
             <type by_reference="false">array</type>
           </tag>
@@ -166,13 +129,13 @@ needs to be done only once&lt;/p&gt;</long-description>
           <tag line="37" name="param" description="The service to build the consumer around." type="\API_Con_Service" variable="$service">
             <type by_reference="false">\API_Con_Service</type>
           </tag>
-          <tag line="37" name="return" description="" type="\API_Con_Consumer">
-            <type by_reference="false">\API_Con_Consumer</type>
+          <tag line="37" name="return" description="" type="\OAuthConsumer">
+            <type by_reference="false">\OAuthConsumer</type>
           </tag>
         </docblock>
         <argument line="42">
           <name>$service</name>
-          <default></default>
+          <default/>
           <type>\API_Con_Service</type>
         </argument>
       </method>
@@ -181,7 +144,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         <full_name>get_service</full_name>
         <docblock line="50">
           <description>Factory method to get service object</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="50" name="param" description="The service name" type="string" variable="$name">
             <type by_reference="false">string</type>
           </tag>
@@ -191,7 +154,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         </docblock>
         <argument line="55">
           <name>$name</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -200,7 +163,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         <full_name>is_connected</full_name>
         <docblock line="72">
           <description>Check if a service is connected.</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="72" name="todo" description="Design system for checking if services are connected or not."/>
           <tag line="72" name="deprecated" description="This method is not designed yet. See the todo."/>
           <tag line="72" name="param" description="The service module." type="\API_Con_Service" variable="$service">
@@ -212,7 +175,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         </docblock>
         <argument line="79">
           <name>$service</name>
-          <default></default>
+          <default/>
           <type>\API_Con_Service</type>
         </argument>
       </method>
@@ -232,7 +195,7 @@ before check is done.&lt;/p&gt;</long-description>
         </docblock>
         <argument line="90">
           <name>$url</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -243,8 +206,8 @@ before check is done.&lt;/p&gt;</long-description>
           <description>Handles callbacks such as ajax requests.</description>
           <long-description>&lt;p&gt;Can be used outside of ajax by passing object type API_Con_DTO with
 necessary data.&lt;/p&gt;</long-description>
-          <tag line="96" name="param" description="Default null. If used outside ajax pass a valid API_Con_DTO here" type="\API_Con_DTO" variable="$dto">
-            <type by_reference="false">\API_Con_DTO</type>
+          <tag line="96" name="param" description="Default null. If used outside ajax pass a valid API_Con_DTO here" type="mixed" variable="$dto">
+            <type by_reference="false">mixed</type>
           </tag>
           <tag line="96" name="return" description="Returns API_Con_DTO if all ok, or API_Con_Error if error" type="mixed">
             <type by_reference="false">mixed</type>
@@ -253,45 +216,62 @@ necessary data.&lt;/p&gt;</long-description>
         <argument line="103">
           <name>$dto</name>
           <default>null</default>
-          <type>\API_Con_DTO</type>
+          <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="133" package="api-connection-manager">
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="139" package="api-connection-manager">
         <name>bootstrap</name>
         <full_name>bootstrap</full_name>
-        <docblock line="127">
+        <docblock line="133">
           <description>Bootstraps the API Connection Manager.</description>
           <long-description>&lt;p&gt;This should only be called once
 and currently is only called from index.php by passing 'bootstrap' =&gt; true
 to the __construct $config param&lt;/p&gt;</long-description>
-          <tag line="127" name="return" description="" type="void">
+          <tag line="133" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="144" package="api-connection-manager">
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="151" package="api-connection-manager">
         <name>request_token</name>
         <full_name>request_token</full_name>
-        <docblock line="138">
+        <docblock line="145">
           <description>Oauth 1/2 callback to request token.</description>
-          <long-description></long-description>
-          <tag line="138" name="see" description="\API_Con_Manager::response_listener()" refers="\API_Con_Manager::response_listener()"/>
-          <tag line="138" name="param" description="The dto." type="\API_Con_DTO" variable="$dto">
+          <long-description/>
+          <tag line="145" name="see" description="\API_Con_Manager::response_listener()" refers="\API_Con_Manager::response_listener()"/>
+          <tag line="145" name="param" description="The dto." type="\API_Con_DTO" variable="$dto">
             <type by_reference="false">\API_Con_DTO</type>
           </tag>
-          <tag line="138" name="return" description="Returns the DTO" type="\API_Con_DTO">
+          <tag line="145" name="return" description="Returns the DTO" type="\API_Con_DTO">
             <type by_reference="false">\API_Con_DTO</type>
           </tag>
         </docblock>
-        <argument line="144">
+        <argument line="151">
           <name>$dto</name>
-          <default></default>
+          <default/>
+          <type>\API_Con_DTO</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="global" line="164" package="api-connection-manager">
+        <name>service_login</name>
+        <full_name>service_login</full_name>
+        <docblock line="159">
+          <description>Redirects to remote authorization service</description>
+          <long-description/>
+          <tag line="159" name="uses" description="The url to redirect to" refers="\API_Con_Service::get_authorize_url()"/>
+          <tag line="159" name="param" description="The data transport object" type="\API_Con_DTO" variable="$dto">
+            <type by_reference="false">\API_Con_DTO</type>
+          </tag>
+        </docblock>
+        <argument line="164">
+          <name>$dto</name>
+          <default/>
           <type>\API_Con_DTO</type>
         </argument>
       </method>
     </class>
   </file>
-  <file path="lib/class-api-con-service.php" hash="ffc5cdd1ce27f3baf8549c1aee1b2d81" package="Default">
+  <file path="lib/class-api-con-service.php" hash="4e18cd5bdb101690ada14985e785e3a9" package="Default">
     <docblock line="2">
       <description>File for the API_Con_Service class</description>
       <long-description></long-description>
@@ -410,100 +390,98 @@ to the __construct $config param&lt;/p&gt;</long-description>
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="49" package="api-connection-manager">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="50" package="api-connection-manager">
         <name>get_authorize_url</name>
         <full_name>get_authorize_url</full_name>
         <docblock line="44">
           <description>Returns the authorize url.</description>
           <long-description></long-description>
           <tag line="44" name="uses" description="API_Con_Service::auth_url" refers="string"/>
+          <tag line="44" name="todo" description="see about using the OAuth2 state parameter. This would mean storing state values in the db"/>
           <tag line="44" name="return" description="Will return API_Con_Error if invalid or missing authorize url." type="mixed">
             <type by_reference="false">mixed</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="59" package="api-connection-manager">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="79" package="api-connection-manager">
         <name>get_login_url</name>
         <full_name>get_login_url</full_name>
-        <docblock line="55">
+        <docblock line="75">
           <description>Return the login url</description>
           <long-description></long-description>
-          <tag line="55" name="return" description="the full `URI` to login this service" type="string">
+          <tag line="75" name="return" description="the full `URI` to login this service" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="67" package="api-connection-manager">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="87" package="api-connection-manager">
         <name>get_redirect_url</name>
         <full_name>get_redirect_url</full_name>
-        <docblock line="63">
+        <docblock line="83">
           <description>Get redirect url for this service</description>
           <long-description></long-description>
-          <tag line="63" name="return" description="" type="string">
+          <tag line="83" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="78" package="api-connection-manager">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="100" package="api-connection-manager">
         <name>request</name>
         <full_name>request</full_name>
-        <docblock line="71">
-          <description>Make a request to the remote api</description>
-          <long-description></long-description>
-          <tag line="71" name="param" description="endpoint" type="string" variable="$url">
+        <docblock line="91">
+          <description>Make a request to the remote api.</description>
+          <long-description>&lt;p&gt;If not connected will die() with login link, or return login url.&lt;/p&gt;</long-description>
+          <tag line="91" name="param" description="endpoint" type="string" variable="$url">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="71" name="param" description="parameters to be sent" type="array" variable="$params">
+          <tag line="91" name="param" description="parameters to be sent" type="array" variable="$params">
             <type by_reference="false">array</type>
           </tag>
-          <tag line="71" name="param" description="Default GET" type="string" variable="$method">
+          <tag line="91" name="param" description="Default GET" type="string" variable="$method">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="71" name="return" description="Returns API_Con_Error on error." type="\API_Con_Consumer">
-            <type by_reference="false">\API_Con_Consumer</type>
+          <tag line="91" name="param" description="Default true. Wether to die with html login link or return login url, if not connected." type="boolean" variable="$die">
+            <type by_reference="false">boolean</type>
+          </tag>
+          <tag line="91" name="return" description="Returns API_Con_Error on error." type="\stdClass">
+            <type by_reference="false">\stdClass</type>
           </tag>
         </docblock>
-        <argument line="78">
+        <argument line="100">
           <name>$url</name>
           <default>null</default>
           <type/>
         </argument>
-        <argument line="78">
+        <argument line="100">
           <name>$params</name>
           <default>array()</default>
           <type/>
         </argument>
-        <argument line="78">
+        <argument line="100">
           <name>$method</name>
           <default>'GET'</default>
           <type/>
         </argument>
+        <argument line="100">
+          <name>$die</name>
+          <default>true</default>
+          <type/>
+        </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="global" line="99" package="api-connection-manager">
-        <name>connect</name>
-        <full_name>connect</full_name>
-        <docblock line="95">
-          <description>Check if this service is connected</description>
-          <long-description></long-description>
-          <tag line="95" name="return" description="Default false." type="boolean">
-            <type by_reference="false">boolean</type>
-          </tag>
-        </docblock>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="global" line="113" package="api-connection-manager">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="global" line="121" package="api-connection-manager">
         <name>get_endpoint_http_url</name>
         <full_name>get_endpoint_http_url</full_name>
-        <docblock line="108">
+        <docblock line="116">
           <description>Builds the endpoint url</description>
           <long-description></long-description>
-          <tag line="108" name="param" description="Default null. The target to append to $this-&gt;endpoint" type="string" variable="$target">
+          <tag line="116" name="param" description="Default null. The target to append to $this-&gt;endpoint" type="string" variable="$target">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="108" name="return" description="Returns (string) $url or API_Con_Error if error" type="mixed">
+          <tag line="116" name="return" description="Returns (string) $url or API_Con_Error if error" type="mixed">
             <type by_reference="false">mixed</type>
           </tag>
         </docblock>
-        <argument line="113">
+        <argument line="121">
           <name>$target</name>
           <default>null</default>
           <type/>
@@ -514,7 +492,7 @@ to the __construct $config param&lt;/p&gt;</long-description>
   <file path="lib/class-api-con-dto.php" hash="28415228ab38d53ef5f1dea208231c37" package="Default">
     <docblock line="2">
       <description>Class file for API_Con_DTO</description>
-      <long-description></long-description>
+      <long-description/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="13" package="api-connection-manager">
       <extends/>
@@ -529,10 +507,10 @@ a remote service.&lt;/p&gt;</long-description>
       </docblock>
       <property final="false" static="false" visibility="public" line="16" namespace="global" package="Default">
         <name>$data</name>
-        <default></default>
+        <default/>
         <docblock line="15">
-          <description></description>
-          <long-description></long-description>
+          <description/>
+          <long-description/>
           <tag line="15" name="var" description="The data passed to the server" type="array">
             <type by_reference="false">array</type>
           </tag>
@@ -543,7 +521,7 @@ a remote service.&lt;/p&gt;</long-description>
         <full_name>__construct</full_name>
         <docblock line="18">
           <description>Construct</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="18" name="param" description="An array of key value pairs passed from the remote server" type="array" variable="$data">
             <type by_reference="false">array</type>
           </tag>
@@ -559,7 +537,7 @@ a remote service.&lt;/p&gt;</long-description>
   <file path="modules/class-dropbox.php" hash="86539c8049c0a35826ddab45e0fe3f0e" package="Default">
     <docblock line="2">
       <description>File for the Dropbox module</description>
-      <long-description></long-description>
+      <long-description/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="13" package="api-connection-manager\module">
       <extends>\API_Con_Service</extends>
@@ -567,7 +545,7 @@ a remote service.&lt;/p&gt;</long-description>
       <full_name>\API_Con_Module_Dropbox</full_name>
       <docblock line="7">
         <description>Class for defining the dropbox module parameters</description>
-        <long-description></long-description>
+        <long-description/>
         <tag line="7" name="package" description="api-connection-manager"/>
         <tag line="7" name="subpackage" description="module"/>
         <tag line="7" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
@@ -577,7 +555,7 @@ a remote service.&lt;/p&gt;</long-description>
         <full_name>__construct</full_name>
         <docblock line="15">
           <description>Construct by passing module details to the parent class</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="15" name="see" description="\API_Con_Service" refers="\API_Con_Service"/>
         </docblock>
       </method>

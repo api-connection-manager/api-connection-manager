@@ -114,29 +114,6 @@ class API_Con_Service{
 	}
 
 	/**
-	 * Check if this service is connected
-	 * @return boolean Default false.
-	 */
-	protected function connect( $action='die' ){
-
-		//OAuth2 connections
-		if( $this->auth_type=='oauth2' ){
-
-			//check for token update
-			
-			//get login url
-		}
-
-		//actions
-		switch( $action ){
-
-			case 'die':
-				die( 'this is a login link' );
-		}
-		return false;
-	}
-
-	/**
 	 * Builds the endpoint url
 	 * @param  string $target Default null. The target to append to $this->endpoint
 	 * @return mixed         Returns (string) $url or API_Con_Error if error

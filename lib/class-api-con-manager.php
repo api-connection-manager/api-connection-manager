@@ -156,6 +156,11 @@ class API_Con_Manager{
 		die();
 	}
 
+	/**
+	 * Redirects to remote authorization service
+	 * @uses  API_Con_Service::get_authorize_url() The url to redirect to
+	 * @param  API_Con_DTO $dto The data transport object
+	 */
 	private function service_login( API_Con_DTO $dto ){
 		
 		$service = API_Con_Manager::get_service( $dto->data['service'] );
