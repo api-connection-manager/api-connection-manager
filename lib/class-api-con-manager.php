@@ -97,10 +97,15 @@ class API_Con_Manager{
 	 * Handles callbacks such as ajax requests.
 	 * Can be used outside of ajax by passing object type API_Con_DTO with
 	 * necessary data.
-	 * @param  API_Con_DTO $dto Default null. If used outside ajax pass a valid API_Con_DTO here
+	 * @param  mixed $dto Default null. If used outside ajax pass a valid API_Con_DTO here
 	 * @return mixed Returns API_Con_DTO if all ok, or API_Con_Error if error
 	 */
-	public function response_listener( API_Con_DTO $dto=null ){
+	public function response_listener( $dto=null ){
+
+		//if used outside wp_ajax, make sure API_Con_DTO is passed
+		if( $dto && !is_string($dto) )
+			if( !get_class( $dto ) == 'API_Con_DTO' )
+				return new API_Con_Error( 'API_Con_Manager::response_listener() takes API_Con_DTO as a parameter' );
 
 		//construct DTO
 		if( !$dto )
@@ -111,7 +116,8 @@ class API_Con_Manager{
 		 * Check valid api-con-action
 		 */
 		$valid_actions = array(
-			'request_token'
+			'request_token',
+			'service_login'
 		);
 		if( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
 			return new API_Con_Error( 'Invalid request' );
@@ -133,6 +139,7 @@ class API_Con_Manager{
 	private function bootstrap(){
 
 		add_action('wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
+		add_action('wp_ajax_nopriv_api-con-manager', array( &$this, 'response_listener' ) );
 	}
 
 	/**
@@ -146,5 +153,15 @@ class API_Con_Manager{
 		//do some security
 		
 		return $dto;
+		die();
+	}
+
+	private function service_login( API_Con_DTO $dto ){
+		
+		$service = API_Con_Manager::get_service( $dto->data['service'] );
+		$url = $service->get_authorize_url();
+
+		wp_redirect( $url );
+		die();
 	}
 }

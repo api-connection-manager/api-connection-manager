@@ -44,12 +44,32 @@ class API_Con_Service{
 	/**
 	 * Returns the authorize url. 
 	 * @uses string API_Con_Service::auth_url
+	 * @todo  see about using the OAuth2 state parameter. This would mean storing state values in the db
 	 * @return mixed Will return API_Con_Error if invalid or missing authorize url.
 	 */
 	public function get_authorize_url(){
 		if( ! API_Con_Manager::valid_url( $this->auth_url ) )
 			return new API_Con_Error( 'Invalid authorize url' );
-		return $this->auth_url;
+
+		$consumer = API_Con_Manager::get_consumer( $this );
+
+		switch ($this->auth_type) {
+			case 'oauth2':
+				
+				$url = $this->auth_url . '?' . http_build_query(array(
+					'client_id' => $consumer->key,
+					'response_type' => 'code',
+					'redirect_uri' => $this->get_redirect_url()
+				));
+
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+
+		return $url;
 	}
 
 	/**
@@ -57,7 +77,7 @@ class API_Con_Service{
 	 * @return string the full `URI` to login this service
 	 */
 	public function get_login_url(){
-		return admin_url('admin-ajax.php') . '?action=api-con-login&service=' . $this->name;
+		return admin_url('admin-ajax.php') . '?action=api-con-manager&api-con-action=service_login&service=' . $this->name;
 	}
 
 	/**
@@ -69,37 +89,49 @@ class API_Con_Service{
 	}
 
 	/**
-	 * Make a request to the remote api
+	 * Make a request to the remote api.
+	 * If not connected will die() with login link, or return login url.
 	 * @param  string $url    endpoint
 	 * @param  array  $params parameters to be sent
 	 * @param  string $method Default GET
-	 * @return API_Con_Consumer Returns API_Con_Error on error.
+	 * @param boolean $die Default true. Wether to die with html login link or return login url, if not connected.
+	 * @return stdClass Returns API_Con_Error on error.
 	 */
-	public function request( $url=null, $params=array(), $method='GET' ){
+	public function request( $url=null, $params=array(), $method='GET', $die=true ){
 
 		//get full target url or return API_Con_Error
 		$url = $this->get_endpoint_http_url( $url );
 		if( is_wp_error( $url ) )
 			return $url;
 		
-		//setup consumer
-		$consumer = API_Con_Manager::get_consumer( $this );
-		
+		//check if connected
 		if( !API_Con_Manager::is_connected( $this ) )
-			$this->connect();
+			if( $die )
+				die( '<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>' );
+			else return $this->get_login_url();
 
-		return $consumer;
+		return new stdClass;
 	}
 
 	/**
 	 * Check if this service is connected
 	 * @return boolean Default false.
 	 */
-	protected function connect(){
+	protected function connect( $action='die' ){
 
 		//OAuth2 connections
 		if( $this->auth_type=='oauth2' ){
 
+			//check for token update
+			
+			//get login url
+		}
+
+		//actions
+		switch( $action ){
+
+			case 'die':
+				die( 'this is a login link' );
 		}
 		return false;
 	}
