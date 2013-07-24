@@ -71,7 +71,7 @@
                     <ul>
 <li class="method private "><a href="#method_bootstrap" title="bootstrap :: Bootstraps the API Connection Manager."><span class="description">Bootstraps the API Connection Manager.</span><pre>bootstrap()</pre></a></li>
 <li class="method private "><a href="#method_request_token" title="request_token :: Oauth 1/2 callback to request token."><span class="description">Oauth 1/2 callback to request token.</span><pre>request_token()</pre></a></li>
-<li class="method private "><a href="#method_service_login" title="service_login :: Redirects to remote authorization service"><span class="description">Redirects to remote authorization service</span><pre>service_login()</pre></a></li>
+<li class="method private "><a href="#method_service_login" title="service_login :: Redirects to remote authorization server."><span class="description">Redirects to remote authorization server.</span><pre>service_login()</pre></a></li>
 </ul>
 </li>
 </ul>
@@ -251,11 +251,12 @@ to the __construct $config param</p></div></div></div>
 </div></div>
 </div>
 <a id="method_service_login"></a><div class="element clickable method private method_service_login" data-toggle="collapse" data-target=".method_service_login .collapse">
-<h2>Redirects to remote authorization service</h2>
+<h2>Redirects to remote authorization server.</h2>
 <pre>service_login(\API_Con_DTO $dto) </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
+<div class="long_description"><p>Service name is taken from $dto->data['service']
+and stored in db.</p></div>
 <table class="table table-bordered"><tr>
 <th>uses</th>
 <td>The url to redirect to</td>
@@ -273,7 +274,7 @@ to the __construct $config param</p></div></div></div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-07-24T20:15:00+01:00.<br></footer></div>
+            generated on 2013-07-24T22:18:52+01:00.<br></footer></div>
 </div>
 </body>
 </html>

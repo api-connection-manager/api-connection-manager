@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 define( 'WP_TESTS_DIR', getenv( 'WP_TESTS_DIR' ) );
 if( !file_exists( WP_TESTS_DIR  ) )

@@ -150,22 +150,31 @@ class API_Con_Manager{
 	 */
 	private function request_token( API_Con_DTO $dto ){
 
-		//do some security
-		
-		return $dto;
+		$key = __CLASS__ . '::service_login';
+		$service = API_Con_Manager::get_service( API_Con_Model::get( $key, true ) );
 		die();
 	}
 
 	/**
-	 * Redirects to remote authorization service
+	 * Redirects to remote authorization server. Service name is taken from $dto->data['service']
+	 * and stored in db.
 	 * @uses  API_Con_Service::get_authorize_url() The url to redirect to
 	 * @param  API_Con_DTO $dto The data transport object
 	 */
 	private function service_login( API_Con_DTO $dto ){
 		
+		//vars
 		$service = API_Con_Manager::get_service( $dto->data['service'] );
 		$url = $service->get_authorize_url();
 
+		//store service in db
+		$key = __CLASS__ . '::service_login';
+		API_Con_Model::set( 
+			$key, 
+			$service->name
+		);
+
+		//redirect & die
 		wp_redirect( $url );
 		die();
 	}

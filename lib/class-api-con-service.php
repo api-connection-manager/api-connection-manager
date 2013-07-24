@@ -38,7 +38,7 @@ class API_Con_Service{
 			@$this->$field = $val;
 
 		//set protected/private fields
-		$this->redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request';
+		$this->redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
 	}
 
 	/**

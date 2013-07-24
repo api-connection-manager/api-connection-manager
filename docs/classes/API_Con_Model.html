@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>phpDocumentor » global</title>
+<title>phpDocumentor » \API_Con_Model</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -51,82 +51,77 @@
                         </div></noscript>
 <div class="row">
 <div class="span4">
-<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
 <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
 </div>
-<ul class="side-nav nav nav-list">
-<li class="nav-header">
-<i class="icon-map-marker"></i> Namespaces</li>
+<ul class="side-nav nav nav-list"><li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method_get" title="get :: Get a value from the db"><span class="description">Get a value from the db</span><pre>get()</pre></a></li>
+<li class="method public "><a href="#method_set" title="set :: Store a value in the db"><span class="description">Store a value in the db</span><pre>set()</pre></a></li>
+</ul>
+</li></ul>
+</div>
+<div class="span8">
+<a id="\API_Con_Model"></a><ul class="breadcrumb">
 <li>
-<a href="../namespaces/global.html" title="global"><i class="icon-th"></i>global</a><ul class="nav nav-list nav-namespaces"></ul>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/global.html">global</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/API_Con_Model.html">API_Con_Model</a>
 </li>
 </ul>
-</div>
-<div class="span8 namespace-contents">
-<ul class="breadcrumb">
-<li>
-<a href="../index.html"><i class="icon-th"></i></a><span class="divider">\</span>
-</li>
-<li class="active"><a href="../namespaces/global.html">global</a></li>
-</ul>
-<div class="namespace-indent">
-<h3>
-<i class="icon-custom icon-class"></i> Classes and interfaces</h3>
-<div id="API_Con_DTO" class="element ajax clickable class">
-<h1>API_Con_DTO<a href="../classes/API_Con_DTO.html">¶</a>
-</h1>
-<p class="short_description">Data Transport Object for handling responses from remote services.</p>
-<div class="details collapse"></div>
-<a href="../classes/API_Con_DTO.html" class="more">« More »</a>
-</div>
-<div id="API_Con_Error" class="element ajax clickable class">
-<h1>API_Con_Error<a href="../classes/API_Con_Error.html">¶</a>
-</h1>
-<p class="short_description">Class for handling ALL errors produced in the running of API Connection Manager.</p>
-<div class="details collapse"></div>
-<a href="../classes/API_Con_Error.html" class="more">« More »</a>
-</div>
-<div id="API_Con_Manager" class="element ajax clickable class">
-<h1>API_Con_Manager<a href="../classes/API_Con_Manager.html">¶</a>
-</h1>
-<p class="short_description">The main class for the API Connection Manager plugin</p>
-<div class="details collapse"></div>
-<a href="../classes/API_Con_Manager.html" class="more">« More »</a>
-</div>
-<div id="API_Con_Model" class="element ajax clickable class">
-<h1>API_Con_Model<a href="../classes/API_Con_Model.html">¶</a>
-</h1>
+<div class="element class">
 <p class="short_description">The main class for the API Con Model</p>
-<div class="details collapse"></div>
-<a href="../classes/API_Con_Model.html" class="more">« More »</a>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/api-connection-manager.html">api-connection-manager</a></td>
+</tr>
+<tr>
+<th>author</th>
+<td><a href="mailto:webeire@gmail.com">Daithi Coobmes</a></td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_get"></a><div class="element clickable method public method_get" data-toggle="collapse" data-target=".method_get .collapse">
+<h2>Get a value from the db</h2>
+<pre>get(string $key, boolean $delete) : mixed</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The key used to store value</p></div>
+<div class="subelement argument">
+<h4>$delete</h4>
+<code>boolean</code><p>Default false. Whether or not db value is deleted</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code>The unserialized value</div>
+</div></div>
 </div>
-<div id="API_Con_Module_Dropbox" class="element ajax clickable class">
-<h1>API_Con_Module_Dropbox<a href="../classes/API_Con_Module_Dropbox.html">¶</a>
-</h1>
-<p class="short_description">Class for defining the dropbox module parameters</p>
-<div class="details collapse"></div>
-<a href="../classes/API_Con_Module_Dropbox.html" class="more">« More »</a>
+<a id="method_set"></a><div class="element clickable method public method_set" data-toggle="collapse" data-target=".method_set .collapse">
+<h2>Store a value in the db</h2>
+<pre>set(string $key, mixed $val) </pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>This is usually the name of the api con class calling this func</p></div>
+<div class="subelement argument">
+<h4>$val</h4>
+<code>mixed</code><p>Anything that $wpdb methods can handle</p>
 </div>
-<div id="API_Con_Module_Github" class="element ajax clickable class">
-<h1>API_Con_Module_Github<a href="../classes/API_Con_Module_Github.html">¶</a>
-</h1>
-<p class="short_description">Class for defining the dropbox module parameters</p>
-<div class="details collapse"></div>
-<a href="../classes/API_Con_Module_Github.html" class="more">« More »</a>
+</div></div>
 </div>
-<div id="API_Con_Service" class="element ajax clickable class">
-<h1>API_Con_Service<a href="../classes/API_Con_Service.html">¶</a>
-</h1>
-<p class="short_description">Class for handling all view actions, such as login forms etc.</p>
-<div class="details collapse"></div>
-<a href="../classes/API_Con_Service.html" class="more">« More »</a>
-</div>
-<div id="API_Con_View" class="element ajax clickable class">
-<h1>API_Con_View<a href="../classes/API_Con_View.html">¶</a>
-</h1>
-<p class="short_description">Class for handling all view actions, such as login forms etc.</p>
-<div class="details collapse"></div>
-<a href="../classes/API_Con_View.html" class="more">« More »</a>
 </div>
 </div>
 </div>
