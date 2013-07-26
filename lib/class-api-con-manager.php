@@ -46,7 +46,7 @@ class API_Con_Manager{
 
 		return new OAuthConsumer( $service->key, $service->secret, $service->get_redirect_url() );
 	}
-	
+
 	public static function get_module_dir(){
 		return dirname( __FILE__ ) . "/../modules";
 	}
@@ -171,8 +171,12 @@ class API_Con_Manager{
 	 */
 	private function bootstrap(){
 
+		//ajax
 		add_action('wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
 		add_action('wp_ajax_nopriv_api-con-manager', array( &$this, 'response_listener' ) );
+
+		//dashboard
+		
 	}
 
 	/**
