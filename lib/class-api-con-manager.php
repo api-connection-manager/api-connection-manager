@@ -46,6 +46,10 @@ class API_Con_Manager{
 
 		return new OAuthConsumer( $service->key, $service->secret, $service->get_redirect_url() );
 	}
+	
+	public static function get_module_dir(){
+		return dirname( __FILE__ ) . "/../modules";
+	}
 
 	/**
 	 * Factory method to get service object
@@ -70,6 +74,33 @@ class API_Con_Manager{
 		$service->name = $name;
 
 		return $service;
+	}
+
+	/**
+	 * Get range of service modules, depending on $type
+	 * @param  enum $type Default all. 'active'|'inactive'
+	 * @return array       An array of services, if all then returns array['active'] and array['inactive']
+	 */
+	public static function get_services( $type=null ){
+		
+		$module_dir = API_Con_Manager::get_module_dir();
+		var_dump($module_dir);
+		switch ($type) {
+
+			case 'inactive':
+				;
+				break;
+			
+
+			case 'active':
+				;
+				break;
+
+			//default return all services
+			default:
+				# code...
+				break;
+		}
 	}
 
 	/**
