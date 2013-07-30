@@ -47,6 +47,10 @@ class API_Con_Manager{
 		return new OAuthConsumer( $service->key, $service->secret, $service->get_redirect_url() );
 	}
 
+	/**
+	 * Get the serivce module directory
+	 * @return string
+	 */
 	public static function get_module_dir(){
 		return dirname( __FILE__ ) . "/../modules";
 	}
@@ -79,12 +83,12 @@ class API_Con_Manager{
 	/**
 	 * Get range of service modules, depending on $type
 	 * @param  enum $type Default all. 'active'|'inactive'
+	 * @todo  try implement WP_Filesystem for scanning the modules directory
 	 * @return array       An array of services, if all then returns array['active'] and array['inactive']
 	 */
 	public static function get_services( $type=null ){
+		$services = array();
 		
-		$module_dir = API_Con_Manager::get_module_dir();
-		var_dump($module_dir);
 		switch ($type) {
 
 			case 'inactive':
@@ -93,14 +97,30 @@ class API_Con_Manager{
 			
 
 			case 'active':
-				;
+					$db_services = API_Con_Model::get('services');
+					return $db_services['active'];
 				break;
+
+			case 'installed':
+				$handle = opendir( self::get_module_dir() );
+
+				while( false !== ( $file = readdir( $handle ) ) ){
+					if( $file=='.' || $file=='..' )
+						continue;
+
+					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
+					$services[] = ucfirst( $matches[0] );
+				}
+			break;
 
 			//default return all services
 			default:
 				# code...
 				break;
+
 		}
+
+		return $services;
 	}
 
 	/**
@@ -124,6 +144,38 @@ class API_Con_Manager{
 
 		$url = str_replace("-", "", $url);
 		return filter_var($url, FILTER_VALIDATE_URL);
+	}
+
+	/**
+	 * Register the dashboard menus
+	 */
+	public function action_admin_menu(){
+		//dashboard
+		add_menu_page( 
+			'API Connection Manager', 
+			'API Manager',
+			'manage_options',
+			'api-con-manager',
+			array(&$this, 'get_page')
+		);
+
+		//services
+		$services = new API_Con_Dash_Service();
+		add_submenu_page(
+			'api-con-manager',
+			'API Con Services',
+			'Services',
+			'manage_options',
+			'api-con-services',
+			array(&$services, 'get_page')
+			);
+	}
+
+	/**
+	 * Print the main API Con dashboard page
+	 */
+	public function get_page(){
+		print '<h1>API Connection Manager</h1>';
 	}
 
 	/**
@@ -172,11 +224,9 @@ class API_Con_Manager{
 	private function bootstrap(){
 
 		//ajax
-		add_action('wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
-		add_action('wp_ajax_nopriv_api-con-manager', array( &$this, 'response_listener' ) );
-
-		//dashboard
-		
+		add_action( 'wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
+		add_action( 'wp_ajax_nopriv_api-con-manager', array( &$this, 'response_listener' ) );
+		add_action( 'admin_menu', array( &$this, 'action_admin_menu' ) );
 	}
 
 	/**
