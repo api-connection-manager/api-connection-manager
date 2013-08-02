@@ -20,7 +20,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 	function __construct(){
 		parent::__construct( array(
 			'singular' => 'api_con_dash_service',
-			'plural' => 'api_con_dash_services'
+			'plural' => 'api_con_dash_services',
 		) );
 	}
 
@@ -32,7 +32,7 @@ class API_Con_Dash_Service extends WP_List_Table{
     function column_cb($item){
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
+            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("service")
             /*$2%s*/ $item->name                //The value of the checkbox should be the record's id
         );
     }
@@ -56,8 +56,8 @@ class API_Con_Dash_Service extends WP_List_Table{
         
         //Build row actions
         $actions = array(
-            'edit'      => sprintf('<a href="?page=%s&action=%s&movie=%s">Edit</a>',$_REQUEST['page'],'edit',$item->name),
-            'delete'    => sprintf('<a href="?page=%s&action=%s&movie=%s">Delete</a>',$_REQUEST['page'],'delete',$item->name),
+            'activate'      => sprintf('<a href="?page=%s&action=%s&api_con_dash_service=%s">Activate</a>',$_REQUEST['page'],'activate',$item->name),
+            'deactivate'    => sprintf('<a href="?page=%s&action=%s&api_con_dash_service=%s">Deactivate</a>',$_REQUEST['page'],'deactivate',$item->name),
         );
         
         //Return the title contents
@@ -142,7 +142,8 @@ class API_Con_Dash_Service extends WP_List_Table{
     	//vars
     	$action = $_GET['action'];
 		$db_services = API_Con_Model::get('services');
-    	$services = $_GET['api_con_dash_service'];
+    	$services = (array) $_GET['api_con_dash_service'];
+    	
     	if( $action=='activate' ){
     		$update='active';
     		$delete='inactive';
