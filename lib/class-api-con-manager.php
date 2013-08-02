@@ -66,7 +66,7 @@ class API_Con_Manager{
 			return new API_Con_Error( 'No service name specified' );
 
 		//load file
-		$service_path = dirname( __FILE__ ) . '/../modules/class-' . $name . '.php';
+		$service_path = dirname( __FILE__ ) . '/../modules/class-' . strtolower( $name ) . '.php';
 		if( !file_exists( $service_path ) )
 			return new API_Con_Error( 'Can\'t find module for ' . $name );
 		else
@@ -227,6 +227,7 @@ class API_Con_Manager{
 		add_action( 'wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
 		add_action( 'wp_ajax_nopriv_api-con-manager', array( &$this, 'response_listener' ) );
 		add_action( 'admin_menu', array( &$this, 'action_admin_menu' ) );
+
 	}
 
 	/**

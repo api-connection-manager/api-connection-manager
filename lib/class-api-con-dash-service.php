@@ -22,6 +22,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 			'singular' => 'api_con_dash_service',
 			'plural' => 'api_con_dash_services',
 		) );
+
 	}
 
 	/**
@@ -58,14 +59,19 @@ class API_Con_Dash_Service extends WP_List_Table{
         $actions = array(
             'activate'      => sprintf('<a href="?page=%s&action=%s&api_con_dash_service=%s">Activate</a>',$_REQUEST['page'],'activate',$item->name),
             'deactivate'    => sprintf('<a href="?page=%s&action=%s&api_con_dash_service=%s">Deactivate</a>',$_REQUEST['page'],'deactivate',$item->name),
+            'edit'			=> sprintf('<a href="#" class="api-con-dash-inline" id="inline-%s">Edit</a>',$item->name)
         );
         
         //Return the title contents
-        return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
+        $ret = sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
             /*$1%s*/ $item->name,
             /*$2%s*/ $item->name,
             /*$3%s*/ $this->row_actions($actions)
         );
+
+        $inline = $this->inline_edit( $item );
+
+        return $ret . $inline;
     }
 
     /**
@@ -135,6 +141,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 	/**
 	 * Process bulk actions
+	 * @todo  setup nonces for all bulk actions
 	 * @return  void
 	 */
     function process_bulk_action() {
@@ -143,19 +150,35 @@ class API_Con_Dash_Service extends WP_List_Table{
     	$action = $_GET['action'];
 		$db_services = API_Con_Model::get('services');
     	$services = (array) $_GET['api_con_dash_service'];
+
+    	//check nonce
+    	if( $action ){
+	    	//if( !wp_verify_nonce( '963a1db024', 'api-con-dash' ) );
+	    		//die('invalid nonce');
+	    }
     	
-    	if( $action=='activate' ){
+    	//save inline-edit form
+    	if( 'inline-edit'==$action ){
+    		$service = API_Con_Manager::get_service( $_GET['api_con_dash_service'] );
+    		$options = $service->get_options();
+
+    		foreach( $options as $key=>$val )
+    			if( @$_GET[ $key ] )
+    				$options[ $key ] = $_GET[ $key ];
+
+    		$service->set_options( $options );
+    	}
+    	//activate/deactivate
+    	elseif( $action=='activate' ){
     		$update='active';
     		$delete='inactive';
-    	}else{
+    	}elseif( $action=='deactivate' ){
     		$update='inactive';
     		$delete='active';
-    	}
-
-    	if( !@$action )
+    	}else
     		return;
 
-    	//update/delete active/inactive table entries
+    	//rebuild services[]
 		foreach($services as $service ){
 			if( false!==($key=array_search($service, $db_services[$delete])))
 				unset( $db_services[$delete][$key] );
@@ -168,21 +191,105 @@ class API_Con_Dash_Service extends WP_List_Table{
 		return;
     }
 
+    function single_row_columns( $item ){
+		list( $columns, $hidden ) = $this->get_column_info();
+
+		foreach ( $columns as $column_name => $column_display_name ) {
+			$class = "class='$column_name column-$column_name'";
+
+			$style = '';
+			if ( in_array( $column_name, $hidden ) )
+				$style = ' style="display:none;"';
+
+			$attributes = "$class$style";
+
+			if ( 'cb' == $column_name ) {
+				echo '<th scope="row" class="check-column">';
+				echo $this->column_cb( $item );
+				echo '</th>';
+			}
+			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
+				echo "<td $attributes>";
+				echo call_user_func( array( &$this, 'column_' . $column_name ), $item );
+				echo "</td>";
+			}
+			else {
+				echo "<td $attributes>";
+				echo $this->column_default( $item, $column_name );
+				echo "</td>";
+			}
+		}
+
+		//inline edit
+    }
+
 	/**
 	 * Prints the dashboard services page for API Connection Manager.
 	 * This page allows the activating/deactivating of services
 	 * @see  API_Con_Manager::action_admin_menu()
 	 */
-	public static function get_page(){
+	public function get_page(){
 
-		$dash_services = new API_Con_Dash_Service();
-		$dash_services->prepare_items();
+		//$dash_services = new API_Con_Dash_Service();
+		$this->prepare_items();
+		$inline_nonce = wp_create_nonce('api-con-dash');
 
 		?>
         <form id="api-con-dash-services" method="get">
         	<input type="hidden" name="page" value="<?php echo $_GET['page']?>"/>
-            <?php $dash_services->display() ?>
+            <?php $this->display() ?>
         </form>
+
+		<script type="text/javascript">
+
+			//submit inline edit
+			jQuery('.api-con-dash-inline-btn').click(function(){
+				var id = jQuery(this).attr('id').substr(7);
+				var inputs = jQuery('input[type="text"]','#api-con-dash-inline-'+id);
+				var url = document.URL.replace('#','');
+
+				inputs.each(function(){
+					if(this.value)
+						url += "&" + this.name + "=" + this.value;
+				})
+				
+				window.location.href = url + '&api_con_dash_service='+id+'&action=inline-edit&wpnonce=<?php echo $inline_nonce; ?>';
+			});
+
+			//show inline edit form
+			jQuery('.api-con-dash-inline').click(function(){
+				var id = jQuery(this).attr('id').substr(7);
+
+				jQuery('.api-con-dash-hidden').hide();
+				jQuery('#api-con-dash-inline-'+id).show()
+					.children('input').each(function(){
+						jQuery(this).removeAttr('disabled');
+					});
+			});
+		</script>
 		<?php
+
+	}
+
+	public function inline_edit( $item=null ){
+		if( !$item )
+			return;
+		
+		$service = API_Con_Manager::get_service( $item->name );
+		$options = $service->get_options();
+		if( !count($options) )
+			return;
+		
+		$ret = '<div class="api-con-dash-hidden" id="api-con-dash-inline-' . $item->name . '">';
+
+		foreach($options as $key=>$val){
+			$ret .= '<label for="' . $key . '">' . $key . '</label>';
+			$ret .= '<input type="text" name="' . $key . '" id="' . $key . '" value="' . $val . '" disabled/>';
+		}
+		
+		$ret .= '<input type="button" class="api-con-dash-inline-btn" id="inline-' . $item->name . '" value="Save" disabled/>
+		</div>';
+
+		return $ret;
 	}
 }

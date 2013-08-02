@@ -24,6 +24,8 @@ class API_Con_Service{
 	protected $consumer;
 	/** @var string The endpoint url */
 	protected $endpoint;
+	/** @var array An associative array of options for this service */
+	protected $options;
 	/** @var string The redirect URI for this blog. @see API_Con_Service::__construct() */
 	protected $redirect_url;
 	/** @var string The URI for requesting an access token */
@@ -82,6 +84,10 @@ class API_Con_Service{
 		return admin_url('admin-ajax.php') . '?action=api-con-manager&api-con-action=service_login&service=' . $this->name;
 	}
 
+	public function get_options(){
+		return $this->options;
+	}
+
 	/**
 	 * Get redirect url for this service
 	 * @return string
@@ -111,6 +117,17 @@ class API_Con_Service{
 
 		parse_str( $res['body'], $body );
 		return new OAuthToken( $body['access_token'], null );
+	}
+
+	/**
+	 * Register the option names
+	 * @param  array  $keys The option keys
+	 */
+	public function register_options( array $keys ){
+
+		foreach($keys as $key)
+			$this->options[$key] = "";
+		$this->load_options();
 	}
 
 	/**
@@ -150,6 +167,25 @@ class API_Con_Service{
 	}
 
 	/**
+	 * Store options
+	 * @param array $options Array of key value pairs.
+	 */
+	public function set_options( array $options ){
+
+		$service_options = API_Con_Model::get("service_options");
+		if( !$service_options )
+			$service_options = array();
+
+		foreach($options as $key=>$val)
+			if( isset($this->options[ $key ]) )
+				$service_options[ $this->name ][ $key ] = $val;
+
+		API_Con_Model::set("service_options", $service_options);
+
+		$this->load_options();
+	}
+
+	/**
 	 * Builds the endpoint url
 	 * @param  string $target Default null. The target to append to $this->endpoint
 	 * @return mixed         Returns (string) $url or API_Con_Error if error
@@ -169,5 +205,21 @@ class API_Con_Service{
 			return new API_Con_Error('Please provide a valid url');
 
 		return $url;
+	}
+
+	/**
+	 * Load options from the db
+	 * @return array Also returns the options
+	 */
+	protected function load_options(){
+
+		$service_options = API_Con_Model::get("service_options");
+		$options = $service_options[ $this->name ];
+
+		if(count($options))
+			foreach( $options as $key=>$val )
+				$this->options[$key] = $val;
+
+		return $options;
 	}
 }
