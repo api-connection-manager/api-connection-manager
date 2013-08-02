@@ -75,7 +75,6 @@ class API_Con_Manager{
 		//construct service
 		$class = 'API_Con_Module_' . ucfirst($name);
 		$service = new $class();
-		$service->name = $name;
 
 		return $service;
 	}
@@ -84,6 +83,7 @@ class API_Con_Manager{
 	 * Get range of service modules, depending on $type
 	 * @param  enum $type Default all. 'active'|'inactive'
 	 * @todo  try implement WP_Filesystem for scanning the modules directory
+	 * @todo  write unit tests
 	 * @return array       An array of services, if all then returns array['active'] and array['inactive']
 	 */
 	public static function get_services( $type=null ){

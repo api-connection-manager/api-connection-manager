@@ -7,6 +7,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 	function setUp(){
 		require_once( 'lib/class-api-con-manager.php' );
 		$this->obj = new API_Con_Manager();
+
 	}
 
 	function test_factory(){
@@ -19,20 +20,38 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 	}
 
 	function test_get_consumer(){
-		$service = API_Con_Manager::get_service( 'dropbox' );
+		$service = API_Con_Manager::get_service( 'facebook' );
+		$service->key = 'foo';
+		$service->secret = 'bar';
 		$this->assertInstanceOf( 'OAuthConsumer', API_Con_Manager::get_consumer( $service ) );
 		
 		$service->key = null;
 		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::get_consumer( $service ) );
 	}
 
+	function test_get_module_dir(){
+		$this->assertEquals(
+			dirname(dirname(dirname( __FILE__ ))) . "/lib/../modules",
+			API_Con_Manager::get_module_dir()
+		);
+	}
+
 	function test_get_service() {
 		$service = API_Con_Manager::get_service( 'dropbox' );
-		
 		$this->assertInstanceOf(
 			'API_Con_Service',
 			$service
 		);
+
+		$service = API_Con_Manager::get_service( 'foo' );
+		$this->assertInstanceOf(
+			'API_Con_Error',
+			$service
+		);
+	}
+
+	function test_get_services(){
+		var_dump( API_Con_Manager::get_services() );
 	}
 
 	function test_response_listener(){

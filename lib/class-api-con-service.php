@@ -34,8 +34,16 @@ class API_Con_Service{
 	/**
 	 * When extending this class you must specify params
 	 * @param array $args Parameters
+	 * @param  string $class The child class name
 	 */
-	function __construct( array $args ){
+	function __construct( array $args, $class ){
+
+		if( $args['options'] )
+			$this->register_options( $args['options'] );
+		unset( $args['options'] );
+
+		$this->name = str_replace("API_Con_Module_", "", $class);
+		$this->load_options();
 
 		//set config
 		foreach( $args as $field => $val )
@@ -84,6 +92,10 @@ class API_Con_Service{
 		return admin_url('admin-ajax.php') . '?action=api-con-manager&api-con-action=service_login&service=' . $this->name;
 	}
 
+	/**
+	 * Returns the optiions for this service
+	 * @return array
+	 */
 	public function get_options(){
 		return $this->options;
 	}
@@ -123,10 +135,12 @@ class API_Con_Service{
 	 * Register the option names
 	 * @param  array  $keys The option keys
 	 */
-	public function register_options( array $keys ){
+	protected function register_options( array $keys ){
 
-		foreach($keys as $key)
-			$this->options[$key] = "";
+		$this->options = array();
+		foreach( $keys as $key )
+			$this->options[ $key ] = '';
+
 		$this->load_options();
 	}
 
@@ -179,10 +193,10 @@ class API_Con_Service{
 		foreach($options as $key=>$val)
 			if( isset($this->options[ $key ]) )
 				$service_options[ $this->name ][ $key ] = $val;
-
+		
 		API_Con_Model::set("service_options", $service_options);
 
-		$this->load_options();
+		$this->options = $service_options[ $this->name ];
 	}
 
 	/**
@@ -192,7 +206,7 @@ class API_Con_Service{
 	 */
 	protected function get_endpoint_http_url( $target=null ){
 
-		if( preg_match('/^http/', $target) )
+		if( preg_match( '/^http/', $target ) )
 			return $target;
 
 		//build full url
@@ -202,7 +216,7 @@ class API_Con_Service{
 			$url = $target;
 
 		if( !API_Con_Manager::valid_url( $url ) ) 
-			return new API_Con_Error('Please provide a valid url');
+			return new API_Con_Error( 'Please provide a valid url' );
 
 		return $url;
 	}
@@ -211,15 +225,15 @@ class API_Con_Service{
 	 * Load options from the db
 	 * @return array Also returns the options
 	 */
-	protected function load_options(){
+	public function load_options(){
 
-		$service_options = API_Con_Model::get("service_options");
+		$service_options = API_Con_Model::get( "service_options" );
 		$options = $service_options[ $this->name ];
 
-		if(count($options))
+		if( count( $options ) )
 			foreach( $options as $key=>$val )
 				$this->options[$key] = $val;
 
-		return $options;
+		return $this->options;
 	}
 }

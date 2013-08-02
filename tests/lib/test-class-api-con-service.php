@@ -9,7 +9,7 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 	}
 
 	function test_get_authorize_url(){
-		$auth_url = "https://www.dropbox.com/1/oauth2/authorize?client_id=rlloodn1vrhfaqa&response_type=code&redirect_uri=http%3A%2F%2Fexample.org%2Fwp-admin%2Fadmin-ajax.php%3Faction%3Dapi-con-manager%26api-con-action%3Drequest_token";
+		$auth_url = "https://www.dropbox.com/1/oauth2/authorize?response_type=code&redirect_uri=http%3A%2F%2Fexample.org%2Fwp-admin%2Fadmin-ajax.php%3Faction%3Dapi-con-manager%26api-con-action%3Drequest_token";
 		$this->assertEquals( $auth_url, $this->obj->get_authorize_url() );
 		$this->obj->auth_url = null;
 		$this->assertInstanceOf( 'API_Con_Error', $this->obj->get_authorize_url() );
@@ -32,7 +32,7 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 
 		//service not connected, login url returned
 		$this->assertEquals( 
-			'http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&api-con-action=service_login&service=dropbox', 
+			'http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&api-con-action=service_login&service=Dropbox',
 			$this->obj->request( 'http://example-foo.com/bar?x=z', null, null, false )
 		);
 	}

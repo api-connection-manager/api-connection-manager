@@ -23,10 +23,8 @@ if( !class_exists( 'API_Con_Module_Facebook' ) ):
 				'auth_type' => 'oauth2',
 				'auth_url' => 'https://www.Facebook.com/1/oauth2/authorize',
 				'endpoint' => 'https://api.dropbox.com/1',
-			) );
-
-			//register this modules options
-			$this->register_options( array( 'key', 'secret' ) );
+				'options' => array( 'key', 'secret' ),
+			), __CLASS__ );
 		}
 	}
 endif;

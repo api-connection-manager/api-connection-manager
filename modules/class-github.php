@@ -23,10 +23,9 @@ if( !class_exists( 'API_Con_Module_Github' ) ):
 				'auth_type' => 'oauth2',
 				'auth_url' => 'https://github.com/login/oauth/authorize',
 				'endpoint' => 'https://api.dropbox.com/1',
-				'key' => '8908cc4735de08bd2a4a',
-				'secret' => 'd8ba51ba9a9c1ef55f9890bb2430ff6a947c8c32',
+				'options' => array('key','secret'),
 				'token_url' => 'https://github.com/login/oauth/access_token'
-			) );
+			), __CLASS__ );
 		}
 	}
 endif;

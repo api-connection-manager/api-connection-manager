@@ -22,8 +22,9 @@ if( !class_exists( 'API_Con_Module_Dropbox' ) ):
 			parent::__construct( array(
 				'auth_type' => 'oauth2',
 				'auth_url' => 'https://www.dropbox.com/1/oauth2/authorize',
-				'endpoint' => 'https://api.dropbox.com/1'
-			) );
+				'endpoint' => 'https://api.dropbox.com/1',
+				'options' => array( 'key', 'secret' )
+			), __CLASS__ );
 		}
 	}
 endif;

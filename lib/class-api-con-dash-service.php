@@ -167,7 +167,11 @@ class API_Con_Dash_Service extends WP_List_Table{
     				$options[ $key ] = $_GET[ $key ];
 
     		$service->set_options( $options );
+    		
+    		$service = API_Con_Manager::get_service( $_GET['api_con_dash_service'] );
+    		$options = $service->get_options();
     	}
+
     	//activate/deactivate
     	elseif( $action=='activate' ){
     		$update='active';
@@ -191,6 +195,10 @@ class API_Con_Dash_Service extends WP_List_Table{
 		return;
     }
 
+    /**
+     * Echo out single row html
+     * @param  stdClass $item The current item
+     */
     function single_row_columns( $item ){
 		list( $columns, $hidden ) = $this->get_column_info();
 
@@ -242,6 +250,8 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 		<script type="text/javascript">
 
+			jQuery('.api-con-dash-hidden').hide();
+
 			//submit inline edit
 			jQuery('.api-con-dash-inline-btn').click(function(){
 				var id = jQuery(this).attr('id').substr(7);
@@ -271,6 +281,11 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 	}
 
+	/**
+	 * Build hmtl for inline edit form
+	 * @param  stdclass $item current item
+	 * @return string       the html
+	 */
 	public function inline_edit( $item=null ){
 		if( !$item )
 			return;
@@ -280,7 +295,8 @@ class API_Con_Dash_Service extends WP_List_Table{
 		if( !count($options) )
 			return;
 		
-		$ret = '<div class="api-con-dash-hidden" id="api-con-dash-inline-' . $item->name . '">';
+		$ret = '<div class="api-con-dash-hidden" id="api-con-dash-inline-' . $item->name . '">
+			<p>Redirect URL:<br/> <b>' . $service->get_redirect_url() . '</b></p>';
 
 		foreach($options as $key=>$val){
 			$ret .= '<label for="' . $key . '">' . $key . '</label>';
