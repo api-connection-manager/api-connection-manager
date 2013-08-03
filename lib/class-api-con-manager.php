@@ -202,7 +202,7 @@ class API_Con_Manager{
 	 */
 	public function action_admin_menu(){
 		//dashboard
-		add_menu_page( 
+		$menu = add_menu_page( 
 			'API Connection Manager', 
 			'API Manager',
 			'manage_options',
@@ -212,7 +212,7 @@ class API_Con_Manager{
 
 		//services
 		$services = new API_Con_Dash_Service();
-		add_submenu_page(
+		$submenu = add_submenu_page(
 			'api-con-manager',
 			'API Con Services',
 			'Services',
@@ -220,6 +220,8 @@ class API_Con_Manager{
 			'api-con-services',
 			array(&$services, 'get_page')
 			);
+
+		return array( $menu, $submenu, $services );
 	}
 
 	/**
@@ -234,6 +236,7 @@ class API_Con_Manager{
 	 * Can be used outside of ajax by passing object type API_Con_DTO with
 	 * necessary data.
 	 * @param  mixed $dto Default null. If used outside ajax pass a valid API_Con_DTO here
+	 * @todo  write unit tests
 	 * @return mixed Returns API_Con_DTO if all ok, or API_Con_Error if error
 	 */
 	public function response_listener( $dto=null ){
