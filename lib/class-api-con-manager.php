@@ -199,6 +199,7 @@ class API_Con_Manager{
 
 	/**
 	 * Register the dashboard menus
+	 * @return  array Returns admin slug, sub menu slug, API_Con_Dash_Service
 	 */
 	public function action_admin_menu(){
 		//dashboard
