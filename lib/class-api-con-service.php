@@ -147,31 +147,27 @@ class API_Con_Service{
 
 	/**
 	 * Make a request to the remote api.
-	 * If not connected will die() with login link, or print login url.
+	 * If not connected will return API_Con_Error with login link as message
 	 * @param  string $url    endpoint
 	 * @param  array  $params parameters to be sent
 	 * @param  string $method Default GET
-	 * @param boolean $die Default true. Wether to die with html login link or return login url, if not connected.
 	 * @param boolean $check_connect Default true. Whether to test if connected or not.
 	 * @return stdClass Returns API_Con_Error on error.
 	 */
-	public function request( $url=null, $params=array(), $method='GET', $die=true, $check_connect=true ){
+	public function request( $url=null, $params=array(), $method='GET', $check_connect=true ){
 
 		//get full target url or return API_Con_Error
 		$url = $this->get_endpoint_http_url( $url );
 		if( is_wp_error( $url ) )
 			return $url;
-		
-		//check if connected
+
+		//if not connected return error with login link
+		//its up to the plugin dev to work out if they want to print it etc
 		if( 
 			!API_Con_Manager::is_connected( $this ) &&
 			$check_connect
-		){
-			$link = '<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>';
-			if( $die )
-				die( $link );
-			else print $link;
-		}
+		)
+			return new API_Con_Error('<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>');
 
 		if( strtolower( $method )==='get' )
 			$res = wp_remote_get( $url, $params );
@@ -186,13 +182,13 @@ class API_Con_Service{
 	 * @param array $options Array of key value pairs.
 	 */
 	public function set_options( array $options ){
-
+		
 		$service_options = API_Con_Model::get("service_options");
 		if( !$service_options )
 			$service_options = array();
 
 		foreach($options as $key=>$val)
-			if( isset($this->options[ $key ]) )
+			if( array_key_exists( $key, $this->options ) )
 				$service_options[ $this->name ][ $key ] = $val;
 		
 		API_Con_Model::set("service_options", $service_options);

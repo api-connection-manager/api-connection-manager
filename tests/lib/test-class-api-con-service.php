@@ -3,9 +3,12 @@
 class API_Con_ServiceTest extends WP_UnitTestCase{
 
 	protected $obj;
+	protected $service;
 
 	function setUp(){
-		$this->obj = API_Con_Manager::get_service('dropbox');
+		$this->obj = API_Con_Manager::get_service( 'dropbox' );
+		$this->service = API_Con_Manager::get_service( 'facebook' );
+		$res = $this->service->set_options( array( 'key'=>'foo', 'secret'=>'bar' ) );
 	}
 
 	function test_get_authorize_url(){
@@ -23,8 +26,7 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 	}
 
 	function test_get_options(){
-		$service = API_Con_Manager::get_service( 'facebook' );
-		$this->assertEquals( array('key'=>"",'secret'=>""), $service->get_options() );
+		$this->assertEquals( array('key'=>"foo",'secret'=>"bar"), $this->service->get_options() );
 	}
 
 	function test_get_redirect_url(){
@@ -35,10 +37,13 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 
 	function test_request(){
 
+		$res = $this->obj->request('http://example-foo.com/bar?x=z');
+		$this->assertInstanceOf('API_Con_Error', $res);
+
 		//service not connected, login url returned
 		$this->assertEquals( 
-			'http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&api-con-action=service_login&service=Dropbox',
-			$this->obj->request( 'http://example-foo.com/bar?x=z', null, null, false )
+			'<a href="http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&api-con-action=service_login&service=Dropbox" target="_new">Login to Dropbox</a>',
+			$res->get_error_message()
 		);
 	}
 }

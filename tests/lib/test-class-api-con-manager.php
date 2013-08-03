@@ -3,16 +3,18 @@
 class API_Con_ManagerTest extends WP_UnitTestCase {
 
 	protected $obj;
+	protected $service;
 	protected $user;
 
 	function setUp(){
 		require_once( 'lib/class-api-con-manager.php' );
 		$this->obj = new API_Con_Manager();
+		$this->service = API_Con_Manager::get_service( 'facebook' );
+		$this->service->set_options( array( 'key'=>'foo', 'secret'=>'bar' ) );
 		$this->user = @wp_signon( array(
 			'user_login' => 'admin',
 			'user_password' => 'password'
 			));
-
 	}
 
 	function test_factory(){
@@ -25,13 +27,10 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 	}
 
 	function test_get_consumer(){
-		$service = API_Con_Manager::get_service( 'facebook' );
-		$service->key = 'foo';
-		$service->secret = 'bar';
-		$this->assertInstanceOf( 'OAuthConsumer', API_Con_Manager::get_consumer( $service ) );
+		$this->assertInstanceOf( 'OAuthConsumer', API_Con_Manager::get_consumer( $this->service ) );
 		
-		$service->key = null;
-		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::get_consumer( $service ) );
+		$this->service->set_options( array( 'key'=>null ) );
+		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::get_consumer( $this->service ) );
 	}
 
 	function test_get_module_dir(){
@@ -42,21 +41,18 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 	}
 
 	function test_get_service() {
-		$service = API_Con_Manager::get_service( 'dropbox' );
 		$this->assertInstanceOf(
 			'API_Con_Service',
-			$service
+			API_Con_Manager::get_service('facebook')
 		);
 
-		$service = API_Con_Manager::get_service( 'foo' );
 		$this->assertInstanceOf(
 			'API_Con_Error',
-			$service
+			API_Con_Manager::get_service('foo')
 		);
 	}
 
 	function test_get_services(){
-		API_Con_Manager::set_service_states( array('facebook'), 'active' );
 		$this->assertTrue( in_array('Facebook', API_Con_Manager::get_services('active') ) );
 	}
 
@@ -66,7 +62,6 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 	}
 
 	function test_set_service_state(){
-		$service = array(API_Con_Manager::get_service( 'facebook' ));
 		API_Con_Manager::set_service_states( array('facebook'), 'deactivate' );
 		$this->assertTrue( API_Con_Manager::set_service_states( array('facebook'), 'activate' ) );
 
