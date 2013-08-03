@@ -15,17 +15,22 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 		$this->assertInstanceOf( 'API_Con_Error', $this->obj->get_authorize_url() );
 	}
 
-	function test_get_redirect_url(){
-		$test = $this->obj->get_redirect_url();
-		$redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
-			$this->assertEquals( $test, $redirect_url );
-	}
-
-	function test_login_url(){
+	function test_get_login_url(){
 		$this->obj->name = 'dropbox';
 		$test = admin_url('admin-ajax.php') . '?action=api-con-manager&api-con-action=service_login&service=' . $this->obj->name;
 		$res = $this->obj->get_login_url();
 		$this->assertEquals( $test, $res );
+	}
+
+	function test_get_options(){
+		$service = API_Con_Manager::get_service( 'facebook' );
+		$this->assertEquals( array('key'=>"",'secret'=>""), $service->get_options() );
+	}
+
+	function test_get_redirect_url(){
+		$test = $this->obj->get_redirect_url();
+		$redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
+			$this->assertEquals( $test, $redirect_url );
 	}
 
 	function test_request(){

@@ -170,8 +170,6 @@ class API_Con_Service{
 				die( '<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>' );
 			else return $this->get_login_url();
 
-		var_dump( $url );
-
 		if( strtolower( $method )==='get' )
 			$res = wp_remote_get( $url, $params );
 		else

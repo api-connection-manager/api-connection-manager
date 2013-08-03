@@ -3,7 +3,7 @@
   <file path="lib/class-api-con-model.php" hash="422d33d2ebd64acc49851734938ddd02" package="Default">
     <docblock line="2">
       <description>The main file for the API Connection Manager Plugin</description>
-      <long-description></long-description>
+      <long-description/>
       <tag line="2" name="author" description="Daithi Coombes &lt;webeire@gmail.com&gt;"/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="12" package="api-connection-manager">
@@ -12,7 +12,7 @@
       <full_name>\API_Con_Model</full_name>
       <docblock line="7">
         <description>The main class for the API Con Model</description>
-        <long-description></long-description>
+        <long-description/>
         <tag line="7" name="package" description="api-connection-manager"/>
         <tag line="7" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
       </docblock>
@@ -21,7 +21,7 @@
         <full_name>get</full_name>
         <docblock line="14">
           <description>Get a value from the db</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="14" name="param" description="The key used to store value" type="string" variable="$key">
             <type by_reference="false">string</type>
           </tag>
@@ -34,7 +34,7 @@
         </docblock>
         <argument line="20">
           <name>$key</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
         <argument line="20">
@@ -48,7 +48,7 @@
         <full_name>set</full_name>
         <docblock line="30">
           <description>Store a value in the db</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="30" name="param" description="This is usually the name of the api con class calling this func" type="string" variable="$key">
             <type by_reference="false">string</type>
           </tag>
@@ -58,12 +58,12 @@
         </docblock>
         <argument line="35">
           <name>$key</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
         <argument line="35">
           <name>$val</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -135,7 +135,7 @@
   <file path="lib/class-api-con-dash-service.php" hash="942693fe059a1b4e9f19c608df491528" package="Default">
     <docblock line="2">
       <description>File for API_Con_Dash_Service class</description>
-      <long-description></long-description>
+      <long-description/>
       <tag line="2" name="author" description="Daithi Coombes &lt;webeire@gmail.com&gt;"/>
     </docblock>
     <class final="false" abstract="false" namespace="global" line="14" package="api-connection-manager">
@@ -145,7 +145,7 @@
       <docblock line="7">
         <description>This class handles displaying the dashboard page for activating/installing
 service modules.</description>
-        <long-description></long-description>
+        <long-description/>
         <tag line="7" name="see" description="\global\API_Con_Manager::action_admin_menu()" refers="\global\API_Con_Manager::action_admin_menu()"/>
         <tag line="7" name="package" description="api-connection-manager"/>
         <tag line="7" name="author" description="Daithi Coombes &lt;webeire@gmail.com&gt;"/>
@@ -155,7 +155,7 @@ service modules.</description>
         <full_name>__construct</full_name>
         <docblock line="16">
           <description>Call parent __construct()</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="16" name="see" description="\WP_List_Table::__construct()" refers="\WP_List_Table::__construct()"/>
         </docblock>
       </method>
@@ -164,7 +164,7 @@ service modules.</description>
         <full_name>column_cb</full_name>
         <docblock line="28">
           <description>Prints the checkbox column</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="28" name="param" description="The row item" type="\stdclass" variable="$item">
             <type by_reference="false">\stdclass</type>
           </tag>
@@ -174,7 +174,7 @@ service modules.</description>
         </docblock>
         <argument line="33">
           <name>$item</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -183,7 +183,7 @@ service modules.</description>
         <full_name>column_default</full_name>
         <docblock line="41">
           <description>The default column html</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="41" name="param" description="The row item" type="\stdClass" variable="$item">
             <type by_reference="false">\stdClass</type>
           </tag>
@@ -196,12 +196,12 @@ service modules.</description>
         </docblock>
         <argument line="47">
           <name>$item</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
         <argument line="47">
           <name>$column_name</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -210,7 +210,7 @@ service modules.</description>
         <full_name>column_name</full_name>
         <docblock line="51">
           <description>The html for the 'name' column</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="51" name="param" description="The current item" type="\stdClass" variable="$item">
             <type by_reference="false">\stdClass</type>
           </tag>
@@ -220,7 +220,7 @@ service modules.</description>
         </docblock>
         <argument line="56">
           <name>$item</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -229,7 +229,7 @@ service modules.</description>
         <full_name>get_bulk_actions</full_name>
         <docblock line="77">
           <description>Register bulk actions</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="77" name="return" description="An array of $slug=&gt;$action_name pairs" type="array">
             <type by_reference="false">array</type>
           </tag>
@@ -240,7 +240,7 @@ service modules.</description>
         <full_name>get_columns</full_name>
         <docblock line="89">
           <description>Register the columns</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="89" name="return" description="An array of column $slug=&gt;$name pairs" type="array">
             <type by_reference="false">array</type>
           </tag>
@@ -251,7 +251,7 @@ service modules.</description>
         <full_name>get_sortable_columns</full_name>
         <docblock line="101">
           <description>Return sortable columns</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="101" name="return" description="an array of columns" type="array">
             <type by_reference="false">array</type>
           </tag>
@@ -262,7 +262,7 @@ service modules.</description>
         <full_name>prepare_items</full_name>
         <docblock line="112">
           <description>Build the items for the table</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="112" name="return" description="The items" type="\stdClass">
             <type by_reference="false">\stdClass</type>
           </tag>
@@ -273,7 +273,7 @@ service modules.</description>
         <full_name>process_bulk_action</full_name>
         <docblock line="142">
           <description>Process bulk actions</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="142" name="todo" description="setup nonces for all bulk actions"/>
           <tag line="142" name="return" description="" type="void">
             <type by_reference="false">void</type>
@@ -285,14 +285,14 @@ service modules.</description>
         <full_name>single_row_columns</full_name>
         <docblock line="181">
           <description>Echo out single row html</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="181" name="param" description="The current item" type="\stdClass" variable="$item">
             <type by_reference="false">\stdClass</type>
           </tag>
         </docblock>
         <argument line="185">
           <name>$item</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -310,7 +310,7 @@ service modules.</description>
         <full_name>inline_edit</full_name>
         <docblock line="267">
           <description>Build hmtl for inline edit form</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="267" name="param" description="current item" type="\stdclass" variable="$item">
             <type by_reference="false">\stdclass</type>
           </tag>
@@ -329,7 +329,7 @@ service modules.</description>
   <file path="lib/class-api-con-manager.php" hash="e5287f3665da1d8e16750ab9a8d311d3" package="Default">
     <docblock line="2">
       <description>The main file for the API Connection Manager Plugin</description>
-      <long-description></long-description>
+      <long-description/>
       <tag line="2" name="author" description="Daithi Coombes &lt;webeire@gmail.com&gt;"/>
     </docblock>
     <include line="73" type="Require Once" package="Default">
@@ -341,7 +341,7 @@ service modules.</description>
       <full_name>\API_Con_Manager</full_name>
       <docblock line="7">
         <description>The main class for the API Connection Manager plugin</description>
-        <long-description></long-description>
+        <long-description/>
         <tag line="7" name="package" description="api-connection-manager"/>
         <tag line="7" name="author" description="Daithi Coobmes &lt;webeire@gmail.com&gt;"/>
       </docblock>
@@ -368,7 +368,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         <full_name>factory</full_name>
         <docblock line="27">
           <description>Factory method to get API Connection Manager object</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="27" name="param" description="Deprecated, for now." type="array" variable="$config">
             <type by_reference="false">array</type>
           </tag>
@@ -398,7 +398,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         </docblock>
         <argument line="42">
           <name>$service</name>
-          <default></default>
+          <default/>
           <type>\API_Con_Service</type>
         </argument>
       </method>
@@ -407,7 +407,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         <full_name>get_module_dir</full_name>
         <docblock line="50">
           <description>Get the serivce module directory</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="50" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -418,7 +418,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         <full_name>get_service</full_name>
         <docblock line="58">
           <description>Factory method to get service object</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="58" name="param" description="The service name" type="string" variable="$name">
             <type by_reference="false">string</type>
           </tag>
@@ -428,7 +428,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         </docblock>
         <argument line="63">
           <name>$name</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -437,7 +437,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         <full_name>get_services</full_name>
         <docblock line="82">
           <description>Get range of service modules, depending on $type</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="82" name="param" description="Default all. 'active'|'inactive'" type="\enum" variable="$type">
             <type by_reference="false">\enum</type>
           </tag>
@@ -458,7 +458,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         <full_name>is_connected</full_name>
         <docblock line="126">
           <description>Check if a service is connected.</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="126" name="todo" description="Design system for checking if services are connected or not."/>
           <tag line="126" name="param" description="The service module." type="\API_Con_Service" variable="$service">
             <type by_reference="false">\API_Con_Service</type>
@@ -469,7 +469,7 @@ needs to be done only once&lt;/p&gt;</long-description>
         </docblock>
         <argument line="132">
           <name>$service</name>
-          <default></default>
+          <default/>
           <type>\API_Con_Service</type>
         </argument>
       </method>
@@ -489,7 +489,7 @@ or construct service module.&lt;/p&gt;</long-description>
         </docblock>
         <argument line="143">
           <name>$service</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -498,7 +498,7 @@ or construct service module.&lt;/p&gt;</long-description>
         <full_name>set_service_states</full_name>
         <docblock line="152">
           <description>Activate / Deactivate services</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="152" name="param" description="An array of service names" type="array" variable="$services">
             <type by_reference="false">array</type>
           </tag>
@@ -511,12 +511,12 @@ or construct service module.&lt;/p&gt;</long-description>
         </docblock>
         <argument line="158">
           <name>$services</name>
-          <default></default>
+          <default/>
           <type>array</type>
         </argument>
         <argument line="158">
           <name>$action</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -536,7 +536,7 @@ before check is done.&lt;/p&gt;</long-description>
         </docblock>
         <argument line="194">
           <name>$url</name>
-          <default></default>
+          <default/>
           <type/>
         </argument>
       </method>
@@ -545,7 +545,7 @@ before check is done.&lt;/p&gt;</long-description>
         <full_name>action_admin_menu</full_name>
         <docblock line="200">
           <description>Register the dashboard menus</description>
-          <long-description></long-description>
+          <long-description/>
         </docblock>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="230" package="api-connection-manager">
@@ -553,7 +553,7 @@ before check is done.&lt;/p&gt;</long-description>
         <full_name>get_page</full_name>
         <docblock line="227">
           <description>Print the main API Con dashboard page</description>
-          <long-description></long-description>
+          <long-description/>
         </docblock>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="global" line="242" package="api-connection-manager">
@@ -595,7 +595,7 @@ to the __construct $config param&lt;/p&gt;</long-description>
         <full_name>request_token</full_name>
         <docblock line="287">
           <description>Oauth 1/2 callback to request token.</description>
-          <long-description></long-description>
+          <long-description/>
           <tag line="287" name="see" description="\API_Con_Manager::response_listener()" refers="\API_Con_Manager::response_listener()"/>
           <tag line="287" name="param" description="The dto." type="\API_Con_DTO" variable="$dto">
             <type by_reference="false">\API_Con_DTO</type>
@@ -606,7 +606,7 @@ to the __construct $config param&lt;/p&gt;</long-description>
         </docblock>
         <argument line="293">
           <name>$dto</name>
-          <default></default>
+          <default/>
           <type>\API_Con_DTO</type>
         </argument>
       </method>
@@ -624,7 +624,7 @@ and stored in db.&lt;/p&gt;</long-description>
         </docblock>
         <argument line="313">
           <name>$dto</name>
-          <default></default>
+          <default/>
           <type>\API_Con_DTO</type>
         </argument>
       </method>
