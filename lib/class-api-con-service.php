@@ -116,38 +116,51 @@ class API_Con_Service{
 	 */
 	public function get_token( API_Con_DTO $dto ){
 
-		$code = $dto->data['code'];
-
-		$res = $this->request( $this->token_url, array(
+/**
+GET https://graph.facebook.com/oauth/access_token?
+    client_id={app-id}
+   &redirect_uri={redirect-uri}
+   &client_secret={app-secret}
+   &code={code-parameter}
+*/
+   		$code = $dto->data['code'];
+   		$params = array(
 			'client_id' => $this->key,
 			'client_secret' => $this->secret,
-			'redirect_uri' => $this->get_redirect_url(),
+			'redirect_uri' => 'http://api-connection-manager.loc/wp-admin/admin-ajax.php?action=api-con-manager&api-con-action=request_token', //$this->get_redirect_url(),
 			'code' => $code
-			), 'GET', false, false );
+		);
+		var_dump($params);
+
+		$res = $this->request( $this->token_url, $params, 'GET', false );
+		var_dump($res);
 		if( is_wp_error( $res ) )
 			return $res;
 
 		parse_str( $res['body'], $body );
-		var_dump($body);
 		return new OAuthToken( $body[ 'access_token' ], null );
 	}
 
 	/**
-	 * Register the option names
-	 * @param  array  $keys The option keys
+	 * Load options from the db
+	 * @return array Also returns the options
 	 */
-	protected function register_options( array $keys ){
+	public function load_options(){
 
-		$this->options = array();
-		foreach( $keys as $key )
-			$this->options[ $key ] = '';
+		$service_options = API_Con_Model::get( "service_options" );
+		$options = $service_options[ $this->name ];
 
-		$this->load_options();
+		if( count( $options ) )
+			foreach( $options as $key=>$val )
+				$this->options[$key] = $val;
+
+		return $this->options;
 	}
 
 	/**
 	 * Make a request to the remote api.
-	 * If not connected will return API_Con_Error with login link as message
+	 * If not connected will return API_Con_Error with the html anchor for the 
+	 * login link as message.
 	 * @param  string $url    endpoint
 	 * @param  array  $params parameters to be sent
 	 * @param  string $method Default GET
@@ -167,12 +180,17 @@ class API_Con_Service{
 			!API_Con_Manager::is_connected( $this ) &&
 			$check_connect
 		)
-			return new API_Con_Error('<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>');
+			return new API_Con_Error( '<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>' );
 
 		if( strtolower( $method )==='get' )
-			$res = wp_remote_get( $url, $params );
+			$res = wp_remote_get( $url, array( 'body' => $params ) );
 		else
 			$res = wp_remote_post( $url, array( 'body' => $params ) );
+		var_dump($res);
+		//if reported as connected above, but request throws error, return it
+		$error = $this->check_error( $res );
+		if( is_wp_error( $error ) )
+			return $error;
 
 		return $res;
 	}
@@ -183,16 +201,53 @@ class API_Con_Service{
 	 */
 	public function set_options( array $options ){
 		
-		$service_options = API_Con_Model::get("service_options");
+		$service_options = API_Con_Model::get( "service_options" );
 		if( !$service_options )
 			$service_options = array();
 
-		foreach($options as $key=>$val)
+		foreach( $options as $key=>$val )
 			if( array_key_exists( $key, $this->options ) )
 				$service_options[ $this->name ][ $key ] = $val;
 		
-		API_Con_Model::set("service_options", $service_options);
+		API_Con_Model::set( "service_options", $service_options );
 		$this->options = $service_options[ $this->name ];
+	}
+
+	public function set_redirect_url( $url ){
+		$this->redirect_url = $url;
+	}
+
+	/**
+	 * Overwrite this to set a services custom error checks
+	 * @param  mixed  $res The full response returned from WP_HTTP
+	 * @return mixed      If error found returns API_Con_Error, false otherwise
+	 */
+	protected function check_error( $res ){
+		if( is_wp_error( $res ) )
+			return new API_Con_Error( $res->get_error_message() );
+		$body = json_decode( $res['body'] );
+		
+		switch ( $this->auth_type ) {
+			case 'oauth1':
+				# code...
+				break;
+			
+			case 'oauth2':
+
+				if( @$body->error )
+					( is_object($body->error) ) ?
+						$error = $body->error->message :
+						$error = $body->error;
+					return new API_Con_Error( $error );
+
+				break;
+
+			default:
+				# code...
+				break;
+		}
+
+		return false;
 	}
 
 	/**
@@ -218,18 +273,15 @@ class API_Con_Service{
 	}
 
 	/**
-	 * Load options from the db
-	 * @return array Also returns the options
+	 * Register the option names
+	 * @param  array  $keys The option keys
 	 */
-	public function load_options(){
+	protected function register_options( array $keys ){
 
-		$service_options = API_Con_Model::get( "service_options" );
-		$options = $service_options[ $this->name ];
+		$this->options = array();
+		foreach( $keys as $key )
+			$this->options[ $key ] = '';
 
-		if( count( $options ) )
-			foreach( $options as $key=>$val )
-				$this->options[$key] = $val;
-
-		return $this->options;
+		$this->load_options();
 	}
 }

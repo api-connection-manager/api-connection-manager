@@ -26,6 +26,8 @@ if( !class_exists( 'API_Con_Module_Facebook' ) ):
 				'options' => array( 'key', 'secret' ),
 				'token_url' => 'https://graph.facebook.com/oauth/access_token',
 			), __CLASS__ );
+
+			//$this->set_redirect_url( 'http://api-connection-manager.loc' );
 		}
 	}
 endif;
