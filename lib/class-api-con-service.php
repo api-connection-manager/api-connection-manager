@@ -123,12 +123,13 @@ class API_Con_Service{
 			'client_secret' => $this->secret,
 			'redirect_uri' => $this->get_redirect_url(),
 			'code' => $code
-			), 'POST', false, false );
+			), 'GET', false, false );
 		if( is_wp_error( $res ) )
 			return $res;
 
 		parse_str( $res['body'], $body );
-		return new OAuthToken( $body['access_token'], null );
+		var_dump($body);
+		return new OAuthToken( $body[ 'access_token' ], null );
 	}
 
 	/**
@@ -146,7 +147,7 @@ class API_Con_Service{
 
 	/**
 	 * Make a request to the remote api.
-	 * If not connected will die() with login link, or return login url.
+	 * If not connected will die() with login link, or print login url.
 	 * @param  string $url    endpoint
 	 * @param  array  $params parameters to be sent
 	 * @param  string $method Default GET
@@ -165,10 +166,12 @@ class API_Con_Service{
 		if( 
 			!API_Con_Manager::is_connected( $this ) &&
 			$check_connect
-		)
+		){
+			$link = '<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>';
 			if( $die )
-				die( '<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>' );
-			else return $this->get_login_url();
+				die( $link );
+			else print $link;
+		}
 
 		if( strtolower( $method )==='get' )
 			$res = wp_remote_get( $url, $params );
@@ -193,7 +196,6 @@ class API_Con_Service{
 				$service_options[ $this->name ][ $key ] = $val;
 		
 		API_Con_Model::set("service_options", $service_options);
-
 		$this->options = $service_options[ $this->name ];
 	}
 

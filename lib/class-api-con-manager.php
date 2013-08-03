@@ -41,10 +41,12 @@ class API_Con_Manager{
 	 */
 	public static function get_consumer( API_Con_Service $service ){
 		//validate params
-		if( !$service->key || !$service->secret )
+		$options = $service->get_options();
+		
+		if( !$options['key'] || !$options['secret'] )
 			return new API_Con_Error( 'Service missing client key or client secret' );
 
-		return new OAuthConsumer( $service->key, $service->secret, $service->get_redirect_url() );
+		return new OAuthConsumer( $options['key'], $options['secret'], $service->get_redirect_url() );
 	}
 
 	/**
