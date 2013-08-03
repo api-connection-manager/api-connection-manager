@@ -34,6 +34,6 @@ class API_Con_Model{
 	 */
 	public static function set( $key, $val ){
 		
-		update_option( $key, $val );
+		return update_option( $key, $val );
 	}
 }

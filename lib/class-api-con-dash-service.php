@@ -172,27 +172,10 @@ class API_Con_Dash_Service extends WP_List_Table{
     		$options = $service->get_options();
     	}
 
-    	//activate/deactivate
-    	elseif( $action=='activate' ){
-    		$update='active';
-    		$delete='inactive';
-    	}elseif( $action=='deactivate' ){
-    		$update='inactive';
-    		$delete='active';
-    	}else
-    		return;
-
-    	//rebuild services[]
-		foreach($services as $service ){
-			if( false!==($key=array_search($service, $db_services[$delete])))
-				unset( $db_services[$delete][$key] );
-			if(in_array($service, $db_services[$update]))
-				continue;
-			$db_services[ $update ][] = $service;
-		}
-		$db_services[$update] = array_unique($db_services[$update]);
-		API_Con_Model::set('services', $db_services);
-		return;
+    	$service_objs = array();
+    	foreach( $services as $service )
+    		$service_objs[] = API_Con_Manager::get_service( $service );
+    	return API_Con_Manager::set_service_states( $service_objs, $action );
     }
 
     /**

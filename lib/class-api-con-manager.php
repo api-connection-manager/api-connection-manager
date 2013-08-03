@@ -134,6 +134,57 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Tests if valid service name.
+	 * Checks for service module file in modules/ does not try to load
+	 * or construct service module.
+	 * @param  string  $service The service name to check
+	 * @return boolean
+	 */
+	public static function is_valid_service_name( $service ){
+
+		$service_path = dirname( __FILE__ ) . '/../modules/class-' . strtolower( $service ) . '.php';
+		if( file_exists( $service_path ) )
+			return true;
+
+		return false;
+	}
+
+	/**
+	 * Activate / Deactivate services
+	 * @param array  $services An array of service names
+	 * @param enum $action   activate|deactivate
+	 * @return  boolean
+	 */
+	public static function set_service_states( array $services, $action ){
+
+		$db_services = (array) API_Con_Model::get('services');
+
+    	if( $action=='activate' ){
+    		$update='active';
+    		$delete='inactive';
+    	}elseif( $action=='deactivate' ){
+    		$update='inactive';
+    		$delete='active';
+    	}else
+    		return false;
+
+    	//rebuild services[]
+		foreach($services as $service ){
+			if( !API_Con_Manager::is_valid_service_name( $service ) )
+				return new API_Con_Error( 'Invalid service name ' . $service );
+
+			if( false!==($key=@array_search($service->name, $db_services[$delete])))
+				unset( $db_services[$delete][$key] );
+			if(@in_array($service->name, $db_services[$update]))
+				continue;
+			$db_services[ $update ][] = $service->name;
+		}
+
+		$db_services[$update] = array_unique($db_services[$update]);
+		return API_Con_Model::set('services', $db_services);
+	}
+
+	/**
 	 * Check if a url is valid.
 	 * Fix for php 5.2 bug with FILTER_VALIDATE_URL '-' are replaced in urls
 	 * before check is done.

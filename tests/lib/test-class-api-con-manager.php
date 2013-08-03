@@ -54,6 +54,11 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		var_dump( API_Con_Manager::get_services() );
 	}
 
+	function test_is_valid_service_name(){
+		$this->assertTrue( API_Con_Manager::is_valid_service_name( 'facebook' ) );
+		$this->assertFalse( API_Con_Manager::is_valid_service_name( 'foo' ) );
+	}
+
 	function test_response_listener(){
 		$this->assertTrue( true );
 		return;
@@ -62,6 +67,14 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 			'api-con-action' => 'request_token'
 			) );
 		$this->assertInstanceOf( 'API_Con_DTO', $this->obj->response_listener( $dto ) );
+	}
+
+	function test_set_service_state(){
+		$service = array(API_Con_Manager::get_service( 'facebook' ));
+		API_Con_Manager::set_service_states( array('facebook'), 'deactivate' );
+		$this->assertTrue( API_Con_Manager::set_service_states( array('facebook'), 'activate' ) );
+
+		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::set_service_states( array('foo'), 'deactivate') );
 	}
 
 	function test_valid_url(){
