@@ -4,9 +4,6 @@
  * @author Daithi Coombes <webeire@gmail.com>
  */
 
-if( session_id()==="" && !isset( $_SESSION ) )
-	session_start();
-
 /**
  * The main class for the API Con Model
  * @package  api-connection-manager
@@ -22,7 +19,6 @@ class API_Con_Model{
 	 */
 	public static function get( $key, $delete=false ){
 		
-		$key .= '-' . session_id();
 		$val = get_option( $key );
 
 		if( $delete )
@@ -38,8 +34,6 @@ class API_Con_Model{
 	 */
 	public static function set( $key, $val ){
 		
-		$key .= '-' . session_id();
-
-		update_option( $key, $val );
+		return update_option( $key, $val );
 	}
 }
