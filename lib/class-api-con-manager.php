@@ -41,10 +41,20 @@ class API_Con_Manager{
 	 */
 	public static function get_consumer( API_Con_Service $service ){
 		//validate params
-		if( !$service->key || !$service->secret )
+		$options = $service->get_options();
+		
+		if( !$options['key'] || !$options['secret'] )
 			return new API_Con_Error( 'Service missing client key or client secret' );
 
-		return new OAuthConsumer( $service->key, $service->secret, $service->get_redirect_url() );
+		return new OAuthConsumer( $options['key'], $options['secret'], $service->get_redirect_url() );
+	}
+
+	/**
+	 * Get the serivce module directory
+	 * @return string
+	 */
+	public static function get_module_dir(){
+		return dirname( __FILE__ ) . "/../modules";
 	}
 
 	/**
@@ -58,7 +68,7 @@ class API_Con_Manager{
 			return new API_Con_Error( 'No service name specified' );
 
 		//load file
-		$service_path = dirname( __FILE__ ) . '/../modules/class-' . $name . '.php';
+		$service_path = dirname( __FILE__ ) . '/../modules/class-' . strtolower( $name ) . '.php';
 		if( !file_exists( $service_path ) )
 			return new API_Con_Error( 'Can\'t find module for ' . $name );
 		else
@@ -67,9 +77,54 @@ class API_Con_Manager{
 		//construct service
 		$class = 'API_Con_Module_' . ucfirst($name);
 		$service = new $class();
-		$service->name = $name;
 
 		return $service;
+	}
+
+	/**
+	 * Get range of service modules, depending on $type
+	 * @param  enum $type Default all. 'active'|'inactive'
+	 * @todo  try implement WP_Filesystem for scanning the modules directory
+	 * @todo  write unit tests
+	 * @return array       An array of services, if all then returns array['active'] and array['inactive']
+	 */
+	public static function get_services( $type=null ){
+		$services = array();
+		
+		switch ($type) {
+
+			case 'inactive':
+				;
+				break;
+			
+
+			case 'active':
+					$db_services = API_Con_Model::get('services');
+					if( !$db_services )
+						return array();
+					return $db_services['active'];
+				break;
+
+			case 'installed':
+				$handle = opendir( self::get_module_dir() );
+
+				while( false !== ( $file = readdir( $handle ) ) ){
+					if( $file=='.' || $file=='..' )
+						continue;
+
+					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
+					$services[] = ucfirst( $matches[0] );
+				}
+			break;
+
+			//default return all services
+			default:
+				# code...
+				break;
+
+		}
+
+		return $services;
 	}
 
 	/**
@@ -80,6 +135,57 @@ class API_Con_Manager{
 	 */
 	public static function is_connected( API_Con_Service $service ){
 		return false;
+	}
+
+	/**
+	 * Tests if valid service name.
+	 * Checks for service module file in modules/ does not try to load
+	 * or construct service module.
+	 * @param  string  $service The service name to check
+	 * @return boolean
+	 */
+	public static function is_valid_service_name( $service ){
+
+		$service_path = dirname( __FILE__ ) . '/../modules/class-' . strtolower( $service ) . '.php';
+		if( file_exists( $service_path ) )
+			return true;
+
+		return false;
+	}
+
+	/**
+	 * Activate / Deactivate services
+	 * @param array  $services An array of service names
+	 * @param enum $action   activate|deactivate
+	 * @return  boolean
+	 */
+	public static function set_service_states( array $services, $action ){
+
+		$db_services = (array) API_Con_Model::get('services');
+
+    	if( $action=='activate' ){
+    		$update='active';
+    		$delete='inactive';
+    	}elseif( $action=='deactivate' ){
+    		$update='inactive';
+    		$delete='active';
+    	}else
+    		return false;
+
+    	//rebuild services[]
+		foreach($services as $service ){
+			if( !API_Con_Manager::is_valid_service_name( $service ) )
+				return new API_Con_Error( 'Invalid service name ' . $service );
+
+			if( false!==($key=@array_search($service->name, $db_services[$delete])))
+				unset( $db_services[$delete][$key] );
+			if(@in_array($service->name, $db_services[$update]))
+				continue;
+			$db_services[ $update ][] = $service->name;
+		}
+
+		$db_services[$update] = array_unique($db_services[$update]);
+		return API_Con_Model::set('services', $db_services);
 	}
 
 	/**
@@ -96,10 +202,46 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Register the dashboard menus
+	 * @return  array Returns admin slug, sub menu slug, API_Con_Dash_Service
+	 */
+	public function action_admin_menu(){
+		//dashboard
+		$menu = add_menu_page( 
+			'API Connection Manager', 
+			'API Manager',
+			'manage_options',
+			'api-con-manager',
+			array(&$this, 'get_page')
+		);
+
+		//services
+		$services = new API_Con_Dash_Service();
+		$submenu = add_submenu_page(
+			'api-con-manager',
+			'API Con Services',
+			'Services',
+			'manage_options',
+			'api-con-services',
+			array(&$services, 'get_page')
+			);
+
+		return array( $menu, $submenu, $services );
+	}
+
+	/**
+	 * Print the main API Con dashboard page
+	 */
+	public function get_page(){
+		print '<h1>API Connection Manager</h1>';
+	}
+
+	/**
 	 * Handles callbacks such as ajax requests.
 	 * Can be used outside of ajax by passing object type API_Con_DTO with
 	 * necessary data.
 	 * @param  mixed $dto Default null. If used outside ajax pass a valid API_Con_DTO here
+	 * @todo  write unit tests
 	 * @return mixed Returns API_Con_DTO if all ok, or API_Con_Error if error
 	 */
 	public function response_listener( $dto=null ){
@@ -140,8 +282,11 @@ class API_Con_Manager{
 	 */
 	private function bootstrap(){
 
-		add_action('wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
-		add_action('wp_ajax_nopriv_api-con-manager', array( &$this, 'response_listener' ) );
+		//ajax
+		add_action( 'wp_ajax_api-con-manager', array( &$this, 'response_listener' ) );
+		add_action( 'wp_ajax_nopriv_api-con-manager', array( &$this, 'response_listener' ) );
+		add_action( 'admin_menu', array( &$this, 'action_admin_menu' ) );
+
 	}
 
 	/**
