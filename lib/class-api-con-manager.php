@@ -100,6 +100,8 @@ class API_Con_Manager{
 
 			case 'active':
 					$db_services = API_Con_Model::get('services');
+					if( !$db_services )
+						return array();
 					return $db_services['active'];
 				break;
 
