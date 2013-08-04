@@ -111,29 +111,22 @@ class API_Con_Service{
 	/**
 	 * Get an access token
 	 * @param  API_Con_DTO $dto The data transport object containing the code value
+	 * @param  bool $params Default true. Whether to send standard params or not.
 	 * @todo  write unit tests for this method
 	 * @return OAuthToken Returns API_Con_Error if error
 	 */
-	public function get_token( API_Con_DTO $dto ){
+	public function get_token( API_Con_DTO $dto, $params=true ){
 
-/**
-GET https://graph.facebook.com/oauth/access_token?
-    client_id={app-id}
-   &redirect_uri={redirect-uri}
-   &client_secret={app-secret}
-   &code={code-parameter}
-*/
    		$code = $dto->data['code'];
+   		$consumer = API_Con_Manager::get_consumer( $this );
    		$params = array(
-			'client_id' => $this->key,
-			'client_secret' => $this->secret,
-			'redirect_uri' => 'http://api-connection-manager.loc/wp-admin/admin-ajax.php?action=api-con-manager&api-con-action=request_token', //$this->get_redirect_url(),
+			'client_id' => $consumer->key,
+			'client_secret' => $consumer->secret,
+			'redirect_uri' => $this->get_redirect_url(),
 			'code' => $code
 		);
-		var_dump($params);
 
 		$res = $this->request( $this->token_url, $params, 'GET', false );
-		var_dump($res);
 		if( is_wp_error( $res ) )
 			return $res;
 
@@ -186,7 +179,7 @@ GET https://graph.facebook.com/oauth/access_token?
 			$res = wp_remote_get( $url, array( 'body' => $params ) );
 		else
 			$res = wp_remote_post( $url, array( 'body' => $params ) );
-		var_dump($res);
+
 		//if reported as connected above, but request throws error, return it
 		$error = $this->check_error( $res );
 		if( is_wp_error( $error ) )
@@ -225,20 +218,27 @@ GET https://graph.facebook.com/oauth/access_token?
 	protected function check_error( $res ){
 		if( is_wp_error( $res ) )
 			return new API_Con_Error( $res->get_error_message() );
-		$body = json_decode( $res['body'] );
-		
+
+		//get body
+		if( preg_match('/text\/plain/', $res['headers']['content-type']) ){
+			parse_str($res['body'], $body);
+			$body = (object) $body;
+		}
+		else
+			$body = json_decode( $res['body'] );
+
 		switch ( $this->auth_type ) {
 			case 'oauth1':
 				# code...
 				break;
 			
 			case 'oauth2':
-
-				if( @$body->error )
+				if( @$body->error ){
 					( is_object($body->error) ) ?
 						$error = $body->error->message :
 						$error = $body->error;
 					return new API_Con_Error( $error );
+				}
 
 				break;
 
