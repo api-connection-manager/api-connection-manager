@@ -161,7 +161,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 	    }
     	
     	//save inline-edit form
-    	if ( 'inline-edit'==$action ){
+    	if ( 'inline-edit' == $action ){
     		$service = API_Con_Manager::get_service( $_GET['api_con_dash_service'] );
     		$options = $service->get_options();
 
@@ -204,8 +204,8 @@ class API_Con_Dash_Service extends WP_List_Table{
 			}
 			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
 				?><td <?php echo wp_kses_post( $attributes ); ?>><?php
-				echo call_user_func( array( &$this, 'column_' . $column_name ), $item );
-				?></td><?php
+				?><?php echo call_user_func( array( &$this, 'column_' . $column_name ), $item ); ?>
+				</td><?php
 			}
 			else {
 				?><td $attributes><?php
