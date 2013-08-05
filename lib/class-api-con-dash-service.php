@@ -240,7 +240,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 						url += "&" + this.name + "=" + this.value;
 				})
 				
-				window.location.href = url + '&api_con_dash_service='+id+'&action=inline-edit&wpnonce=<?php echo wp_sanitize_text( $inline_nonce ); ?>';
+				window.location.href = url + '&api_con_dash_service='+id+'&action=inline-edit&wpnonce=<?php echo sanitize_text_field( $inline_nonce ); ?>';
 			});
 
 			//show inline edit form
