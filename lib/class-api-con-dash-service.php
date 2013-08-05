@@ -198,19 +198,19 @@ class API_Con_Dash_Service extends WP_List_Table{
 			$attributes = "$class$style";
 
 			if ( 'cb' == $column_name ) {
-				echo '<th scope="row" class="check-column">';
-				echo wp_kses( $this->column_cb( $item ) );
-				echo '</th>';
+				?><th scope="row" class="check-column"><?php
+				echo wp_kses_post( $this->column_cb( $item ) );
+				?></th><?php
 			}
 			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				echo wp_kses( "<td $attributes>" );
+				?><td <?php echo wp_kses_post( $attributes ); ?>><?php
 				echo call_user_func( array( &$this, 'column_' . $column_name ), $item );
-				echo "</td>";
+				?></td><?php
 			}
 			else {
-				echo "<td $attributes>";
-				echo $this->column_default( $item, $column_name );
-				echo "</td>";
+				?><td $attributes><?php
+				echo wp_kses_post( $this->column_default( $item, $column_name ) );
+				?></td><?php
 			}
 		}
 
