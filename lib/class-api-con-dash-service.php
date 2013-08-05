@@ -27,19 +27,6 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 	}
 
-	/**
-	 * Prints the checkbox column
-	 * @param  stdclass $item The row item
-	 * @return string       checkbox html
-	 */
-    function column_cb( $item ){
-        return sprintf(
-            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("service")
-            /*$2%s*/ $item->name                //The value of the checkbox should be the record's id
-        );
-    }
-
     /**
      * The default column html
      * @param  stdClass $item        The row item
@@ -75,6 +62,10 @@ class API_Con_Dash_Service extends WP_List_Table{
         $inline = $this->inline_edit( $item );
 
         return $ret . $inline;
+    }
+
+    function _echo( $str ){
+    	echo sanitize_text_field( $str );
     }
 
     /**
@@ -199,17 +190,21 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 			if ( 'cb' == $column_name ) {
 				echo '<th scope="row" class="check-column">';
-				echo __( $this->column_cb( $item ) );
+		        echo sprintf(
+		        	'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+		            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("service")
+		            /*$2%s*/ $item->name                //The value of the checkbox should be the record's id
+		        );
 				echo '</th>';
 			}
 			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
 				echo '<td ' . esc_attr( $attributes ) . '>';
-				echo __( call_user_func( array( &$this, 'column_' . $column_name ), $item ) );
+				echo sanitize_text_field( call_user_func( array( &$this, 'column_' . $column_name ), $item ) );
 				echo '</td>';
 			}
 			else {
 				echo '<td ' . esc_attr( $attributes ) . '>';
-				echo __( $this->column_default( $item, $column_name ) );
+				echo sanitize_text_field( $this->column_default( $item, $column_name ) );
 				echo '</td>';
 			}
 		}
