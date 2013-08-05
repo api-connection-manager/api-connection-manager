@@ -65,7 +65,7 @@ class API_Con_Dash_Service extends WP_List_Table{
         );
         
         //Return the title contents
-        $ret = sprintf( 
+        $ret = sprintf(
         	'%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
             /*$1%s*/ $item->name,
             /*$2%s*/ $item->name,
@@ -165,7 +165,7 @@ class API_Con_Dash_Service extends WP_List_Table{
     		$service = API_Con_Manager::get_service( $_GET['api_con_dash_service'] );
     		$options = $service->get_options();
 
-    		foreach( $options as $key => $val )
+    		foreach ( $options as $key => $val )
     			if ( @$_GET[ $key ] )
     				$options[ $key ] = $_GET[ $key ];
 
@@ -199,11 +199,11 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 			if ( 'cb' == $column_name ) {
 				echo '<th scope="row" class="check-column">';
-				echo $this->column_cb( $item );
+				echo wp_kses( $this->column_cb( $item ) );
 				echo '</th>';
 			}
 			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				echo "<td $attributes>";
+				echo wp_kses( "<td $attributes>" );
 				echo call_user_func( array( &$this, 'column_' . $column_name ), $item );
 				echo "</td>";
 			}
