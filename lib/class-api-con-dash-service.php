@@ -221,7 +221,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 		?>
         <form id="api-con-dash-services" method="get">
-        	<input type="hidden" name="page" value="<?php echo esc_attr( $_GET['page']); ?>"/>
+        	<input type="hidden" name="page" value="<?php echo sanitize_text_field( $_GET['page'] ); ?>"/>
             <?php $this->display() ?>
         </form>
 
