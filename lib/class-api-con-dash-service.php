@@ -18,7 +18,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 	 * @see WP_List_Table::__construct()
 	 */
 	function __construct(){
-		parent::__construct( 
+		parent::__construct(
 			array(
 				'singular' => 'api_con_dash_service',
 				'plural' => 'api_con_dash_services',
@@ -65,7 +65,8 @@ class API_Con_Dash_Service extends WP_List_Table{
         );
         
         //Return the title contents
-        $ret = sprintf( '%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
+        $ret = sprintf( 
+        	'%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
             /*$1%s*/ $item->name,
             /*$2%s*/ $item->name,
             /*$3%s*/ $this->row_actions( $actions )
@@ -131,7 +132,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 		$items = array();
 
 		foreach ( $services as $service ) {
-			if( in_array( $service, $services_active ) )
+			if ( in_array( $service, $services_active ) )
 				$state = 'active';
 			else
 				$state = 'inactive';
@@ -150,22 +151,22 @@ class API_Con_Dash_Service extends WP_List_Table{
 
     	//vars
     	$action = $_GET['action'];
-		$db_services = API_Con_Model::get('services');
+		$db_services = API_Con_Model::get( 'services' );
     	$services = (array) $_GET['api_con_dash_service'];
 
     	//check nonce
-    	if( $action ){
+    	if ( $action ){
 	    	//if( !wp_verify_nonce( '963a1db024', 'api-con-dash' ) );
 	    		//die('invalid nonce');
 	    }
     	
     	//save inline-edit form
-    	if( 'inline-edit'==$action ){
+    	if ( 'inline-edit'==$action ){
     		$service = API_Con_Manager::get_service( $_GET['api_con_dash_service'] );
     		$options = $service->get_options();
 
-    		foreach( $options as $key=>$val )
-    			if( @$_GET[ $key ] )
+    		foreach( $options as $key => $val )
+    			if ( @$_GET[ $key ] )
     				$options[ $key ] = $_GET[ $key ];
 
     		$service->set_options( $options );
@@ -175,7 +176,7 @@ class API_Con_Dash_Service extends WP_List_Table{
     	}
 
     	$service_objs = array();
-    	foreach( $services as $service )
+    	foreach ( $services as $service )
     		$service_objs[] = API_Con_Manager::get_service( $service );
     	return API_Con_Manager::set_service_states( $service_objs, $action );
     }
