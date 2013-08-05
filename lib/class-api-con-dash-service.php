@@ -203,7 +203,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 				?></th><?php
 			}
 			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				?><td <?php echo wp_kses_post( $attributes ); ?>><?php
+				echo '<td' . esc_attr( $attributes ) . '>';
 				?><?php echo call_user_func( array( &$this, 'column_' . $column_name ), $item ); ?>
 				</td><?php
 			}
