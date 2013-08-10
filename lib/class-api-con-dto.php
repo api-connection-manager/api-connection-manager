@@ -19,7 +19,7 @@ class API_Con_DTO{
 	 * Construct
 	 * @param array $data An array of key value pairs passed from the remote server
 	 */
-	function __construct( array $data=null ){
+	function __construct( array $data = null ){
 
 			$this->data = $data;
 	}

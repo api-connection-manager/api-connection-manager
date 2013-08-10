@@ -17,10 +17,10 @@ class API_Con_Manager{
 	 * @see index.php
 	 * @param array $config An array of key value pairs.
 	 */
-	function __construct( $config=null ){
+	function __construct( $config = null ){
 
 		//if bootstrapping
-		if( @$config['bootstrap'] )
+		if ( @$config['bootstrap'] )
 			$this->bootstrap();
 	}
 
@@ -30,7 +30,7 @@ class API_Con_Manager{
 	 * @todo see if $config param is needed
 	 * @return API_Con_Manager
 	 */
-	public static function factory( $config=null ){
+	public static function factory( $config = null ){
 		return new API_Con_Manager( $config );
 	}
 
@@ -43,7 +43,7 @@ class API_Con_Manager{
 		//validate params
 		$options = $service->get_options();
 		
-		if( !$options['key'] || !$options['secret'] )
+		if ( !$options['key'] || !$options['secret'] )
 			return new API_Con_Error( 'Service missing client key or client secret' );
 
 		return new OAuthConsumer( $options['key'], $options['secret'], $service->get_redirect_url() );
@@ -54,7 +54,7 @@ class API_Con_Manager{
 	 * @return string
 	 */
 	public static function get_module_dir(){
-		return dirname( __FILE__ ) . "/../modules";
+		return dirname( __FILE__ ) . '/../modules';
 	}
 
 	/**
@@ -64,18 +64,18 @@ class API_Con_Manager{
 	 */
 	public static function get_service( $name ){
 
-		if( empty($name) )
+		if ( empty($name) )
 			return new API_Con_Error( 'No service name specified' );
 
 		//load file
 		$service_path = dirname( __FILE__ ) . '/../modules/class-' . strtolower( $name ) . '.php';
-		if( !file_exists( $service_path ) )
+		if ( !file_exists( $service_path ) )
 			return new API_Con_Error( 'Can\'t find module for ' . $name );
 		else
 			require_once( $service_path );
 
 		//construct service
-		$class = 'API_Con_Module_' . ucfirst($name);
+		$class = 'API_Con_Module_' . ucfirst( $name );
 		$service = new $class();
 
 		return $service;
@@ -88,19 +88,18 @@ class API_Con_Manager{
 	 * @todo  write unit tests
 	 * @return array       An array of services, if all then returns array['active'] and array['inactive']
 	 */
-	public static function get_services( $type=null ){
+	public static function get_services( $type = null ){
 		$services = array();
 		
-		switch ($type) {
-
+		switch ( $type ) {
 			case 'inactive':
 				;
 				break;
 			
 
 			case 'active':
-					$db_services = API_Con_Model::get('services');
-					if( !$db_services )
+					$db_services = API_Con_Model::get( 'services' );
+					if ( !$db_services )
 						return array();
 					return $db_services['active'];
 				break;
@@ -108,8 +107,8 @@ class API_Con_Manager{
 			case 'installed':
 				$handle = opendir( self::get_module_dir() );
 
-				while( false !== ( $file = readdir( $handle ) ) ){
-					if( $file=='.' || $file=='..' )
+				while ( false !== ( $file = readdir( $handle ) ) ) {
+					if ( $file == '.' || $file == '..' )
 						continue;
 
 					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
@@ -121,7 +120,6 @@ class API_Con_Manager{
 			default:
 				# code...
 				break;
-
 		}
 
 		return $services;
@@ -147,7 +145,7 @@ class API_Con_Manager{
 	public static function is_valid_service_name( $service ){
 
 		$service_path = dirname( __FILE__ ) . '/../modules/class-' . strtolower( $service ) . '.php';
-		if( file_exists( $service_path ) )
+		if ( file_exists( $service_path ) )
 			return true;
 
 		return false;
@@ -161,31 +159,31 @@ class API_Con_Manager{
 	 */
 	public static function set_service_states( array $services, $action ){
 
-		$db_services = (array) API_Con_Model::get('services');
+		$db_services = (array) API_Con_Model::get( 'services' );
 
-    	if( $action=='activate' ){
-    		$update='active';
-    		$delete='inactive';
-    	}elseif( $action=='deactivate' ){
-    		$update='inactive';
-    		$delete='active';
+    	if ( $action == 'activate' ){
+    		$update = 'active';
+    		$delete = 'inactive';
+    	}elseif ( $action == 'deactivate' ){
+    		$update = 'inactive';
+    		$delete = 'active';
     	}else
     		return false;
 
     	//rebuild services[]
-		foreach($services as $service ){
-			if( !API_Con_Manager::is_valid_service_name( $service ) )
+		foreach ( $services as $service ) {
+			if ( !API_Con_Manager::is_valid_service_name( $service ) )
 				return new API_Con_Error( 'Invalid service name ' . $service );
 
-			if( false!==($key=@array_search($service->name, $db_services[$delete])))
+			if ( false !== ( $key = @array_search( $service->name, $db_services[$delete] ) ) )
 				unset( $db_services[$delete][$key] );
-			if(@in_array($service->name, $db_services[$update]))
+			if ( @in_array( $service->name, $db_services[$update] ) )
 				continue;
 			$db_services[ $update ][] = $service->name;
 		}
 
-		$db_services[$update] = array_unique($db_services[$update]);
-		return API_Con_Model::set('services', $db_services);
+		$db_services[$update] = array_unique( $db_services[$update] );
+		return API_Con_Model::set( 'services', $db_services );
 	}
 
 	/**
@@ -197,8 +195,8 @@ class API_Con_Manager{
 	 */
 	public static function valid_url( $url ){
 
-		$url = str_replace("-", "", $url);
-		return filter_var($url, FILTER_VALIDATE_URL);
+		$url = str_replace( '-', '', $url );
+		return filter_var( $url, FILTER_VALIDATE_URL );
 	}
 
 	/**
@@ -207,7 +205,7 @@ class API_Con_Manager{
 	 */
 	public function action_admin_menu(){
 		//dashboard
-		$menu = add_menu_page( 
+		$menu = add_menu_page(
 			'API Connection Manager', 
 			'API Manager',
 			'manage_options',
@@ -244,15 +242,15 @@ class API_Con_Manager{
 	 * @todo  write unit tests
 	 * @return mixed Returns API_Con_DTO if all ok, or API_Con_Error if error
 	 */
-	public function response_listener( $dto=null ){
+	public function response_listener( $dto = null ){
 
 		//if used outside wp_ajax, make sure API_Con_DTO is passed
-		if( $dto && !is_string($dto) )
-			if( !get_class( $dto ) == 'API_Con_DTO' )
+		if ( $dto && !is_string( $dto ) )
+			if ( !get_class( $dto ) == 'API_Con_DTO' )
 				return new API_Con_Error( 'API_Con_Manager::response_listener() takes API_Con_DTO as a parameter' );
 
 		//construct DTO
-		if( !$dto )
+		if ( !$dto )
 			$dto = new API_Con_DTO( $_REQUEST );
 
 		/**
@@ -261,9 +259,9 @@ class API_Con_Manager{
 		 */
 		$valid_actions = array(
 			'request_token',
-			'service_login'
+			'service_login',
 		);
-		if( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
+		if ( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
 			return new API_Con_Error( 'Invalid request' );
 		//end Security
 		
@@ -300,11 +298,10 @@ class API_Con_Manager{
 		$key = __CLASS__ . '::service_login';
 		$service = API_Con_Manager::get_service( API_Con_Model::get( $key, true ) );
 
-		if( is_wp_error( $service ) )
+		if ( is_wp_error( $service ) )
 			die( $service->get_error_message() );
 
 		$token = $service->get_token( $dto );
-		var_dump( $token );
 
 		die('process finished');
 	}
@@ -323,7 +320,7 @@ class API_Con_Manager{
 
 		//store service in db
 		$key = __CLASS__ . '::service_login';
-		API_Con_Model::set( 
+		API_Con_Model::set(
 			$key, 
 			$service->name
 		);

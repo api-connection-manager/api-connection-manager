@@ -4,7 +4,7 @@
  <!-- <target name="build"
    depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdox,phpunit,phpcb"/>  -->
  <target name="build"
-   depends="prepare,lint,phploc,pdepend,phpmd,phpmd-ci,phpcs-ci,phpcpd,phpunit"/>
+   depends="prepare,lint,phploc,pdepend,phpmd,phpmd-ci,phpcs-ci ,phpcpd, phpunit"/>
 
  <target name="build-parallel"
    depends="prepare,lint,tools-parallel,phpunit"/>
@@ -46,8 +46,8 @@
   <apply executable="php" failonerror="true">
    <arg value="-l" />
 
-   <fileset dir="${basedir}/application/modules">
-    <include name="*.class.php" />
+   <fileset dir="${basedir}/lib">
+    <include name="class-*.php" />
     <modified />
    </fileset>
 
@@ -60,7 +60,7 @@
 
  <target name="phploc" description="Measure project size using PHPLOC">
   <exec executable="phploc">
-   <arg value="--log-csv" />
+   <arg value="--log-csv"/>
    <arg value="${basedir}/build/logs/phploc.csv" />
    <arg path="${basedir}/lib/" />
   </exec>
@@ -99,7 +99,7 @@
  <target name="phpcs"
          description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
   <exec executable="phpcs">
-   <arg value="--standard=${basedir}/build/phpcs.xml" />
+   <arg value="--standard=Wordpress" />
    <arg path="${basedir}/lib/" />
   </exec>
  </target>

@@ -18,7 +18,7 @@ class API_Con_Error extends WP_Error{
 	 * Pass the error string.
 	 * @param string $msg The error produced
 	 */
-	function __construct( $msg='' ){
+	function __construct( $msg = '' ){
 		$this->add( $this->code, $msg );
 	}
 }

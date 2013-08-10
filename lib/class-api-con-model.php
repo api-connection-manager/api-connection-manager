@@ -17,11 +17,11 @@ class API_Con_Model{
 	 * @param  boolean $delete 	Default false. Whether or not db value is deleted
 	 * @return mixed             The unserialized value
 	 */
-	public static function get( $key, $delete=false ){
+	public static function get( $key, $delete = false ){
 		
 		$val = get_option( $key );
 
-		if( $delete )
+		if ( $delete )
 			delete_option( $key );
 
 		return $val;
