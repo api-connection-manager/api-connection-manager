@@ -12,7 +12,9 @@
 class API_Con_Model{
 
 	public static $meta_keys = array(
-		'transient' => array( 'API_Con_Service-callback' )
+		'callback' => 'API_Con_Manager-callback',			//the current callback @see API_Con_Manager::service_login
+		'transient' => array( 'API_Con_Service-callback' ),
+		'user_connections' => 'API_Con_Manager-connections'
 	);
 
 	/**
@@ -31,8 +33,34 @@ class API_Con_Model{
 		return $val;
 	}
 
+	/**
+	 * Get transient value
+	 * @param  string $key The transient name
+	 * @return mixed
+	 */
 	public static function get_transient( $key ){
 		return get_transient( $key );
+	}
+
+	/**
+	 * Get transient value by record id `option_id`
+	 * @see  API_Con_Manager::service_login()
+	 * @param  integer $id The option_id for the transient record.
+	 * @return mixed
+	 */
+	public static function get_transient_by_id( $id ){
+		global $wpdb;
+		
+		$res = $wpdb->get_var( 
+			$foo = $wpdb->prepare( 
+				'SELECT `option_value`
+				FROM ' . $wpdb->options . '
+				WHERE option_id=%d',
+				array( $id )
+			)
+		);
+		
+		return maybe_unserialize( $res );
 	}
 
 	/**
