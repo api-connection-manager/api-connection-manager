@@ -55,18 +55,11 @@ class API_Con_Model{
 	 */
 	public static function set_transient( $key, $val, $expire=3600 ){
 		global $wpdb;
-
-		//get unique transient name
-		$x=0;
-		while( API_Con_Model::get_transient( $key . '-' . $x ) )
-			$x++;
-
 		set_transient( $key, $val, $expire );
-	
-		var_dump($wpdb);	
+		
 		//return option_id | WP_Error
 		if( $wpdb->insert_id )
-			$wpdb->insert_id;
+			return $wpdb->insert_id;
 		else
 			return new API_Con_Error( 'API_Con_Model::set_transient Error: ' . $wpdb->last_error );
 	}

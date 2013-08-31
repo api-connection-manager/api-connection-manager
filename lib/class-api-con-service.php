@@ -106,21 +106,33 @@ class API_Con_Service{
 	 * All logins should open in a new tab. Callbacks are stored as transient
 	 * records. The record id is required to be sent in the url request and 
 	 * matched in _response_listener to get the callback. This is to ensure
-	 * callback, class names are not displayed in the login link - only the
+	 * callback, class names etc are not displayed in the login link - only the
 	 * transient record id will.
 	 *
-	 * Each call to get_login_link() will require its own row in the db. These
-	 * recored must be deleted after x amount of time.
+	 * Each call to get_login_link() will require its own transient. These
+	 * recoreds must be deleted after x amount of time and have unique key.
 	 * @see  API_Con_Model::set_transient()
 	 * @see  API_Con_Manager::_response_listener()
+	 * @todo  write unit tests
+	 * @param mixed $callback The callback function, or array(class, method)
+	 * @param integer $transient_time Default 3600. Transient timeout in seconds
 	 * @return string The html anchor link
 	 */
-	public function get_login_link( $callback, $transient_time=5 ){
+	public function get_login_link( $callback, $transient_time=3600 ){
 
-		//store $callback as transient
+		//generate unique key for callback transient
+		$key = API_Con_Model::$meta_keys['transient'][0];
+		$x=0;
+		if( API_Con_Model::get_transient( $key . '-' . $x ) )
+			while( API_Con_Model::get_transient( $key . '-' . $x ) )
+				$x++;
+		$key .= '-' . $x;
+
+		//set transient
 		$trans_id = API_Con_Model::set_transient(
-			API_Con_Model::$meta_keys['transient'][0], 
-			$callback 
+			$key, 
+			$callback,
+			$transient_time
 		);
 
 		//return htm link | API_Con_Error
