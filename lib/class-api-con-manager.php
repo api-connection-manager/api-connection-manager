@@ -322,8 +322,8 @@ class API_Con_Manager{
 	 * @return API_Con_DTO           Returns the DTO
 	 */
 	private function request_token( API_Con_DTO $dto ){
-
-		$service = $_SESSION['api-con-manager-callback']['service'];
+		
+		$service = API_Con_Manager::get_service( $_SESSION['api-con-manager-callback']['service'] );
 		$callback = $_SESSION['api-con-manager-callback']['callback'];
 		unset($_SESSION['api-con-manager-callback']);
 
@@ -332,9 +332,17 @@ class API_Con_Manager{
 
 		$token = (array) $service->get_token( $dto );
 		$user = wp_get_current_user();
-		API_Con_Manager::connect_user( $this, $user, $token );
+		API_Con_Manager::connect_user( $service, $user, $token );
 
-		call_user_func( $callback );
+		//do callback
+		if ( is_array($callback) ){
+			$class_name = $callback[0];
+			$method = $callback[1];
+			$class = new $class_name();
+			$class->$method( $dto );
+		}
+		elseif( $callback )
+			$callback( $dto );
 
 		die('process finished');
 	}
@@ -356,18 +364,9 @@ class API_Con_Manager{
 			'service' => $dto->data['service'],
 			'callback' => API_Con_Model::get_transient_by_id( $dto->data['transid'] )
 		);
+
 		$service = API_Con_Manager::get_service( $dto->data['service'] );
 		$url = $service->get_authorize_url();
-
-		//set callback as option
-		update_option( API_Con_Model::$meta_keys['callback'] );
-
-		//store service in db
-		$key = __CLASS__ . '::service_login';
-		API_Con_Model::set(
-			$key, 
-			$service->name
-		);
 
 		//redirect & die
 		wp_redirect( $url );

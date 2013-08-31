@@ -10,6 +10,7 @@
   Author: Daithi Coombes
   Author URI: http://david-coombes.com
  */
+session_start();
 
 function api_con_autoload( $class ){
   
