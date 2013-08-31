@@ -18,25 +18,14 @@ class API_Con_Dash_Service extends WP_List_Table{
 	 * @see WP_List_Table::__construct()
 	 */
 	function __construct(){
-		parent::__construct( array(
-			'singular' => 'api_con_dash_service',
-			'plural' => 'api_con_dash_services',
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'api_con_dash_service',
+				'plural' => 'api_con_dash_services',
+			)
+		);
 
 	}
-
-	/**
-	 * Prints the checkbox column
-	 * @param  stdclass $item The row item
-	 * @return string       checkbox html
-	 */
-    function column_cb($item){
-        return sprintf(
-            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("service")
-            /*$2%s*/ $item->name                //The value of the checkbox should be the record's id
-        );
-    }
 
     /**
      * The default column html
@@ -44,7 +33,7 @@ class API_Con_Dash_Service extends WP_List_Table{
      * @param  string $column_name Current column name
      * @return string              The item value for this column
      */
-    function column_default($item, $column_name){
+    function column_default( $item, $column_name ){
     	return $item->$column_name;
     }
 
@@ -53,25 +42,30 @@ class API_Con_Dash_Service extends WP_List_Table{
      * @param  stdClass $item The current item
      * @return string       The quick link html
      */
-    function column_name($item){
+    function column_name( $item ){
         
         //Build row actions
         $actions = array(
-            'activate'      => sprintf('<a href="?page=%s&action=%s&api_con_dash_service=%s">Activate</a>',$_REQUEST['page'],'activate',$item->name),
-            'deactivate'    => sprintf('<a href="?page=%s&action=%s&api_con_dash_service=%s">Deactivate</a>',$_REQUEST['page'],'deactivate',$item->name),
-            'edit'			=> sprintf('<a href="#" class="api-con-dash-inline" id="inline-%s">Edit</a>',$item->name)
+            'activate'      => sprintf( '<a href="?page=%s&action=%s&api_con_dash_service=%s">Activate</a>',$_REQUEST['page'],'activate',$item->name ),
+            'deactivate'    => sprintf( '<a href="?page=%s&action=%s&api_con_dash_service=%s">Deactivate</a>',$_REQUEST['page'],'deactivate',$item->name ),
+            'edit'			=> sprintf( '<a href="#" class="api-con-dash-inline" id="inline-%s">Edit</a>',$item->name )
         );
         
         //Return the title contents
-        $ret = sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
+        $ret = sprintf(
+        	'%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
             /*$1%s*/ $item->name,
             /*$2%s*/ $item->name,
-            /*$3%s*/ $this->row_actions($actions)
+            /*$3%s*/ $this->row_actions( $actions )
         );
 
         $inline = $this->inline_edit( $item );
 
         return $ret . $inline;
+    }
+
+    function _echo( $str ){
+    	echo sanitize_text_field( $str );
     }
 
     /**
@@ -81,7 +75,7 @@ class API_Con_Dash_Service extends WP_List_Table{
     function get_bulk_actions() {
         $actions = array(
             'activate'    => __( 'Activate' ),
-            'deactivate' => __( 'Deactivate' )
+            'deactivate' => __( 'Deactivate' ),
         );
         return $actions;
     }
@@ -105,7 +99,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 	function get_sortable_columns(){
 		return $sortable = array(
 			'name' => 'name',
-			'state' => 'state'
+			'state' => 'state',
 		);
 	}
 
@@ -128,8 +122,8 @@ class API_Con_Dash_Service extends WP_List_Table{
 		$services_active = API_Con_Manager::get_services( 'active' );
 		$items = array();
 
-		foreach( $services as $service ){
-			if( in_array( $service, $services_active ) )
+		foreach ( $services as $service ) {
+			if ( in_array( $service, $services_active ) )
 				$state = 'active';
 			else
 				$state = 'inactive';
@@ -148,22 +142,22 @@ class API_Con_Dash_Service extends WP_List_Table{
 
     	//vars
     	$action = $_GET['action'];
-		$db_services = API_Con_Model::get('services');
+		$db_services = API_Con_Model::get( 'services' );
     	$services = (array) $_GET['api_con_dash_service'];
 
     	//check nonce
-    	if( $action ){
+    	if ( $action ){
 	    	//if( !wp_verify_nonce( '963a1db024', 'api-con-dash' ) );
 	    		//die('invalid nonce');
 	    }
     	
     	//save inline-edit form
-    	if( 'inline-edit'==$action ){
+    	if ( 'inline-edit' == $action ){
     		$service = API_Con_Manager::get_service( $_GET['api_con_dash_service'] );
     		$options = $service->get_options();
 
-    		foreach( $options as $key=>$val )
-    			if( @$_GET[ $key ] )
+    		foreach ( $options as $key => $val )
+    			if ( @$_GET[ $key ] )
     				$options[ $key ] = $_GET[ $key ];
 
     		$service->set_options( $options );
@@ -173,7 +167,7 @@ class API_Con_Dash_Service extends WP_List_Table{
     	}
 
     	$service_objs = array();
-    	foreach( $services as $service )
+    	foreach ( $services as $service )
     		$service_objs[] = API_Con_Manager::get_service( $service );
     	return API_Con_Manager::set_service_states( $service_objs, $action );
     }
@@ -196,18 +190,18 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 			if ( 'cb' == $column_name ) {
 				echo '<th scope="row" class="check-column">';
-				echo $this->column_cb( $item );
+		        echo wp_kses_post( '<input type="checkbox" name="' . $this->_args['singular'] . '" value="' . $item->name . '" />' );
 				echo '</th>';
 			}
 			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				echo "<td $attributes>";
-				echo call_user_func( array( &$this, 'column_' . $column_name ), $item );
-				echo "</td>";
+				echo '<td ' . esc_attr( $attributes ) . '>';
+				echo wp_kses_post( call_user_func( array( &$this, 'column_' . $column_name ), $item ) );
+				echo '</td>';
 			}
 			else {
-				echo "<td $attributes>";
-				echo $this->column_default( $item, $column_name );
-				echo "</td>";
+				echo '<td ' . esc_attr( $attributes ) . '>';
+				echo wp_kses_post( $this->column_default( $item, $column_name ) );
+				echo '</td>';
 			}
 		}
 
@@ -223,11 +217,11 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 		//$dash_services = new API_Con_Dash_Service();
 		$this->prepare_items();
-		$inline_nonce = wp_create_nonce('api-con-dash');
+		$inline_nonce = wp_create_nonce( 'api-con-dash' );
 
 		?>
         <form id="api-con-dash-services" method="get">
-        	<input type="hidden" name="page" value="<?php echo $_GET['page']?>"/>
+        	<input type="hidden" name="page" value="<?php echo sanitize_text_field( $_GET['page'] ); ?>"/>
             <?php $this->display() ?>
         </form>
 
@@ -246,7 +240,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 						url += "&" + this.name + "=" + this.value;
 				})
 				
-				window.location.href = url + '&api_con_dash_service='+id+'&action=inline-edit&wpnonce=<?php echo $inline_nonce; ?>';
+				window.location.href = url + '&api_con_dash_service='+id+'&action=inline-edit&wpnonce=<?php echo sanitize_text_field( $inline_nonce ); ?>';
 			});
 
 			//show inline edit form
@@ -269,19 +263,19 @@ class API_Con_Dash_Service extends WP_List_Table{
 	 * @param  stdclass $item current item
 	 * @return string       the html
 	 */
-	public function inline_edit( $item=null ){
-		if( !$item )
+	public function inline_edit( $item = null ){
+		if ( !$item )
 			return;
 		
 		$service = API_Con_Manager::get_service( $item->name );
 		$options = $service->get_options();
-		if( !count($options) )
+		if ( !count( $options ) )
 			return;
 		
 		$ret = '<div class="api-con-dash-hidden" id="api-con-dash-inline-' . $item->name . '">
 			<p>Redirect URL:<br/> <b>' . $service->get_redirect_url() . '</b></p>';
 
-		foreach($options as $key=>$val){
+		foreach ( $options as $key => $val ){
 			$ret .= '<label for="' . $key . '">' . $key . '</label>';
 			$ret .= '<input type="text" name="' . $key . '" id="' . $key . '" value="' . $val . '" disabled/>';
 		}
