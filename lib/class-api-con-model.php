@@ -12,8 +12,10 @@
 class API_Con_Model{
 
 	public static $meta_keys = array(
-		'callback' => 'API_Con_Manager-callback',			//the current callback @see API_Con_Manager::service_login
-		'transient' => array( 'API_Con_Service-callback' ),
+		'callback' => 'API_Con_Manager-callback',			//the current callback @see API_Con_Manager::service_login()
+		'service_options' => 'API_Con_Manager-options',		//service options
+		'services' => 'API_Con_Manager-services',			//service states
+		'transient' => array( 'API_Con_Service-callback' ), //for login links @see API_Con_Service::get_login_link()
 		'user_connections' => 'API_Con_Manager-connections'
 	);
 

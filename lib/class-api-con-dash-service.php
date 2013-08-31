@@ -121,13 +121,13 @@ class API_Con_Dash_Service extends WP_List_Table{
 		$services = API_Con_Manager::get_services( 'installed' );
 		$services_active = API_Con_Manager::get_services( 'active' );
 		$items = array();
-
+		
 		foreach ( $services as $service ) {
 			if ( in_array( $service, $services_active ) )
 				$state = 'active';
 			else
 				$state = 'inactive';
-			$items[] = (object) array( 'cb' => $service, 'name' => $service, 'state' => $state );
+			$items[] = (object) array( 'cb' => $service, 'name' => $service->name, 'state' => $state );
 		}
 
 		$this->items = $items;
@@ -190,7 +190,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 			if ( 'cb' == $column_name ) {
 				echo '<th scope="row" class="check-column">';
-		        echo wp_kses_post( '<input type="checkbox" name="' . $this->_args['singular'] . '" value="' . $item->name . '" />' );
+		        echo '<input type="checkbox" name="' . $this->_args['singular'] . '[]" value="' . $item->name . '" />';
 				echo '</th>';
 			}
 			elseif ( method_exists( $this, 'column_' . $column_name ) ) {

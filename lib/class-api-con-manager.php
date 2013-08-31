@@ -124,7 +124,7 @@ class API_Con_Manager{
 			
 
 			case 'active':
-					$db_services = API_Con_Model::get( 'services' );
+					$db_services = API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
 					if ( !$db_services )
 						return array();
 
@@ -140,7 +140,7 @@ class API_Con_Manager{
 						continue;
 
 					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
-					$services[] = ucfirst( $matches[0] );
+					$services[] = API_Con_Manager::get_service( ucfirst( $matches[0] ) );
 				}
 			break;
 
@@ -187,8 +187,8 @@ class API_Con_Manager{
 	 */
 	public static function set_service_states( array $services, $action ){
 
-		$db_services = (array) API_Con_Model::get( 'services' );
-
+		$db_services = (array) API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
+		
     	if ( $action == 'activate' ){
     		$update = 'active';
     		$delete = 'inactive';
@@ -200,8 +200,8 @@ class API_Con_Manager{
 
     	//rebuild services[]
 		foreach ( $services as $service ) {
-			if ( !API_Con_Manager::is_valid_service_name( $service ) )
-				return new API_Con_Error( 'Invalid service name ' . $service );
+			if ( !API_Con_Manager::is_valid_service_name( $service->name ) )
+				return new API_Con_Error( 'Invalid service name ' . $service->name );
 
 			if ( false !== ( $key = @array_search( $service->name, $db_services[$delete] ) ) )
 				unset( $db_services[$delete][$key] );
@@ -211,7 +211,10 @@ class API_Con_Manager{
 		}
 
 		$db_services[$update] = array_unique( $db_services[$update] );
-		return API_Con_Model::set( 'services', $db_services );
+		return API_Con_Model::set(
+			API_Con_Model::$meta_keys['services'],
+			$db_services
+		);
 	}
 
 	/**

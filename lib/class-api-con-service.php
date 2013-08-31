@@ -194,7 +194,7 @@ class API_Con_Service{
 	 */
 	public function load_options(){
 
-		$service_options = API_Con_Model::get( 'service_options' );
+		$service_options = API_Con_Model::get( API_Con_Model::$meta_keys['service_options'] );
 		$options = $service_options[ $this->name ];
 
 		if ( count( $options ) )
@@ -248,7 +248,7 @@ class API_Con_Service{
 	 */
 	public function set_options( array $options ){
 		
-		$service_options = API_Con_Model::get( 'service_options' );
+		$service_options = API_Con_Model::get( API_Con_Model::$meta_keys['service_options'] );
 		if ( !$service_options )
 			$service_options = array();
 
