@@ -101,7 +101,9 @@ class API_Con_Manager{
 					$db_services = API_Con_Model::get( 'services' );
 					if ( !$db_services )
 						return array();
-					return $db_services['active'];
+
+					foreach( $db_services['active'] as $service )
+						$services[] = API_Con_Manager::get_service( $service );
 				break;
 
 			case 'installed':

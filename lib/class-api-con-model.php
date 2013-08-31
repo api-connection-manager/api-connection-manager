@@ -11,6 +11,10 @@
  */
 class API_Con_Model{
 
+	public static $meta_keys = array(
+		'transient' => array( 'API_Con_Service-callback' )
+	);
+
 	/**
 	 * Get a value from the db
 	 * @param  string  $key       The key used to store value
@@ -27,6 +31,10 @@ class API_Con_Model{
 		return $val;
 	}
 
+	public static function get_transient( $key ){
+		return get_transient( $key );
+	}
+
 	/**
 	 * Store a value in the db
 	 * @param string  $key       This is usually the name of the api con class calling this func
@@ -35,5 +43,31 @@ class API_Con_Model{
 	public static function set( $key, $val ){
 		
 		return update_option( $key, $val );
+	}
+
+	/**
+	 * Set a transient record.
+	 * Method must return the record id from the database.
+	 * @see  API_Con_Service::get_login_link()
+	 * @param string  $key    The transient name.
+	 * @param mixed  $val    The transient value.
+	 * @param integer $expire Default 1hr. The expire time in seconds.
+	 */
+	public static function set_transient( $key, $val, $expire=3600 ){
+		global $wpdb;
+
+		//get unique transient name
+		$x=0;
+		while( API_Con_Model::get_transient( $key . '-' . $x ) )
+			$x++;
+
+		set_transient( $key, $val, $expire );
+	
+		var_dump($wpdb);	
+		//return option_id | WP_Error
+		if( $wpdb->insert_id )
+			$wpdb->insert_id;
+		else
+			return new API_Con_Error( 'API_Con_Model::set_transient Error: ' . $wpdb->last_error );
 	}
 }

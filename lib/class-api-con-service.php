@@ -88,10 +88,50 @@ class API_Con_Service{
 
 	/**
 	 * Return the login url
+	 * @param array $extra_params Optional. Any extra query params.
 	 * @return string the full `URI` to login this service
 	 */
-	public function get_login_url(){
-		return admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=service_login&service=' . $this->name;
+	public function get_login_url( $extra_params=array() ){
+		$ret = admin_url( 'admin-ajax.php' ) 
+			. '?action=api-con-manager&api-con-action=service_login&service=' 
+			. $this->name;
+		if( count( $extra_params ) )
+			$ret .= '&' . http_build_query( $extra_params );
+
+		return $ret;
+	}
+
+	/**
+	 * Return the login link.
+	 * All logins should open in a new tab. Callbacks are stored as transient
+	 * records. The record id is required to be sent in the url request and 
+	 * matched in _response_listener to get the callback. This is to ensure
+	 * callback, class names are not displayed in the login link - only the
+	 * transient record id will.
+	 *
+	 * Each call to get_login_link() will require its own row in the db. These
+	 * recored must be deleted after x amount of time.
+	 * @see  API_Con_Model::set_transient()
+	 * @see  API_Con_Manager::_response_listener()
+	 * @return string The html anchor link
+	 */
+	public function get_login_link( $callback, $transient_time=5 ){
+
+		//store $callback as transient
+		$trans_id = API_Con_Model::set_transient(
+			API_Con_Model::$meta_keys['transient'][0], 
+			$callback 
+		);
+
+		//return htm link | API_Con_Error
+		if( !is_wp_error( $trans_id ) )
+			return '<a href="' 
+				. $this->get_login_url( array('transid' => $trans_id) )
+				. '" target="_new">'
+				. $this->name
+				. '</a>';
+		else
+			return $trans_id;
 	}
 
 	/**
