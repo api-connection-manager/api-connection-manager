@@ -208,6 +208,32 @@ class API_Con_Dash_Service extends WP_List_Table{
 		//inline edit
     }
 
+    public function get_page_options(){
+
+    	$services = API_Con_Manager::get_services( 'active' );
+    	$html = array();
+
+    	foreach( $services as $service ){
+    		$form = '<form method="post">
+    			<input type="hidden" name="api-con-action" value="save_options"/>
+    			<ul>
+    			<li><hr/><strong>' . $service->name . '</strong></li>
+    		';
+    		foreach( $service->get_options() as $option => $val )
+    			$form .= '<li>
+    				<label for="' . $service->name . '-' . $option . '">' . $option . '
+    				<input type="text" name="' . $option . '"/>
+    			</li>';
+    		$form .= '</ul>
+    			<input type="submit" value="Save ' . $service->name . '"/>
+    			</form>
+    		';
+    		$html[] = $form;
+    	}
+
+    	echo implode('', $html);
+    }
+
 	/**
 	 * Prints the dashboard services page for API Connection Manager.
 	 * This page allows the activating/deactivating of services
@@ -269,7 +295,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 		
 		$service = API_Con_Manager::get_service( $item->name );
 		$options = $service->get_options();
-		var_dump($options);
+		
 		if ( !count( $options ) )
 			return;
 		
