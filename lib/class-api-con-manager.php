@@ -32,7 +32,7 @@ class API_Con_Manager{
 	 * API_Con_Service::request()
 	 * @return array
 	 */
-	public static function connect_user( API_Con_Service $service, WP_User $user, array $data ){
+	public static function connect_user( API_Con_Service $service, WP_User $user, OAuthToken $data ){
 
 		//build connections array()
 		$connections = get_user_meta(
@@ -346,6 +346,8 @@ class API_Con_Manager{
 
 	/**
 	 * Oauth 1/2 callback to request token.
+	 * Will call user defined callback and pass API_Con_Service, WP_User and
+	 * token.
 	 * @see  API_Con_Manager::response_listener()
 	 * @param  API_Con_DTO $dto The dto.
 	 * @return API_Con_DTO           Returns the DTO
@@ -368,10 +370,10 @@ class API_Con_Manager{
 			$class_name = $callback[0];
 			$method = $callback[1];
 			$class = new $class_name();
-			$class->$method( $service, $dto );
+			$class->$method( $service, $dto, $token );
 		}
 		elseif( $callback )
-			$callback( $service, $dto );
+			$callback( $service, $dto, $token );
 
 		die('process finished');
 	}
