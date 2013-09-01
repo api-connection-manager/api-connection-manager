@@ -154,6 +154,21 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Get user connections from usermeta.
+	 * @see  API_Con_Manager::connect_user()
+	 * @return array
+	 */
+	public static function get_user_connections(){
+
+		$user = wp_get_current_user();
+		return get_user_meta(
+			$user->ID, 
+			API_Con_Model::$meta_keys['user_connections'], 
+			array()
+		);
+	}
+
+	/**
 	 * Check if a service is connected.
 	 * @todo  Design system for checking if services are connected or not.
 	 * @param  API_Con_Service $service The service module.
@@ -353,10 +368,10 @@ class API_Con_Manager{
 			$class_name = $callback[0];
 			$method = $callback[1];
 			$class = new $class_name();
-			$class->$method( $dto );
+			$class->$method( $service, $dto );
 		}
 		elseif( $callback )
-			$callback( $dto );
+			$callback( $service, $dto );
 
 		die('process finished');
 	}
