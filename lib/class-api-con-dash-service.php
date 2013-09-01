@@ -139,10 +139,10 @@ class API_Con_Dash_Service extends WP_List_Table{
 	 * @return  void
 	 */
     function process_bulk_action() {
-
+    	
     	//vars
     	$action = $_GET['action'];
-		$db_services = API_Con_Model::get( 'services' );
+		$db_services = API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
     	$services = (array) $_GET['api_con_dash_service'];
 
     	//check nonce
@@ -214,19 +214,26 @@ class API_Con_Dash_Service extends WP_List_Table{
      */
     public function get_page_options(){
 
-    	$services = API_Con_Manager::get_services( 'active' );
+    	$action = @$_GET['action'];
     	$html = array();
+    	$services = API_Con_Manager::get_services( 'active' );
+
+    	if ( $action && method_exists($this, $action ) )
+    		$this->$action();
+
 
     	foreach( $services as $service ){
-    		$form = '<form method="post">
+    		$form = '<form method="get">
     			<input type="hidden" name="action" value="save_options"/>
+    			<input type="hidden" name="page" value="' . $_GET['page'] . '"/>
+    			<input type="hidden" name="service" value="' . $service->name . '"/>
     			<ul>
     			<li><hr/><strong>' . $service->name . '</strong></li>
     		';
     		foreach( $service->get_options() as $option => $val )
     			$form .= '<li>
     				<label for="' . $service->name . '-' . $option . '">' . $option . '
-    				<input type="text" name="' . $option . '"/>
+    				<input type="text" name="' . $option . '" value="' . $val . '"/>
     			</li>';
     		$form .= '</ul>
     			<input type="submit" value="Save ' . $service->name . '"/>
@@ -315,5 +322,20 @@ class API_Con_Dash_Service extends WP_List_Table{
 		</div>';
 
 		return $ret;
+	}
+
+	/**
+	 * Save service options
+	 * @see  API_Con_Dash_Service::get_page_options()
+	 */
+	private function save_options(){
+		
+		$service = API_Con_Manager::get_service( $_GET['service'] );
+		$options = $service->get_options();
+		
+		foreach($options as $option=>$val)
+			$options[$option] = $_GET[$option];
+
+		$service->set_options($options);
 	}
 }
