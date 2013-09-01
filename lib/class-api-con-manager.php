@@ -25,6 +25,32 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Set a connection between user and service
+	 * @param  API_Con_Service $service The service to set
+	 * @param  WP_User         $user    The user to connect with
+	 * @param  array           $data    Tokens and other data needed by
+	 * API_Con_Service::request()
+	 * @return array
+	 */
+	public static function connect_user( API_Con_Service $service, WP_User $user, array $data ){
+
+		//build connections array()
+		$connections = get_user_meta(
+			$user->ID, 
+			API_Con_Model::$meta_keys['user_connections'], 
+			array()
+		);
+		$connections[$service->name] = $data;
+
+		//set and return
+		return update_user_meta(
+			$user->ID,
+			API_Con_Model::$meta_keys['user_connections'],
+			$connections
+		);
+	}
+
+	/**
 	 * Factory method to get API Connection Manager object
 	 * @param  array $config Deprecated, for now.
 	 * @todo see if $config param is needed
@@ -98,10 +124,12 @@ class API_Con_Manager{
 			
 
 			case 'active':
-					$db_services = API_Con_Model::get( 'services' );
+					$db_services = API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
 					if ( !$db_services )
 						return array();
-					return $db_services['active'];
+
+					foreach( $db_services['active'] as $service )
+						$services[] = API_Con_Manager::get_service( $service );
 				break;
 
 			case 'installed':
@@ -112,7 +140,7 @@ class API_Con_Manager{
 						continue;
 
 					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
-					$services[] = ucfirst( $matches[0] );
+					$services[] = API_Con_Manager::get_service( ucfirst( $matches[0] ) );
 				}
 			break;
 
@@ -123,6 +151,21 @@ class API_Con_Manager{
 		}
 
 		return $services;
+	}
+
+	/**
+	 * Get user connections from usermeta.
+	 * @see  API_Con_Manager::connect_user()
+	 * @return array
+	 */
+	public static function get_user_connections(){
+
+		$user = wp_get_current_user();
+		return get_user_meta(
+			$user->ID, 
+			API_Con_Model::$meta_keys['user_connections'], 
+			array()
+		);
 	}
 
 	/**
@@ -159,8 +202,8 @@ class API_Con_Manager{
 	 */
 	public static function set_service_states( array $services, $action ){
 
-		$db_services = (array) API_Con_Model::get( 'services' );
-
+		$db_services = (array) API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
+		
     	if ( $action == 'activate' ){
     		$update = 'active';
     		$delete = 'inactive';
@@ -172,8 +215,8 @@ class API_Con_Manager{
 
     	//rebuild services[]
 		foreach ( $services as $service ) {
-			if ( !API_Con_Manager::is_valid_service_name( $service ) )
-				return new API_Con_Error( 'Invalid service name ' . $service );
+			if ( !API_Con_Manager::is_valid_service_name( $service->name ) )
+				return new API_Con_Error( 'Invalid service name ' . $service->name );
 
 			if ( false !== ( $key = @array_search( $service->name, $db_services[$delete] ) ) )
 				unset( $db_services[$delete][$key] );
@@ -183,7 +226,10 @@ class API_Con_Manager{
 		}
 
 		$db_services[$update] = array_unique( $db_services[$update] );
-		return API_Con_Model::set( 'services', $db_services );
+		return API_Con_Model::set(
+			API_Con_Model::$meta_keys['services'],
+			$db_services
+		);
 	}
 
 	/**
@@ -204,24 +250,35 @@ class API_Con_Manager{
 	 * @return  array Returns admin slug, sub menu slug, API_Con_Dash_Service
 	 */
 	public function action_admin_menu(){
+		$dash = new API_Con_Dash_Service();
+
 		//dashboard
 		$menu = add_menu_page(
 			'API Connection Manager', 
 			'API Manager',
 			'manage_options',
 			'api-con-manager',
-			array(&$this, 'get_page')
+			array(&$dash, 'get_page_services')
 		);
 
 		//services
-		$services = new API_Con_Dash_Service();
 		$submenu = add_submenu_page(
 			'api-con-manager',
 			'API Con Services',
 			'Services',
 			'manage_options',
 			'api-con-services',
-			array(&$services, 'get_page')
+			array(&$dash, 'get_page_services')
+			);
+
+		//options
+		$submenu = add_submenu_page(
+			'api-con-manager',
+			'API Con Options',
+			'Options',
+			'manage_options',
+			'api-con-options',
+			array(&$dash, 'get_page_options')
 			);
 
 		return array( $menu, $submenu, $services );
@@ -294,36 +351,51 @@ class API_Con_Manager{
 	 * @return API_Con_DTO           Returns the DTO
 	 */
 	private function request_token( API_Con_DTO $dto ){
-
-		$key = __CLASS__ . '::service_login';
-		$service = API_Con_Manager::get_service( API_Con_Model::get( $key, true ) );
+		
+		$service = API_Con_Manager::get_service( $_SESSION['api-con-manager-callback']['service'] );
+		$callback = $_SESSION['api-con-manager-callback']['callback'];
+		unset($_SESSION['api-con-manager-callback']);
 
 		if ( is_wp_error( $service ) )
 			die( $service->get_error_message() );
 
-		$token = $service->get_token( $dto );
+		$token = (array) $service->get_token( $dto );
+		$user = wp_get_current_user();
+		API_Con_Manager::connect_user( $service, $user, $token );
+
+		//do callback
+		if ( is_array($callback) ){
+			$class_name = $callback[0];
+			$method = $callback[1];
+			$class = new $class_name();
+			$class->$method( $service, $dto );
+		}
+		elseif( $callback )
+			$callback( $service, $dto );
 
 		die('process finished');
 	}
 
 	/**
-	 * Redirects to remote authorization server. Service name is taken from $dto->data['service']
-	 * and stored in db.
+	 * Redirects to remote authorization server. Service name is taken from 
+	 * $dto->data['service'] and callback transient record is taken from 
+	 * $dto->data['transid']. Both are stored in a session.
+	 * @uses  $_SESSION['api-con-manager-callback'] Stores service and callback.
+	 * @uses  API_Con_Model::get_transient_by_id() To get callback value.
 	 * @uses  API_Con_Service::get_authorize_url() The url to redirect to
 	 * @param  API_Con_DTO $dto The data transport object
 	 */
 	private function service_login( API_Con_DTO $dto ){
-		
+		global $wpdb;
+
 		//vars
+		$_SESSION['api-con-manager-callback'] = array(
+			'service' => $dto->data['service'],
+			'callback' => API_Con_Model::get_transient_by_id( $dto->data['transid'] )
+		);
+
 		$service = API_Con_Manager::get_service( $dto->data['service'] );
 		$url = $service->get_authorize_url();
-
-		//store service in db
-		$key = __CLASS__ . '::service_login';
-		API_Con_Model::set(
-			$key, 
-			$service->name
-		);
 
 		//redirect & die
 		wp_redirect( $url );
