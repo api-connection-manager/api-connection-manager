@@ -88,10 +88,62 @@ class API_Con_Service{
 
 	/**
 	 * Return the login url
+	 * @param array $extra_params Optional. Any extra query params.
 	 * @return string the full `URI` to login this service
 	 */
-	public function get_login_url(){
-		return admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=service_login&service=' . $this->name;
+	public function get_login_url( $extra_params=array() ){
+		$ret = admin_url( 'admin-ajax.php' ) 
+			. '?action=api-con-manager&api-con-action=service_login&service=' 
+			. $this->name;
+		if( count( $extra_params ) )
+			$ret .= '&' . http_build_query( $extra_params );
+
+		return $ret;
+	}
+
+	/**
+	 * Return the login link.
+	 * All logins should open in a new tab. Callbacks are stored as transient
+	 * records. The record id is required to be sent in the url request and 
+	 * matched in _response_listener to get the callback. This is to ensure
+	 * callback, class names etc are not displayed in the login link - only the
+	 * transient record id will.
+	 *
+	 * Each call to get_login_link() will require its own transient. These
+	 * recoreds must be deleted after x amount of time and have unique key.
+	 * @see  API_Con_Model::set_transient()
+	 * @see  API_Con_Manager::_response_listener()
+	 * @todo  write unit tests
+	 * @param mixed $callback The callback function, or array(class, method)
+	 * @param integer $transient_time Default 3600. Transient timeout in seconds
+	 * @return string The html anchor link
+	 */
+	public function get_login_link( $callback, $transient_time=3600 ){
+
+		//generate unique key for callback transient
+		$key = API_Con_Model::$meta_keys['transient'][0];
+		$x=0;
+		if( API_Con_Model::get_transient( $key . '-' . $x ) )
+			while( API_Con_Model::get_transient( $key . '-' . $x ) )
+				$x++;
+		$key .= '-' . $x;
+
+		//set transient
+		$trans_id = API_Con_Model::set_transient(
+			$key, 
+			$callback,
+			$transient_time
+		);
+
+		//return htm link | API_Con_Error
+		if( !is_wp_error( $trans_id ) )
+			return '<a href="' 
+				. $this->get_login_url( array('transid' => $trans_id) )
+				. '" target="_new">'
+				. $this->name
+				. '</a>';
+		else
+			return $trans_id;
 	}
 
 	/**
@@ -142,7 +194,7 @@ class API_Con_Service{
 	 */
 	public function load_options(){
 
-		$service_options = API_Con_Model::get( 'service_options' );
+		$service_options = API_Con_Model::get( API_Con_Model::$meta_keys['service_options'] );
 		$options = $service_options[ $this->name ];
 
 		if ( count( $options ) )
@@ -196,7 +248,7 @@ class API_Con_Service{
 	 */
 	public function set_options( array $options ){
 		
-		$service_options = API_Con_Model::get( 'service_options' );
+		$service_options = API_Con_Model::get( API_Con_Model::$meta_keys['service_options'] );
 		if ( !$service_options )
 			$service_options = array();
 
@@ -204,7 +256,7 @@ class API_Con_Service{
 			if ( array_key_exists( $key, $this->options ) )
 				$service_options[ $this->name ][ $key ] = $val;
 		
-		API_Con_Model::set( 'service_options', $service_options );
+		API_Con_Model::set( API_Con_Model::$meta_keys['service_options'], $service_options );
 		$this->options = $service_options[ $this->name ];
 	}
 

@@ -121,13 +121,13 @@ class API_Con_Dash_Service extends WP_List_Table{
 		$services = API_Con_Manager::get_services( 'installed' );
 		$services_active = API_Con_Manager::get_services( 'active' );
 		$items = array();
-
+		
 		foreach ( $services as $service ) {
 			if ( in_array( $service, $services_active ) )
 				$state = 'active';
 			else
 				$state = 'inactive';
-			$items[] = (object) array( 'cb' => $service, 'name' => $service, 'state' => $state );
+			$items[] = (object) array( 'cb' => $service, 'name' => $service->name, 'state' => $state );
 		}
 
 		$this->items = $items;
@@ -139,10 +139,10 @@ class API_Con_Dash_Service extends WP_List_Table{
 	 * @return  void
 	 */
     function process_bulk_action() {
-
+    	
     	//vars
     	$action = $_GET['action'];
-		$db_services = API_Con_Model::get( 'services' );
+		$db_services = API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
     	$services = (array) $_GET['api_con_dash_service'];
 
     	//check nonce
@@ -190,7 +190,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 
 			if ( 'cb' == $column_name ) {
 				echo '<th scope="row" class="check-column">';
-		        echo wp_kses_post( '<input type="checkbox" name="' . $this->_args['singular'] . '" value="' . $item->name . '" />' );
+		        echo '<input type="checkbox" name="' . $this->_args['singular'] . '[]" value="' . $item->name . '" />';
 				echo '</th>';
 			}
 			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
@@ -208,12 +208,49 @@ class API_Con_Dash_Service extends WP_List_Table{
 		//inline edit
     }
 
+    /**
+     * Display dash options page.
+     * @see  API_Con_Dash_Service::save_options()
+     */
+    public function get_page_options(){
+
+    	$action = @$_GET['action'];
+    	$html = array();
+    	$services = API_Con_Manager::get_services( 'active' );
+
+    	if ( $action && method_exists($this, $action ) )
+    		$this->$action();
+
+
+    	foreach( $services as $service ){
+    		$form = '<form method="get">
+    			<input type="hidden" name="action" value="save_options"/>
+    			<input type="hidden" name="page" value="' . $_GET['page'] . '"/>
+    			<input type="hidden" name="service" value="' . $service->name . '"/>
+    			<ul>
+    			<li><hr/><strong>' . $service->name . '</strong></li>
+    		';
+    		foreach( $service->get_options() as $option => $val )
+    			$form .= '<li>
+    				<label for="' . $service->name . '-' . $option . '">' . $option . '
+    				<input type="text" name="' . $option . '" value="' . $val . '"/>
+    			</li>';
+    		$form .= '</ul>
+    			<input type="submit" value="Save ' . $service->name . '"/>
+    			</form>
+    		';
+    		$html[] = $form;
+    	}
+
+    	echo implode('', $html);
+    }
+
 	/**
 	 * Prints the dashboard services page for API Connection Manager.
 	 * This page allows the activating/deactivating of services
 	 * @see  API_Con_Manager::action_admin_menu()
 	 */
-	public function get_page(){
+	public function get_page_services(){
 
 		//$dash_services = new API_Con_Dash_Service();
 		$this->prepare_items();
@@ -269,6 +306,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 		
 		$service = API_Con_Manager::get_service( $item->name );
 		$options = $service->get_options();
+		
 		if ( !count( $options ) )
 			return;
 		
@@ -284,5 +322,20 @@ class API_Con_Dash_Service extends WP_List_Table{
 		</div>';
 
 		return $ret;
+	}
+
+	/**
+	 * Save service options
+	 * @see  API_Con_Dash_Service::get_page_options()
+	 */
+	private function save_options(){
+		
+		$service = API_Con_Manager::get_service( $_GET['service'] );
+		$options = $service->get_options();
+		
+		foreach($options as $option=>$val)
+			$options[$option] = $_GET[$option];
+
+		$service->set_options($options);
 	}
 }
