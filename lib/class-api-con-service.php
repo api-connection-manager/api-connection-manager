@@ -165,11 +165,11 @@ class API_Con_Service{
 	/**
 	 * Get an access token
 	 * @param  API_Con_DTO $dto The data transport object containing the code value
-	 * @param  bool $params Default true. Whether to send standard params or not.
+	 * @param  array $params Aditional params to send
 	 * @todo  write unit tests for this method
 	 * @return OAuthToken Returns API_Con_Error if error
 	 */
-	public function get_token( API_Con_DTO $dto, $params = true ){
+	public function get_token( API_Con_DTO $dto, $params = array() ){
 
    		$code = $dto->data['code'];
    		$consumer = API_Con_Manager::get_consumer( $this );
