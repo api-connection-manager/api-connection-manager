@@ -213,7 +213,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 	 * This page allows the activating/deactivating of services
 	 * @see  API_Con_Manager::action_admin_menu()
 	 */
-	public function get_page(){
+	public function get_page_services(){
 
 		//$dash_services = new API_Con_Dash_Service();
 		$this->prepare_items();
@@ -269,6 +269,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 		
 		$service = API_Con_Manager::get_service( $item->name );
 		$options = $service->get_options();
+		var_dump($options);
 		if ( !count( $options ) )
 			return;
 		

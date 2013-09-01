@@ -256,7 +256,7 @@ class API_Con_Service{
 			if ( array_key_exists( $key, $this->options ) )
 				$service_options[ $this->name ][ $key ] = $val;
 		
-		API_Con_Model::set( 'service_options', $service_options );
+		API_Con_Model::set( API_Con_Model::$meta_keys['service_options'], $service_options );
 		$this->options = $service_options[ $this->name ];
 	}
 

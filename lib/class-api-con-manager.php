@@ -235,24 +235,35 @@ class API_Con_Manager{
 	 * @return  array Returns admin slug, sub menu slug, API_Con_Dash_Service
 	 */
 	public function action_admin_menu(){
+		$dash = new API_Con_Dash_Service();
+
 		//dashboard
 		$menu = add_menu_page(
 			'API Connection Manager', 
 			'API Manager',
 			'manage_options',
 			'api-con-manager',
-			array(&$this, 'get_page')
+			array(&$dash, 'get_page_services')
 		);
 
 		//services
-		$services = new API_Con_Dash_Service();
 		$submenu = add_submenu_page(
 			'api-con-manager',
 			'API Con Services',
 			'Services',
 			'manage_options',
 			'api-con-services',
-			array(&$services, 'get_page')
+			array(&$dash, 'get_page_services')
+			);
+
+		//options
+		$submenu = add_submenu_page(
+			'api-con-manager',
+			'API Con Options',
+			'Options',
+			'manage_options',
+			'api-con-options',
+			array(&$dash, 'get_page_options')
 			);
 
 		return array( $menu, $submenu, $services );
