@@ -208,6 +208,10 @@ class API_Con_Dash_Service extends WP_List_Table{
 		//inline edit
     }
 
+    /**
+     * Display dash options page.
+     * @see  API_Con_Dash_Service::save_options()
+     */
     public function get_page_options(){
 
     	$services = API_Con_Manager::get_services( 'active' );
@@ -215,7 +219,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 
     	foreach( $services as $service ){
     		$form = '<form method="post">
-    			<input type="hidden" name="api-con-action" value="save_options"/>
+    			<input type="hidden" name="action" value="save_options"/>
     			<ul>
     			<li><hr/><strong>' . $service->name . '</strong></li>
     		';
