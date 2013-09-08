@@ -14,6 +14,8 @@ class API_Con_DTO{
 	
 	/** @var array The data passed to the server */
 	public $data;
+	/** @var OAuthToken An access token object */
+	public $token;
 
 	/**
 	 * Construct

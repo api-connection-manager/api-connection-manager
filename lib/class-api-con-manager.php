@@ -27,12 +27,22 @@ class API_Con_Manager{
 	/**
 	 * Set a connection between user and service
 	 * @param  API_Con_Service $service The service to set
-	 * @param  WP_User         $user    The user to connect with
-	 * @param  array           $data    Tokens and other data needed by
-	 * API_Con_Service::request()
+	 * @param  WP_User         $user    Default null. If not set then will use
+	 * the currently logged in user.
 	 * @return array
 	 */
-	public static function connect_user( API_Con_Service $service, WP_User $user, array $data ){
+	public static function connect_user( API_Con_Service $service, $user=null ){
+
+		//use current user?
+		if ( !$user )
+			$user = wp_get_current_user();
+
+		if ( $user->ID==0 )
+			return new API_Con_Error( 'Cannot connect user. No user logged in' );
+
+		//check for access token
+		if ( get_class($service->token)!='OAuthToken' )
+			return new API_Con_Error( 'No access token set for this service' );
 
 		//build connections array()
 		$connections = get_user_meta(
@@ -40,14 +50,34 @@ class API_Con_Manager{
 			API_Con_Model::$meta_keys['user_connections'], 
 			array()
 		);
-		$connections[$service->name] = $data;
-
+		$connections[$service->name] = $service->token;
+		
 		//set and return
-		return update_user_meta(
+		update_user_meta(
 			$user->ID,
 			API_Con_Model::$meta_keys['user_connections'],
 			$connections
 		);
+		return $connections;
+	}
+
+	/**
+	 * Do a callback.
+	 * @param  mixed $callback The class/method/function data
+	 * @param  API_Con_DTO $dto      The data transport object
+	 * @param  API_CON_Service $service  The service to pass to callback
+	 * @return mixed           Returns the callback call.
+	 */
+	public static function do_callback( $callback, $dto, $service ){
+		if ( is_array($callback) ){	
+			$class_name = $callback[0];
+			$method = $callback[1];
+			$class = new $class_name();
+			return $class->$method( $service, $dto );
+		}
+		elseif( $callback )
+			return $callback( $service, $dto );
+
 	}
 
 	/**
@@ -322,10 +352,25 @@ class API_Con_Manager{
 			return new API_Con_Error( 'Invalid request' );
 		//end Security
 		
-		//run method
-		$method = $dto->data['api-con-action'];
-		$dto = $this->$method( $dto );
+		//get service and callback
+		if ( @$_SESSION['api-con-manager-callback']['service'] )
+			$service = API_Con_Manager::get_service( $_SESSION['api-con-manager-callback']['service'] );
+		else
+			$service = API_Con_Manager::get_service( $dto->data['service'] );
+		$callback = @$_SESSION['api-con-manager-callback']['callback'];
+		unset($_SESSION['api-con-manager-callback']);
 
+		//run action method
+		$method = $dto->data['api-con-action'];
+		$this->$method( $dto, $service );
+
+		//do callbacks?
+		if ( $callback )
+			API_Con_Manager::do_callback( $callback, $dto, $service );
+
+		//error report | return
+		if ( is_wp_error($dto) )
+			die( 'Error in method ' . $method . ': ' . $dto->get_error_message() );
 		return $dto;
 	}
 
@@ -346,51 +391,44 @@ class API_Con_Manager{
 
 	/**
 	 * Oauth 1/2 callback to request token.
+	 * If user is logged in will connect that user to this service.
 	 * @see  API_Con_Manager::response_listener()
-	 * @param  API_Con_DTO $dto The dto.
-	 * @return API_Con_DTO           Returns the DTO
+	 * @param  API_Con_DTO $dto The dto, should contain the code.
+	 * @param  API_Con_Service $service The service the dto is related to.
+	 * @return API_Con_DTO           Returns the DTO with token set or
+	 * API_Con_Error if issue.
 	 */
-	private function request_token( API_Con_DTO $dto ){
-		
-		$service = API_Con_Manager::get_service( $_SESSION['api-con-manager-callback']['service'] );
-		$callback = $_SESSION['api-con-manager-callback']['callback'];
-		unset($_SESSION['api-con-manager-callback']);
+	private function request_token( API_Con_DTO $dto, API_Con_Service $service ){
+			
+		//get token
+		$token = $service->request_token( $dto );
+		if ( is_wp_error($token) )
+			return $token;
 
-		if ( is_wp_error( $service ) )
-			die( $service->get_error_message() );
-
-		$token = (array) $service->get_token( $dto );
-		$user = wp_get_current_user();
-		API_Con_Manager::connect_user( $service, $user, $token );
-
-		//do callback
-		if ( is_array($callback) ){
-			$class_name = $callback[0];
-			$method = $callback[1];
-			$class = new $class_name();
-			$class->$method( $service, $dto );
+		//try connect user
+		if ( is_user_logged_in() ){
+			$user = wp_get_current_user();
+			API_Con_Manager::connect_user( $service, $user );
 		}
-		elseif( $callback )
-			$callback( $service, $dto );
 
-		die('process finished');
+		return $service;
 	}
 
 	/**
-	 * Redirects to remote authorization server. Service name is taken from 
-	 * $dto->data['service'] and callback transient record is taken from 
-	 * $dto->data['transid']. Both are stored in a session.
+	 * Redirects to remote authorization server. Callback transient record id is 
+	 * taken from $dto->data['transid'].
 	 * @uses  $_SESSION['api-con-manager-callback'] Stores service and callback.
 	 * @uses  API_Con_Model::get_transient_by_id() To get callback value.
 	 * @uses  API_Con_Service::get_authorize_url() The url to redirect to
 	 * @param  API_Con_DTO $dto The data transport object
+	 * @param API_Con_Service $service The service object
 	 */
-	private function service_login( API_Con_DTO $dto ){
+	private function service_login( API_Con_DTO $dto, API_Con_Service $service ){
 		global $wpdb;
 
 		//vars
 		$_SESSION['api-con-manager-callback'] = array(
-			'service' => $dto->data['service'],
+			'service' => $service->name,
 			'callback' => API_Con_Model::get_transient_by_id( $dto->data['transid'] )
 		);
 
