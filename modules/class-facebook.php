@@ -22,10 +22,14 @@ if( !class_exists( 'API_Con_Module_Facebook' ) ):
 			parent::__construct( array(
 				'auth_type' => 'oauth2',
 				'auth_url' => 'https://www.facebook.com/dialog/oauth',
-				'endpoint' => 'https://api.dropbox.com/1',
+				'endpoint' => 'https://graph.facebook.com',
 				'options' => array( 'key', 'secret' ),
 				'token_url' => 'https://graph.facebook.com/oauth/access_token',
 			), __CLASS__ );
+		}
+
+		function get_token( API_Con_DTO $dto ){
+			return parent::get_token( $dto, null, 'post' );
 		}
 
 		/**
@@ -36,7 +40,8 @@ if( !class_exists( 'API_Con_Module_Facebook' ) ):
 		 * @see  API_Con_Service::get_token()
 		 * @param  API_Con_DTO $dto [description]
 		 * @return [type]           [description]
-		 */
+		 * @deprecated
+		 *
 		function get_token( API_Con_DTO $dto ){
 
 	   		$code = $dto->data['code'];
@@ -56,6 +61,7 @@ if( !class_exists( 'API_Con_Module_Facebook' ) ):
 			parse_str( $res['body'], $body );
 			return new OAuthToken( $body[ 'access_token' ], null );
 		}
+		*/
 
 	}
 endif;
