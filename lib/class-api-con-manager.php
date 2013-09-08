@@ -51,21 +51,21 @@ class API_Con_Manager{
 	}
 
 	/**
-	 * Do a callback
-	 * @param  [type] $callback [description]
-	 * @param  [type] $dto      [description]
-	 * @param  [type] $service  [description]
-	 * @return [type]           [description]
+	 * Do a callback.
+	 * @param  mixed $callback The class/method/function data
+	 * @param  API_Con_DTO $dto      The data transport object
+	 * @param  API_CON_Service $service  The service to pass to callback
+	 * @return mixed           Returns the callback call.
 	 */
 	public static function do_callback( $callback, $dto, $service ){
 		if ( is_array($callback) ){	
 			$class_name = $callback[0];
 			$method = $callback[1];
 			$class = new $class_name();
-			$class->$method( $service, $dto );
+			return $class->$method( $service, $dto );
 		}
 		elseif( $callback )
-			$callback( $service, $dto );
+			return $callback( $service, $dto );
 
 	}
 

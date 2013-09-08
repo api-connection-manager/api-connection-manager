@@ -17,6 +17,16 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 			));
 	}
 
+	function test_do_callback(){
+
+		$callback = array(__CLASS__, "do_callback_foo");
+		$dto = new API_Con_DTO();
+		$res = API_Con_Manager::do_callback( $callback, $dto, $this->service );
+
+		$this->assertEquals($res[0], $this->service);
+		$this->assertEquals($res[1], $dto);
+	}
+
 	function test_factory(){
 		$api = API_Con_Manager::factory();
 
@@ -93,4 +103,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->assertInstanceOf( 'API_Con_DTO', $this->obj->response_listener( $dto ) );
 	}
 
+	function do_callback_foo( $service, $dto ){
+		return func_get_args();
+	}
 }
