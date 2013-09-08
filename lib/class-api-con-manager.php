@@ -27,12 +27,22 @@ class API_Con_Manager{
 	/**
 	 * Set a connection between user and service
 	 * @param  API_Con_Service $service The service to set
-	 * @param  WP_User         $user    The user to connect with
-	 * @param  array           $data    Tokens and other data needed by
-	 * API_Con_Service::request()
+	 * @param  WP_User         $user    Default null. If not set then will use
+	 * the currently logged in user.
 	 * @return array
 	 */
-	public static function connect_user( API_Con_Service $service, WP_User $user, OAuthToken $data ){
+	public static function connect_user( API_Con_Service $service, $user=null ){
+
+		//use current user?
+		if ( !$user )
+			$user = wp_get_current_user();
+
+		if ( $user->ID==0 )
+			return new API_Con_Error( 'Cannot connect user. No user logged in' );
+
+		//check for access token
+		if ( get_class($service->token)!='OAuthToken' )
+			return new API_Con_Error( 'No access token set for this service' );
 
 		//build connections array()
 		$connections = get_user_meta(
@@ -40,14 +50,15 @@ class API_Con_Manager{
 			API_Con_Model::$meta_keys['user_connections'], 
 			array()
 		);
-		$connections[$service->name] = $data;
-
+		$connections[$service->name] = $service->token;
+		
 		//set and return
-		return update_user_meta(
+		update_user_meta(
 			$user->ID,
 			API_Con_Model::$meta_keys['user_connections'],
 			$connections
 		);
+		return $connections;
 	}
 
 	/**
@@ -351,7 +362,7 @@ class API_Con_Manager{
 
 		//run action method
 		$method = $dto->data['api-con-action'];
-		$dto = $this->$method( $dto, $service );
+		$this->$method( $dto, $service );
 
 		//do callbacks?
 		if ( $callback )
@@ -390,19 +401,17 @@ class API_Con_Manager{
 	private function request_token( API_Con_DTO $dto, API_Con_Service $service ){
 			
 		//get token
-		$token = $service->get_token( $dto );
+		$token = $service->request_token( $dto );
 		if ( is_wp_error($token) )
 			return $token;
 
 		//try connect user
 		if ( is_user_logged_in() ){
 			$user = wp_get_current_user();
-			API_Con_Manager::connect_user( $service, $user, $token );
+			API_Con_Manager::connect_user( $service, $user );
 		}
 
-		//return new dto
-		$dto->token = $token;
-		return $dto;
+		return $service;
 	}
 
 	/**

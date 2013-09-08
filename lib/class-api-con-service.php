@@ -163,15 +163,16 @@ class API_Con_Service{
 	}
 
 	/**
-	 * Get an access token
+	 * Request an access token.
 	 * @param  API_Con_DTO $dto The data transport object containing the code value
 	 * @param  array $params Aditional params to send
 	 * @param string $method Default GET. Method to use for this service.
 	 * @todo  write unit tests for this method
 	 * @return OAuthToken Returns API_Con_Error if error
 	 */
-	public function get_token( API_Con_DTO $dto, $params = array(), $method='GET' ){
+	public function request_token( API_Con_DTO $dto, $params = array(), $method='GET' ){
 
+		//vars
    		$code = $dto->data['code'];
    		$consumer = API_Con_Manager::get_consumer( $this );
    		$params = array(
@@ -181,16 +182,18 @@ class API_Con_Service{
 			'code' => $code,
 		);
 
+   		//request an access token
 		if ( strtolower( $method ) === 'get' )
 			$res = wp_remote_get( $this->token_url, array( 'body' => $params ) );
 		else
 			$res = wp_remote_post( $this->token_url, array( 'body' => $params ) );
-		
 		if ( is_wp_error( $res ) )
 			return $res;
 
+		//set and return
 		parse_str( $res['body'], $body );
-		return new OAuthToken( $body[ 'access_token' ], null );
+		$this->token = new OAuthToken( $body[ 'access_token' ], null );
+		return $this->token;
 	}
 
 	/**
@@ -238,9 +241,9 @@ class API_Con_Service{
 		switch ($this->auth_type) {
 			case 'oauth2':
 				if ( strtolower( $method ) == 'get' || $method == null )
-					$url .= '?access_token=' . $this->key;
+					$url .= '?access_token=' . $this->token->key;
 				else
-					$params['access_token'] = $this->key;
+					$params['access_token'] = $this->token->key;
 				break;
 			
 			default:
@@ -259,6 +262,10 @@ class API_Con_Service{
 			return $error;
 
 		return $res;
+	}
+
+	public function set_token( OAuthToken $token ){
+
 	}
 
 	/**
