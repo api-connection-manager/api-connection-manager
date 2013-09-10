@@ -139,17 +139,21 @@ class API_Con_Manager{
 
 	/**
 	 * Get range of service modules, depending on $type
-	 * @param  enum $type Default all. 'active'|'inactive'
+	 * @param  enum $type Default all. 'active'|'inactive'|null
 	 * @todo  try implement WP_Filesystem for scanning the modules directory
-	 * @todo  write unit tests
-	 * @return array       An array of services, if all then returns array['active'] and array['inactive']
+	 * @return array       An array of service objects.
 	 */
 	public static function get_services( $type = null ){
 		$services = array();
 		
 		switch ( $type ) {
 			case 'inactive':
-				;
+				$db_services = API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
+				if ( !$db_services )
+					return array();
+
+					foreach( $db_services['inactive'] as $service)
+						$services[] = API_Con_Manager::get_service( $service );
 				break;
 			
 
@@ -162,7 +166,8 @@ class API_Con_Manager{
 						$services[] = API_Con_Manager::get_service( $service );
 				break;
 
-			case 'installed':
+			//returns all
+			default:
 				$handle = opendir( self::get_module_dir() );
 
 				while ( false !== ( $file = readdir( $handle ) ) ) {

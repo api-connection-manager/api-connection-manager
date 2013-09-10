@@ -4,6 +4,11 @@ define( 'WP_TESTS_DIR', getenv( 'WP_TESTS_DIR' ) );
 if( !file_exists( WP_TESTS_DIR  ) )
 	throw new Exception( 'Unable to find tests directory. Please set the WP_TESTS_DIR environment variable');
 
+//set db options
+$GLOBALS['wp_tests_options'] = array(
+	'foo-option-name' => 'bar'
+);
+
 require_once getenv( 'WP_TESTS_DIR' ) . '/includes/functions.php';
 
 function _manually_load_plugin() {
