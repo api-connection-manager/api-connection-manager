@@ -105,9 +105,19 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 	}
 
 	function test_set_service_state(){
-		API_Con_Manager::set_service_states( array('facebook'), 'deactivate' );
-		$this->assertTrue( API_Con_Manager::set_service_states( array('facebook'), 'activate' ) );
+		$active = array(
+			API_Con_Manager::get_service('Github')
+		);
+		$inactive = array(
+			API_Con_Manager::get_service('Dropbox'),
+			API_Con_Manager::get_service('Facebook')
+		);
+		API_Con_Manager::set_service_states( $active, 'activate' );
+		API_Con_Manager::set_service_states( $inactive, 'deactivate' );
+		$all = API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
 
+		$this->assertEquals( array('Github'), $all['active'] );
+		$this->assertEquals( array('Dropbox','Facebook'), $all['inactive']);
 		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::set_service_states( array('foo'), 'deactivate') );
 	}
 

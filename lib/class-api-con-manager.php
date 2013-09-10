@@ -230,14 +230,13 @@ class API_Con_Manager{
 
 	/**
 	 * Activate / Deactivate services
-	 * @param array  $services An array of service names
+	 * @param array  $services An array of service objects
 	 * @param enum $action   activate|deactivate
 	 * @return  boolean
 	 */
 	public static function set_service_states( array $services, $action ){
 
 		$db_services = (array) API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
-		
     	if ( $action == 'activate' ){
     		$update = 'active';
     		$delete = 'inactive';
@@ -245,7 +244,7 @@ class API_Con_Manager{
     		$update = 'inactive';
     		$delete = 'active';
     	}else
-    		return false;
+    		return new API_Con_Error( 'invalid action for API_Con_Manager::set_service_states' );
 
     	//rebuild services[]
 		foreach ( $services as $service ) {
@@ -258,7 +257,10 @@ class API_Con_Manager{
 				continue;
 			$db_services[ $update ][] = $service->name;
 		}
+		$db_services['inactive'] = array_values($db_services['inactive']);	//reset array keys
+		$db_services['active'] = array_values($db_services['active']);
 
+		//set new services[]
 		$db_services[$update] = array_unique( $db_services[$update] );
 		return API_Con_Model::set(
 			API_Con_Model::$meta_keys['services'],
