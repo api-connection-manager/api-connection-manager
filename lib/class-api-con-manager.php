@@ -321,13 +321,6 @@ class API_Con_Manager{
 	}
 
 	/**
-	 * Print the main API Con dashboard page
-	 */
-	public function get_page(){
-		print '<h1>API Connection Manager</h1>';
-	}
-
-	/**
 	 * Handles callbacks such as ajax requests.
 	 * Can be used outside of ajax by passing object type API_Con_DTO with
 	 * necessary data.

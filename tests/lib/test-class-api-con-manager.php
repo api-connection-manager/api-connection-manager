@@ -142,10 +142,6 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		) );
 	}
 
-	function test_get_page(){
-		$this->expectOutputString( '<h1>API Connection Manager</h1>', $this->obj->get_page() );
-	}
-
 	function test_response_listener(){
 		$this->assertTrue( true );
 		return;
