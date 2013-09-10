@@ -143,20 +143,11 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 	}
 
 	function test_response_listener(){
-		$this->assertTrue( true );
-		return;
-		$this->assertInstanceOf( 'API_Con_Error', $this->obj->response_listener() );
-		$dto = new API_Con_DTO( array(
-			'api-con-action' => 'request_token'
-			) );
-		$this->assertInstanceOf( 'API_Con_DTO', $this->obj->response_listener( $dto ) );
+		;
 	}
 
 	function do_callback_foo( $service, $dto ){
 		return func_get_args();
 	}
 
-	function compare_array_object_name($obj1, $obj2){
-		return strcmp($obj1->name, $obj2->name);
-	}
 }
