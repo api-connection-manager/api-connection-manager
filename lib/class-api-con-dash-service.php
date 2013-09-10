@@ -118,7 +118,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 		$this->process_bulk_action();
 
 		$screen = get_current_screen();
-		$services = API_Con_Manager::get_services( 'installed' );
+		$services = API_Con_Manager::get_services( 'all' );
 		$services_active = API_Con_Manager::get_services( 'active' );
 		$items = array();
 		
