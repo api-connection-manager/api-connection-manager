@@ -80,22 +80,23 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 
 		//bootstrap test
 		$installed = $active = $inactive = array();
-		foreach ( API_Con_Manager::get_services('installed') as $service )
+		foreach ( API_Con_Manager::get_services('all') as $service )
 			$installed[] = $service->name;
 		foreach ( API_Con_Manager::get_services('active') as $service )
 			$active[] = $service->name;
 		foreach ( API_Con_Manager::get_services('inactive') as $service )
 			$inactive[] = $service->name;
+		$db = API_Con_Model::get(API_Con_Model::$meta_keys['services']);
+		$db['all'] = array_merge($active, $inactive);
 		sort( $installed );
 		sort( $active );
 		sort( $inactive );
-		$db = API_Con_Model::get(API_Con_Model::$meta_keys['services']);
-		$db['installed'] = array_merge($active, $inactive);
+		asort($db);
 
 		//run tests
 		$this->assertEquals( $db['active'], $active, "API_Con_Manager::get_services['active'] failed");
 		$this->assertEquals( $db['inactive'], $inactive, "API_Con_Manager::get_services['inactive'] failed");
-		$this->assertEquals( $db['installed'], $installed, "API_Con_Manager::get_services['installed'] failed");
+		$this->assertEquals( $db['all'], $installed, "API_Con_Manager::get_services['installed'] failed");
 	}
 
 	function test_is_valid_service_name(){

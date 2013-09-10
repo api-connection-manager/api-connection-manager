@@ -139,7 +139,7 @@ class API_Con_Manager{
 
 	/**
 	 * Get range of service modules, depending on $type
-	 * @param  enum $type Default all. 'active'|'inactive'|null
+	 * @param  enum $type Default all. 'active'|'inactive'|'all'
 	 * @todo  try implement WP_Filesystem for scanning the modules directory
 	 * @return array       An array of service objects.
 	 */
@@ -167,21 +167,20 @@ class API_Con_Manager{
 				break;
 
 			//returns all
-			default:
+			case 'all':
 				$handle = opendir( self::get_module_dir() );
 
 				while ( false !== ( $file = readdir( $handle ) ) ) {
 					if ( $file == '.' || $file == '..' )
 						continue;
-
 					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
 					$services[] = API_Con_Manager::get_service( ucfirst( $matches[0] ) );
 				}
 			break;
 
-			//default return all services
+			//default return API_Con_Error
 			default:
-				# code...
+				return new API_Con_Error('Invalid param $type: ' . $type);
 				break;
 		}
 
