@@ -17,6 +17,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 			'user_login' => 'admin',
 			'user_password' => 'password'
 			));
+		wp_set_current_user($this->user->ID);
 
 		//set db params
 		API_Con_Model::set(
@@ -104,6 +105,9 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->assertFalse( API_Con_Manager::is_valid_service_name( 'foo' ) );
 	}
 
+	/**
+	 * @group services
+	 */
 	function test_set_service_state(){
 		$active = array(
 			API_Con_Manager::get_service('Github')
@@ -126,10 +130,16 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->assertEquals( 'http://examplefoo.com', API_Con_Manager::valid_url( 'http://example-foo.com' ) );
 	}
 
+	/**
+	 * @group wp-actions
+	 */
 	function test_action_admin_menu(){
 		$res = $this->obj->action_admin_menu();
-		$this->assertEquals( $res[0], 'toplevel_page_api-con-manager');
-		$this->assertInstanceOf( 'API_Con_Dash_Service', $res[2] );
+		$this->assertEquals( $res, array(
+			'toplevel_page_api-con-manager',
+			'api-manager_page_api-con-services',
+			'api-manager_page_api-con-options'
+		) );
 	}
 
 	function test_get_page(){

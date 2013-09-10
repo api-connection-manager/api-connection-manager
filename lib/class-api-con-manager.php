@@ -282,8 +282,8 @@ class API_Con_Manager{
 	}
 
 	/**
-	 * Register the dashboard menus
-	 * @return  array Returns admin slug, sub menu slug, API_Con_Dash_Service
+	 * Register the dashboard menus.
+	 * @return  array Returns admin slug, settings slug, options slug
 	 */
 	public function action_admin_menu(){
 		$dash = new API_Con_Dash_Service();
@@ -298,7 +298,7 @@ class API_Con_Manager{
 		);
 
 		//services
-		$submenu = add_submenu_page(
+		$services = add_submenu_page(
 			'api-con-manager',
 			'API Con Services',
 			'Services',
@@ -308,7 +308,7 @@ class API_Con_Manager{
 			);
 
 		//options
-		$submenu = add_submenu_page(
+		$options = add_submenu_page(
 			'api-con-manager',
 			'API Con Options',
 			'Options',
@@ -317,7 +317,7 @@ class API_Con_Manager{
 			array(&$dash, 'get_page_options')
 			);
 
-		return array( $menu, $submenu, $services );
+		return array( $menu, $services, $options );
 	}
 
 	/**
