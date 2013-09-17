@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group api-connection-manager
+ */
 class API_Con_ModelTest extends WP_UnitTestCase{
 
 	protected $obj;

@@ -6,9 +6,26 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	>
+	<groups>
+		<include>
+			<group>api-connection-manager</group>
+		</include>
+	</groups>
 	<testsuites>
 		<testsuite>
 			<directory prefix="test-" suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<filter>
+		<whitelist>
+			<directory suffix=".php">./lib</directory>
+			<exclude>
+				<directory suffix=".php">../../../unit-tests</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<log type="coverage-html" target="build/html" charset="UTF-8" yui="true" highlight="true"/>
+		<log type="coverage-clover" target="build/logs/clover.xml"/>
+	</logging>
 </phpunit>

@@ -56,7 +56,9 @@ class API_Con_Service{
 	/**
 	 * Returns the authorize url. 
 	 * @uses string API_Con_Service::auth_url
-	 * @todo  see about using the OAuth2 state parameter. This would mean storing state values in the db
+	 * @todo  see about using the OAuth2 state parameter. This would mean 
+	 * storing state values in the db
+	 * @todo  oauth1 and custom types
 	 * @return mixed Will return API_Con_Error if invalid or missing authorize url.
 	 */
 	public function get_authorize_url(){
@@ -84,21 +86,6 @@ class API_Con_Service{
 		}
 
 		return $url;
-	}
-
-	/**
-	 * Return the login url
-	 * @param array $extra_params Optional. Any extra query params.
-	 * @return string the full `URI` to login this service
-	 */
-	public function get_login_url( $extra_params=array() ){
-		$ret = admin_url( 'admin-ajax.php' ) 
-			. '?action=api-con-manager&api-con-action=service_login&service=' 
-			. $this->name;
-		if( count( $extra_params ) )
-			$ret .= '&' . http_build_query( $extra_params );
-
-		return $ret;
 	}
 
 	/**
@@ -144,6 +131,21 @@ class API_Con_Service{
 				. '</a>';
 		else
 			return $trans_id;
+	}
+
+	/**
+	 * Return the login url
+	 * @param array $extra_params Optional. Any extra query params.
+	 * @return string the full `URI` to login this service
+	 */
+	public function get_login_url( $extra_params=array() ){
+		$ret = admin_url( 'admin-ajax.php' ) 
+			. '?action=api-con-manager&api-con-action=service_login&service=' 
+			. $this->name;
+		if( count( $extra_params ) )
+			$ret .= '&' . http_build_query( $extra_params );
+
+		return $ret;
 	}
 
 	/**
@@ -277,10 +279,13 @@ class API_Con_Service{
 		$service_options = API_Con_Model::get( API_Con_Model::$meta_keys['service_options'] );
 		if ( !$service_options )
 			$service_options = array();
+		if ( !$service_options[ $this->name ] )
+			$service_options[ $this->name ] = array();
 
-		foreach ( $options as $key => $val )
-			if ( array_key_exists( $key, $this->options ) )
-				$service_options[ $this->name ][ $key ] = $val;
+		$service_options[ $this->name ] = array_merge(
+			$service_options[ $this->name ],
+			$options
+		);
 		
 		API_Con_Model::set( API_Con_Model::$meta_keys['service_options'], $service_options );
 		$this->options = $service_options[ $this->name ];
