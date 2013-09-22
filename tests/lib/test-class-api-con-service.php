@@ -86,9 +86,6 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 		$this->assertEquals( $test, $redirect_url );
 	}
 
-	/**
-	 * @group foo
-	 */
 	function test_load_options(){
 
 		$service_options = API_Con_Model::get( API_Con_Model::$meta_keys['service_options'] );

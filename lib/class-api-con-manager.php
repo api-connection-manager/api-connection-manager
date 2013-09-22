@@ -47,9 +47,11 @@ class API_Con_Manager{
 		//build connections array()
 		$connections = get_user_meta(
 			$user->ID, 
-			API_Con_Model::$meta_keys['user_connections'], 
-			array()
+			API_Con_Model::$meta_keys['user_connections'],
+			true
 		);
+		if ( !is_array($connections) )
+			$connections = array();
 		$connections[$service->name] = $service->token;
 		
 		//set and return

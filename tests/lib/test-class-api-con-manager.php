@@ -30,6 +30,35 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 				'inactive' => array( $this->services[2] )
 			)
 		);
+		update_user_meta( $this->user, API_Con_Model::$meta_keys['user_connections'], null );
+	}
+
+	/**
+	 * @group foo
+	 */
+	function test_connect_user(){
+
+		$this->assertInstanceOf(
+			'API_Con_Error',
+			API_Con_Manager::connect_user( $this->service, new WP_User() )
+		);
+
+		$token = new OAuthToken( 'token-key', null );
+		$connections_test = array( $this->service->name => $token );
+		$this->service->token = $token;
+
+		$connections = API_Con_Manager::connect_user( $this->service );
+		$user_connections = get_user_meta( $this->user->ID, API_Con_Model::$meta_keys['user_connections'], true );
+		$this->assertEquals(
+			$connections_test,
+			$connections,
+			"method logic failure"
+		);
+		$this->assertEquals(
+			$connections_test,
+			$user_connections,
+			"method db write failure"
+		);
 	}
 
 	function test_do_callback(){
@@ -101,6 +130,11 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->assertEquals( $db['active'], $active, "API_Con_Manager::get_services['active'] failed");
 		$this->assertEquals( $db['inactive'], $inactive, "API_Con_Manager::get_services['inactive'] failed");
 		$this->assertEquals( $db['all'], $installed, "API_Con_Manager::get_services['installed'] failed");
+	}
+
+	function test_get_user_connections(){
+
+		$user = API_Con_Manager::get_user_connections();
 	}
 
 	function test_is_valid_service_name(){
