@@ -77,9 +77,8 @@ class API_Con_Manager{
 			$class = new $class_name();
 			return $class->$method( $service, $dto );
 		}
-		elseif( $callback )
+		else
 			return $callback( $service, $dto );
-
 	}
 
 	/**
@@ -333,8 +332,7 @@ class API_Con_Manager{
 	public function response_listener( $dto = null ){
 
 		//if used outside wp_ajax, make sure API_Con_DTO is passed
-		if ( $dto && !is_string( $dto ) )
-			if ( !get_class( $dto ) == 'API_Con_DTO' )
+		if ( $dto && (!get_class( $dto ) == 'API_Con_DTO') )
 				return new API_Con_Error( 'API_Con_Manager::response_listener() takes API_Con_DTO as a parameter' );
 
 		//construct DTO
@@ -359,19 +357,17 @@ class API_Con_Manager{
 		else
 			$service = API_Con_Manager::get_service( $dto->data['service'] );
 		$callback = @$_SESSION['api-con-manager-callback']['callback'];
-		unset($_SESSION['api-con-manager-callback']);
-
-		//run action method
-		$method = $dto->data['api-con-action'];
-		$this->$method( $dto, $service );
+		unset( $_SESSION['api-con-manager-callback'] );
 
 		//do callbacks?
 		if ( $callback )
 			API_Con_Manager::do_callback( $callback, $dto, $service );
+		
+		//do action
+		$method = $dto->data['api-con-action'];
+		$dto = $this->$method( $dto, $service );
 
 		//error report | return
-		if ( is_wp_error($dto) )
-			die( 'Error in method ' . $method . ': ' . $dto->get_error_message() );
 		return $dto;
 	}
 

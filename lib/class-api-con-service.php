@@ -189,8 +189,11 @@ class API_Con_Service{
 			$res = wp_remote_get( $this->token_url, array( 'body' => $params ) );
 		else
 			$res = wp_remote_post( $this->token_url, array( 'body' => $params ) );
-		if ( is_wp_error( $res ) )
-			return $res;
+		$error = $this->check_error( $res );
+		if ( $error ){
+			$this->token = $error;
+			return $error;
+		}
 
 		//set and return
 		parse_str( $res['body'], $body );

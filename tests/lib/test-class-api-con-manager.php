@@ -33,9 +33,6 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		update_user_meta( $this->user, API_Con_Model::$meta_keys['user_connections'], null );
 	}
 
-	/**
-	 * @group foo
-	 */
 	function test_connect_user(){
 
 		$this->assertInstanceOf(
@@ -66,9 +63,18 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$callback = array(__CLASS__, "do_callback_foo");
 		$dto = new API_Con_DTO();
 		$res = API_Con_Manager::do_callback( $callback, $dto, $this->service );
-
 		$this->assertEquals($res[0], $this->service);
 		$this->assertEquals($res[1], $dto);
+		$classname = __CLASS__;
+		$class = new $classname();
+		$method = $callback[1];
+		$res_test = $class->$method( $this->service, $dto );
+		$this->assertEquals( $res, $res_test );
+
+		$callback = "do_callback_foo";
+		$res = API_Con_Manager::do_callback( $callback, $dto, $this->service );
+		$this->assertEquals( $res[0], $this->service );
+		$this->assertEquals( $res[1], $dto );
 	}
 
 	function test_factory(){
@@ -130,6 +136,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->assertEquals( $db['active'], $active, "API_Con_Manager::get_services['active'] failed");
 		$this->assertEquals( $db['inactive'], $inactive, "API_Con_Manager::get_services['inactive'] failed");
 		$this->assertEquals( $db['all'], $installed, "API_Con_Manager::get_services['installed'] failed");
+		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::get_services('foo') );
 	}
 
 	function test_get_user_connections(){
@@ -160,6 +167,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->assertEquals( array('Github'), $all['active'] );
 		$this->assertEquals( array('Dropbox','Facebook'), $all['inactive']);
 		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::set_service_states( array('foo'), 'deactivate') );
+		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::set_service_states( array('foo'), 'bar') );
 	}
 
 	function test_valid_url(){
@@ -179,12 +187,40 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		) );
 	}
 
+	/**
+	 * @group foo
+	 */
 	function test_response_listener(){
-		;
+		
+		//assert dto is passed		
+		$this->assertInstanceOf( 
+			'API_Con_Error', 
+			$this->obj->response_listener(array())
+		);
+
+		//assert valid api-con-action
+		$this->assertInstanceOf(
+			'API_Con_Error',
+			$this->obj->response_listener( new API_Con_DTO(array('api-con-action'=>'foo')) )
+		);
+
+		//assert callback from session (request-token)
+		$dto = new API_Con_DTO(array(
+			'service'=>$this->service->name,
+			'api-con-action' => 'request_token'
+		));
+		$res = $this->obj->response_listener( $dto );
+		var_dump($res);
+		die();
+
 	}
 
 	function do_callback_foo( $service, $dto ){
 		return func_get_args();
 	}
 
+}
+
+function do_callback_foo( $service, $dto ){
+	return func_get_args();
 }
