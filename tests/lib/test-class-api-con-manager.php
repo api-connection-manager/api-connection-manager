@@ -210,9 +210,6 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 			'api-con-action' => 'request_token'
 		));
 		$res = $this->obj->response_listener( $dto );
-		var_dump($res);
-		die();
-
 	}
 
 	function do_callback_foo( $service, $dto ){
