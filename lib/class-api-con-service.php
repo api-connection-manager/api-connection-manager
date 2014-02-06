@@ -140,10 +140,10 @@ class API_Con_Service{
 	 */
 	public function get_login_url( $extra_params=array() ){
 		$ret = admin_url( 'admin-ajax.php' ) 
-			. '?action=api-con-manager&api-con-action=service_login&service=' 
+			. '?action=api-con-manager&amp;api-con-action=service_login&amp;service=' 
 			. $this->name;
 		if( count( $extra_params ) )
-			$ret .= '&' . http_build_query( $extra_params );
+			$ret .= '&amp;' . http_build_query( $extra_params );
 
 		return $ret;
 	}
