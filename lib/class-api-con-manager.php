@@ -399,6 +399,7 @@ class API_Con_Manager{
 			
 		//get token
 		$token = $service->request_token( $dto );
+		
 		if ( is_wp_error($token) )
 			return $token;
 

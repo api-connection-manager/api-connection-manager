@@ -189,6 +189,7 @@ class API_Con_Service{
 			$res = wp_remote_get( $this->token_url, array( 'body' => $params ) );
 		else
 			$res = wp_remote_post( $this->token_url, array( 'body' => $params ) );
+		
 		$error = $this->check_error( $res );
 		if ( $error ){
 			$this->token = $error;
@@ -198,6 +199,7 @@ class API_Con_Service{
 		//set and return
 		parse_str( $res['body'], $body );
 		$this->token = new OAuthToken( $body[ 'access_token' ], null );
+
 		return $this->token;
 	}
 

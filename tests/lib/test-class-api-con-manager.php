@@ -187,9 +187,6 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		) );
 	}
 
-	/**
-	 * @group foo
-	 */
 	function test_response_listener(){
 		
 		//assert dto is passed		
@@ -198,18 +195,34 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 			$this->obj->response_listener(array())
 		);
 
-		//assert valid api-con-action
+		//assert valid api-con-action tested
 		$this->assertInstanceOf(
 			'API_Con_Error',
 			$this->obj->response_listener( new API_Con_DTO(array('api-con-action'=>'foo')) )
 		);
 
-		//assert callback from session (request-token)
+		//assert request-token
 		$dto = new API_Con_DTO(array(
 			'service'=>$this->service->name,
-			'api-con-action' => 'request_token'
+			'api-con-action' => 'request_token',
+			'data' => array(
+				'code' => '12345',
+			),
 		));
+		add_filter('pre_http_request', function(){
+			return array(
+				'headers' => array(
+					'content-type' => 'text/plain',
+				),
+				'body' => http_build_query(array('access_token'=>'12345')),
+				'response' => '',
+				'cookies' => '',
+				'filename' => '',
+			);
+		});
+
 		$res = $this->obj->response_listener( $dto );
+		$this->assertEquals('12345', $res->token->key);
 	}
 
 	function do_callback_foo( $service, $dto ){
