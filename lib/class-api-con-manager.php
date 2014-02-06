@@ -31,17 +31,17 @@ class API_Con_Manager{
 	 * the currently logged in user.
 	 * @return array
 	 */
-	public static function connect_user( API_Con_Service $service, $user=null ){
+	public static function connect_user( API_Con_Service $service, $user = null ){
 
 		//use current user?
 		if ( !$user )
 			$user = wp_get_current_user();
 
-		if ( $user->ID==0 )
+		if ( $user->ID == 0 )
 			return new API_Con_Error( 'Cannot connect user. No user logged in' );
 
 		//check for access token
-		if ( get_class($service->token)!='OAuthToken' )
+		if ( get_class( $service->token ) != 'OAuthToken' )
 			return new API_Con_Error( 'No access token set for this service' );
 
 		//build connections array()
@@ -50,7 +50,7 @@ class API_Con_Manager{
 			API_Con_Model::$meta_keys['user_connections'],
 			true
 		);
-		if ( !is_array($connections) )
+		if ( !is_array( $connections ) )
 			$connections = array();
 		$connections[$service->name] = $service->token;
 		
@@ -71,7 +71,7 @@ class API_Con_Manager{
 	 * @return mixed           Returns the callback call.
 	 */
 	public static function do_callback( $callback, $dto, $service ){
-		if ( is_array($callback) ){	
+		if ( is_array( $callback ) ){
 			$class_name = $callback[0];
 			$method = $callback[1];
 			$class = new $class_name();
@@ -153,7 +153,7 @@ class API_Con_Manager{
 				if ( !$db_services )
 					return array();
 
-					foreach( $db_services['inactive'] as $service)
+					foreach( $db_services['inactive'] as $service )
 						$services[] = API_Con_Manager::get_service( $service );
 				break;
 			
@@ -163,7 +163,7 @@ class API_Con_Manager{
 					if ( !$db_services )
 						return array();
 
-					foreach( $db_services['active'] as $service )
+					foreach ( $db_services['active'] as $service )
 						$services[] = API_Con_Manager::get_service( $service );
 				break;
 
@@ -181,7 +181,7 @@ class API_Con_Manager{
 
 			//default return API_Con_Error
 			default:
-				return new API_Con_Error('Invalid param $type: ' . $type);
+				return new API_Con_Error( 'Invalid param $type: ' . $type );
 				break;
 		}
 
@@ -258,8 +258,8 @@ class API_Con_Manager{
 				continue;
 			$db_services[ $update ][] = $service->name;
 		}
-		$db_services['inactive'] = array_values($db_services['inactive']);	//reset array keys
-		$db_services['active'] = array_values($db_services['active']);
+		$db_services['inactive'] = array_values( $db_services['inactive'] );	//reset array keys
+		$db_services['active'] = array_values( $db_services['active'] );
 
 		//set new services[]
 		$db_services[$update] = array_unique( $db_services[$update] );
@@ -400,7 +400,7 @@ class API_Con_Manager{
 		//get token
 		$token = $service->request_token( $dto );
 		
-		if ( is_wp_error($token) )
+		if ( is_wp_error( $token ) )
 			return $token;
 
 		//try connect user
@@ -427,7 +427,7 @@ class API_Con_Manager{
 		//vars
 		$_SESSION['api-con-manager-callback'] = array(
 			'service' => $service->name,
-			'callback' => API_Con_Model::get_transient_by_id( $dto->data['transid'] )
+			'callback' => API_Con_Model::get_transient_by_id( $dto->data['transid'] ),
 		);
 
 		$service = API_Con_Manager::get_service( $dto->data['service'] );
