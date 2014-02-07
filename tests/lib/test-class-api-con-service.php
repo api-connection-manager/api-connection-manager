@@ -59,7 +59,8 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 
 	function test_get_login_url(){
 		$this->obj->name = 'dropbox';
-		$test = admin_url('admin-ajax.php') . '?action=api-con-manager&api-con-action=service_login&service=' . $this->obj->name . '&foo=bar';
+		//http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&amp;api-con-action=service_login&amp;service=dropbox&amp;foo=bar
+		$test = admin_url('admin-ajax.php') . '?action=api-con-manager&amp;api-con-action=service_login&amp;service=' . $this->obj->name . '&amp;foo=bar';
 		$res = $this->obj->get_login_url(array('foo'=>'bar'));
 		$this->assertEquals( $test, $res );
 	}
@@ -99,7 +100,7 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 
 		//service not connected, login url returned
 		$this->assertEquals( 
-			'<a href="http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&api-con-action=service_login&service=Dropbox" target="_new">Login to Dropbox</a>',
+			'<a href="http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&amp;api-con-action=service_login&amp;service=Dropbox" target="_new">Login to Dropbox</a>',
 			$res->get_error_message()
 		);
 	}

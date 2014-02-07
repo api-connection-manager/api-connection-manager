@@ -338,6 +338,9 @@ class API_Con_Manager{
 		//construct DTO
 		if ( !$dto )
 			$dto = new API_Con_DTO( $_REQUEST );
+		$action = @$dto->data['api-con-action'] ?
+			$dto->data['api-con-action'] :
+			null;
 
 		/**
 		 * Security.
@@ -347,28 +350,32 @@ class API_Con_Manager{
 			'request_token',
 			'service_login',
 		);
-		if ( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
+		if ( !in_array( $action, $valid_actions ) )
 			return new API_Con_Error( 'Invalid request' );
 		//end Security
-		
+
 		//get service and callback
 		if ( @$_SESSION['api-con-manager-callback']['service'] )
 			$service = API_Con_Manager::get_service( $_SESSION['api-con-manager-callback']['service'] );
 		else
 			$service = API_Con_Manager::get_service( $dto->data['service'] );
-		$callback = @$_SESSION['api-con-manager-callback']['callback'];
-		unset( $_SESSION['api-con-manager-callback'] );
+
+		//do action
+		$method = $dto->data['api-con-action'];
+		$res = $this->$method( $dto, $service );
+
+		//if not service_login request, see if callback in $_SESSION
+		if ( $action != 'service_login' ){
+			$callback = @$_SESSION['api-con-manager-callback']['callback'];
+			unset( $_SESSION['api-con-manager-callback'] );
+		}
 
 		//do callbacks?
 		if ( $callback )
 			API_Con_Manager::do_callback( $callback, $dto, $service );
 		
-		//do action
-		$method = $dto->data['api-con-action'];
-		$dto = $this->$method( $dto, $service );
-
 		//error report | return
-		return $dto;
+		return $res;
 	}
 
 	/**
@@ -414,7 +421,7 @@ class API_Con_Manager{
 
 	/**
 	 * Redirects to remote authorization server. Callback transient record id is 
-	 * taken from $dto->data['transid'].
+	 * taken from $dto->data['transid'] and stored as a session.
 	 * @uses  $_SESSION['api-con-manager-callback'] Stores service and callback.
 	 * @uses  API_Con_Model::get_transient_by_id() To get callback value.
 	 * @uses  API_Con_Service::get_authorize_url() The url to redirect to
