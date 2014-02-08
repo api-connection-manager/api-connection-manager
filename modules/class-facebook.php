@@ -28,6 +28,10 @@ if( !class_exists( 'API_Con_Module_Facebook' ) ):
 			), __CLASS__ );
 		}
 
+		function get_uid( $data=false ){
+			
+		}
+
 		function request_token( API_Con_DTO $dto ){
 			return parent::request_token( $dto, null, 'post' );
 		}

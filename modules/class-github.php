@@ -27,5 +27,9 @@ if( !class_exists( 'API_Con_Module_Github' ) ):
 				'token_url' => 'https://github.com/login/oauth/access_token'
 			), __CLASS__ );
 		}
+
+		function get_uid( $data=false ){
+			;
+		}
 	}
 endif;

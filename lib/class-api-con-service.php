@@ -8,7 +8,7 @@
  * @package  api-connection-manager
  * @author Daithi Coobmes <webeire@gmail.com>
  */
-class API_Con_Service{
+abstract class API_Con_Service{
 	
 	/** @var string Default custom. Either: oauth1, oauth2, custom */
 	public $auth_type = 'custom';
@@ -52,6 +52,17 @@ class API_Con_Service{
 		//set protected/private fields
 		$this->redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
 	}
+
+	/**
+	 * Returns the service user id.
+	 * If data is passed as a parameter then this will be parsed for a user id,
+	 * if not then a request to the service for a user id is made. Default is to
+	 * make a request from the service.
+	 * @param mixed $data Default false. A response body from the service to
+	 * parse. If not passed then request to service will be made.
+	 * @return string 
+	 */
+	abstract public function get_uid( $data=false );
 
 	/**
 	 * Returns the authorize url. 
