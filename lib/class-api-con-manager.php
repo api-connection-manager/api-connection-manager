@@ -88,6 +88,7 @@ class API_Con_Manager{
 	 * @return API_Con_Manager
 	 */
 	public static function factory( $config = null ){
+
 		return new API_Con_Manager( $config );
 	}
 
@@ -127,6 +128,7 @@ class API_Con_Manager{
 	 * @return string
 	 */
 	public static function get_module_dir(){
+
 		return dirname( __FILE__ ) . '/../modules';
 	}
 
@@ -226,6 +228,7 @@ class API_Con_Manager{
 	 * @return boolean Default false;
 	 */
 	public static function is_connected( API_Con_Service $service ){
+		
 		return false;
 	}
 
@@ -303,7 +306,18 @@ class API_Con_Manager{
 	 * @return  array Returns admin slug, settings slug, options slug
 	 */
 	public function action_admin_menu(){
+
 		$dash = new API_Con_Dash_Service();
+		$connections = new API_Con_Dash_Connections();
+
+		//connections
+		$con_page = add_menu_page(
+			'API Connection Manager - My Connections',
+			'My Connections',
+			'read',
+			'api-con-connections',
+			array(&$connections, 'get_page')
+		);
 
 		//dashboard
 		$menu = add_menu_page(
