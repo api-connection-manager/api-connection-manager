@@ -20,11 +20,12 @@ if( !class_exists( 'API_Con_Module_Facebook' ) ):
 
 			//construct parent
 			parent::__construct( array(
-				'auth_type' => 'oauth2',
-				'auth_url' => 'https://www.facebook.com/dialog/oauth',
-				'endpoint' => 'https://graph.facebook.com',
-				'options' => array( 'key', 'secret' ),
-				'token_url' => 'https://graph.facebook.com/oauth/access_token',
+				'auth_type'	=> 'oauth2',
+				'auth_url'	=> 'https://www.facebook.com/dialog/oauth',
+				'button'	=> 'facebook-29x29.png',
+				'endpoint'	=> 'https://graph.facebook.com',
+				'options'	=> array( 'key', 'secret' ),
+				'token_url'	=> 'https://graph.facebook.com/oauth/access_token',
 			), __CLASS__ );
 		}
 

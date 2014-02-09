@@ -14,6 +14,8 @@ abstract class API_Con_Service{
 	public $auth_type = 'custom';
 	/** @var string The authorize url. @see API_Con_Service::get_authorize_url() */
 	public $auth_url;
+	/** @var string The filename for login image. Image must be in modules folders */
+	public $button;
 	/** @var string The client key/id */
 	public $key;
 	/** @var string The name of this service. Declared in factory method API_Con_Manager::get_service() */
@@ -137,6 +139,10 @@ abstract class API_Con_Service{
 			$callback,
 			$transient_time
 		);
+
+		//use button
+		if ( $this->button )
+			$text = '<img src="' . plugins_url('/api-connection-manager/modules/' . $this->button) . '"/>';
 
 		if ( !$text )
 			$text = $this->name;
