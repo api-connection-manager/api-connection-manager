@@ -34,6 +34,7 @@ class API_Con_Dash_Service extends WP_List_Table{
      * @return string              The item value for this column
      */
     function column_default( $item, $column_name ){
+
     	return $item->$column_name;
     }
 
@@ -65,6 +66,7 @@ class API_Con_Dash_Service extends WP_List_Table{
     }
 
     function _echo( $str ){
+    	
     	echo sanitize_text_field( $str );
     }
 

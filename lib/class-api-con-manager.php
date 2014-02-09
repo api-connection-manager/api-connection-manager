@@ -53,6 +53,7 @@ class API_Con_Manager{
 		if ( !is_array( $connections ) )
 			$connections = array();
 		$connections[$service->name] = $service->token;
+		var_dump($connections);
 		
 		//set and return
 		update_user_meta(
@@ -63,6 +64,14 @@ class API_Con_Manager{
 		return $connections;
 	}
 
+	public static function disconnect( API_Con_Service $service, WP_User $user){
+
+		$meta = get_user_meta($user->ID, API_Con_Model::$meta_keys['user_connections'], true );
+		unset($meta[$service->name]);
+		
+		return update_user_meta( $user->ID, API_Con_Model::$meta_keys['user_connections'], $meta);
+	}
+
 	/**
 	 * Do a callback.
 	 * @param  mixed $callback The class/method/function data
@@ -71,6 +80,7 @@ class API_Con_Manager{
 	 * @return mixed           Returns the callback call.
 	 */
 	public static function do_callback( $callback, $dto, $service ){
+		
 		if ( is_array( $callback ) ){
 			$class_name = $callback[0];
 			$method = $callback[1];
@@ -214,11 +224,15 @@ class API_Con_Manager{
 	public static function get_user_connections(){
 
 		$user = wp_get_current_user();
-		return get_user_meta(
+		$res = get_user_meta(
 			$user->ID, 
-			API_Con_Model::$meta_keys['user_connections'], 
-			array()
+			API_Con_Model::$meta_keys['user_connections'],
+			true
 		);
+
+		if ( !$res )
+			return array();
+		return $res;
 	}
 
 	/**
@@ -228,7 +242,7 @@ class API_Con_Manager{
 	 * @return boolean Default false;
 	 */
 	public static function is_connected( API_Con_Service $service ){
-		
+
 		return false;
 	}
 

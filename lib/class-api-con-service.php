@@ -116,7 +116,7 @@ abstract class API_Con_Service{
 	 * @param integer $transient_time Default 3600. Transient timeout in seconds
 	 * @return string The html anchor link
 	 */
-	public function get_login_link( $callback, $transient_time=3600 ){
+	public function get_login_link( $callback, $text=false, $transient_time=3600 ){
 
 		//generate unique key for callback transient
 		$key = API_Con_Model::$meta_keys['transient'][0];
@@ -126,6 +126,11 @@ abstract class API_Con_Service{
 				$x++;
 		$key .= '-' . $x;
 
+		//force callback classname, instead of object reference
+		if ( is_array($callback) )
+			if ( is_object($callback[0]) )
+				$callback[0] = get_class($callback[0]);
+
 		//set transient
 		$trans_id = API_Con_Model::set_transient(
 			$key, 
@@ -133,12 +138,15 @@ abstract class API_Con_Service{
 			$transient_time
 		);
 
+		if ( !$text )
+			$text = $this->name;
+
 		//return htm link | API_Con_Error
 		if( !is_wp_error( $trans_id ) )
 			return '<a href="' 
 				. $this->get_login_url( array('transid' => $trans_id) )
 				. '" target="_new">'
-				. $this->name
+				. $text
 				. '</a>';
 		else
 			return $trans_id;
@@ -164,6 +172,7 @@ abstract class API_Con_Service{
 	 * @return array
 	 */
 	public function get_options(){
+
 		return $this->options;
 	}
 
@@ -172,6 +181,7 @@ abstract class API_Con_Service{
 	 * @return string
 	 */
 	public function get_redirect_url(){
+
 		return $this->redirect_url;
 	}
 
@@ -308,6 +318,7 @@ abstract class API_Con_Service{
 	}
 
 	public function set_redirect_url( $url ){
+		
 		$this->redirect_url = $url;
 	}
 
