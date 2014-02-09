@@ -64,6 +64,12 @@ class API_Con_Manager{
 		return $connections;
 	}
 
+	/**
+	 * Disconnect a user from a service
+	 * @param  API_Con_Service $service The service object
+	 * @param  WP_User         $user    The wordpress user object
+	 * @return boolean                   Returns result from update_user_meta()
+	 */
 	public static function disconnect( API_Con_Service $service, WP_User $user){
 
 		$meta = get_user_meta($user->ID, API_Con_Model::$meta_keys['user_connections'], true );
