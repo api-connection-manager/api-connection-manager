@@ -25,13 +25,14 @@ class API_Con_Manager{
 	}
 
 	/**
-	 * Set a connection between user and service
-	 * @param  API_Con_Service $service The service to set
-	 * @param  WP_User         $user    Default null. If not set then will use
-	 * the currently logged in user.
-	 * @return array
+	 * Connect a user to a service
+	 * @param  API_Con_Service $service The service object
+	 * @param  stirng          $uid     Optional. The service uid, if not set
+	 * a request to the service will be made
+	 * @param  WP_User          $user    Optional. The user to connect, if not
+	 * set then w_get_current_user() will be used.
 	 */
-	public static function connect_user( API_Con_Service $service, $user = null ){
+	public static function connect_user( API_Con_Service $service, $uid=null, $user = null ){
 
 		//use current user?
 		if ( !$user )
@@ -44,6 +45,10 @@ class API_Con_Manager{
 		if ( get_class( $service->token ) != 'OAuthToken' )
 			return new API_Con_Error( 'No access token set for this service' );
 
+		//get uid
+		if ( !$uid )
+			$uid = $service->get_uid();
+
 		//build connections array()
 		$connections = get_user_meta(
 			$user->ID, 
@@ -52,8 +57,7 @@ class API_Con_Manager{
 		);
 		if ( !is_array( $connections ) )
 			$connections = array();
-		$connections[$service->name] = $service->token;
-		var_dump($connections);
+		$connections[$service->name] = array( $uid, $service->token );
 		
 		//set and return
 		update_user_meta(
@@ -119,7 +123,7 @@ class API_Con_Manager{
 			));
 
 		foreach( $users as $user )
-			$connections[ $user->ID ] = get_user_meta( $user->ID, API_Con_Model::$meta_keys['user_connections'] );
+			$connections[ $user->ID ] = get_user_meta( $user->ID, API_Con_Model::$meta_keys['user_connections'], true );
 
 		return $connections;
 	}

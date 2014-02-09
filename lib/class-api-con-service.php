@@ -241,6 +241,23 @@ abstract class API_Con_Service{
 	}
 
 	/**
+	 * Parse response from service
+	 * @param  array $res The http(s) response from wp_remote_(*)
+	 * @return mixed      Return value depends on the content-type of the $res
+	 * param.
+	 */
+	public function parse_response( $res ){
+
+		$type = $res['headers']['content-type'];
+
+		//json
+		if ( preg_match('/json/', $type) )
+			$res = json_decode( $res['body'] );
+
+		return (object) $res;
+	}
+
+	/**
 	 * Make a request to the remote api.
 	 * If not connected will return API_Con_Error with the html anchor for the 
 	 * login link as message.
@@ -289,7 +306,7 @@ abstract class API_Con_Service{
 		if ( is_wp_error( $error ) )
 			return $error;
 
-		return $res;
+		return $this->parse_response( $res );
 	}
 
 	public function set_token( OAuthToken $token ){
