@@ -92,6 +92,22 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Return all connections for users.
+	 */
+	public static function get_connections(){
+
+		$connections = array();
+		$users = get_users( array(
+			'meta_key' => API_Con_Model::$meta_keys['user_connections'],
+			));
+
+		foreach( $users as $user )
+			$connections[ $user->ID ] = get_user_meta( $user->ID, API_Con_Model::$meta_keys['user_connections'] );
+
+		return $connections;
+	}
+
+	/**
 	 * Factory method. Builds a new API_Con_Consumer
 	 * @param  API_Con_Service $service The service to build the consumer around.
 	 * @return OAuthConsumer

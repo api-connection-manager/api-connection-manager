@@ -28,8 +28,18 @@ if( !class_exists( 'API_Con_Module_Facebook' ) ):
 			), __CLASS__ );
 		}
 
+		/**
+		 * get the user id
+		 * @param  mixed $data Pass request response body to parse, default is
+		 * to make a request for uid
+		 * @return string        The user id
+		 */
 		function get_uid( $data=false ){
 			
+			if ( !$data )
+				$data = $this->request('/me', null, null, false);
+
+			return $data->id;
 		}
 
 		function request_token( API_Con_DTO $dto ){
