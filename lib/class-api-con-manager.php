@@ -25,32 +25,39 @@ class API_Con_Manager{
 	}
 
 	/**
-	 * Set a connection between user and service
-	 * @param  API_Con_Service $service The service to set
-	 * @param  WP_User         $user    Default null. If not set then will use
-	 * the currently logged in user.
-	 * @return array
+	 * Connect a user to a service
+	 * @param  API_Con_Service $service The service object
+	 * @param  stirng          $uid     Optional. The service uid, if not set
+	 * a request to the service will be made
+	 * @param  WP_User          $user    Optional. The user to connect, if not
+	 * set then w_get_current_user() will be used.
 	 */
-	public static function connect_user( API_Con_Service $service, $user=null ){
+	public static function connect_user( API_Con_Service $service, $uid=null, $user = null ){
 
 		//use current user?
 		if ( !$user )
 			$user = wp_get_current_user();
 
-		if ( $user->ID==0 )
+		if ( $user->ID == 0 )
 			return new API_Con_Error( 'Cannot connect user. No user logged in' );
 
 		//check for access token
-		if ( get_class($service->token)!='OAuthToken' )
+		if ( get_class( $service->token ) != 'OAuthToken' )
 			return new API_Con_Error( 'No access token set for this service' );
+
+		//get uid
+		if ( !$uid )
+			$uid = $service->get_uid();
 
 		//build connections array()
 		$connections = get_user_meta(
 			$user->ID, 
-			API_Con_Model::$meta_keys['user_connections'], 
-			array()
+			API_Con_Model::$meta_keys['user_connections'],
+			true
 		);
-		$connections[$service->name] = $service->token;
+		if ( !is_array( $connections ) )
+			$connections = array();
+		$connections[$service->name] = array( $uid, $service->token );
 		
 		//set and return
 		update_user_meta(
@@ -62,6 +69,20 @@ class API_Con_Manager{
 	}
 
 	/**
+	 * Disconnect a user from a service
+	 * @param  API_Con_Service $service The service object
+	 * @param  WP_User         $user    The wordpress user object
+	 * @return boolean                   Returns result from update_user_meta()
+	 */
+	public static function disconnect( API_Con_Service $service, WP_User $user){
+
+		$meta = get_user_meta($user->ID, API_Con_Model::$meta_keys['user_connections'], true );
+		unset($meta[$service->name]);
+		
+		return update_user_meta( $user->ID, API_Con_Model::$meta_keys['user_connections'], $meta);
+	}
+
+	/**
 	 * Do a callback.
 	 * @param  mixed $callback The class/method/function data
 	 * @param  API_Con_DTO $dto      The data transport object
@@ -69,15 +90,15 @@ class API_Con_Manager{
 	 * @return mixed           Returns the callback call.
 	 */
 	public static function do_callback( $callback, $dto, $service ){
-		if ( is_array($callback) ){	
+		
+		if ( is_array( $callback ) ){
 			$class_name = $callback[0];
 			$method = $callback[1];
 			$class = new $class_name();
 			return $class->$method( $service, $dto );
 		}
-		elseif( $callback )
+		else
 			return $callback( $service, $dto );
-
 	}
 
 	/**
@@ -87,7 +108,24 @@ class API_Con_Manager{
 	 * @return API_Con_Manager
 	 */
 	public static function factory( $config = null ){
+
 		return new API_Con_Manager( $config );
+	}
+
+	/**
+	 * Return all connections for users.
+	 */
+	public static function get_connections(){
+
+		$connections = array();
+		$users = get_users( array(
+			'meta_key' => API_Con_Model::$meta_keys['user_connections'],
+			));
+
+		foreach( $users as $user )
+			$connections[ $user->ID ] = get_user_meta( $user->ID, API_Con_Model::$meta_keys['user_connections'], true );
+
+		return $connections;
 	}
 
 	/**
@@ -110,6 +148,7 @@ class API_Con_Manager{
 	 * @return string
 	 */
 	public static function get_module_dir(){
+
 		return dirname( __FILE__ ) . '/../modules';
 	}
 
@@ -139,17 +178,21 @@ class API_Con_Manager{
 
 	/**
 	 * Get range of service modules, depending on $type
-	 * @param  enum $type Default all. 'active'|'inactive'
+	 * @param  enum $type Default all. 'active'|'inactive'|'all'
 	 * @todo  try implement WP_Filesystem for scanning the modules directory
-	 * @todo  write unit tests
-	 * @return array       An array of services, if all then returns array['active'] and array['inactive']
+	 * @return array       An array of service objects.
 	 */
 	public static function get_services( $type = null ){
 		$services = array();
 		
 		switch ( $type ) {
 			case 'inactive':
-				;
+				$db_services = API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
+				if ( !$db_services )
+					return array();
+
+					foreach( $db_services['inactive'] as $service )
+						$services[] = API_Con_Manager::get_service( $service );
 				break;
 			
 
@@ -158,25 +201,25 @@ class API_Con_Manager{
 					if ( !$db_services )
 						return array();
 
-					foreach( $db_services['active'] as $service )
+					foreach ( $db_services['active'] as $service )
 						$services[] = API_Con_Manager::get_service( $service );
 				break;
 
-			case 'installed':
+			//returns all
+			case 'all':
 				$handle = opendir( self::get_module_dir() );
 
 				while ( false !== ( $file = readdir( $handle ) ) ) {
 					if ( $file == '.' || $file == '..' )
 						continue;
-
 					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
 					$services[] = API_Con_Manager::get_service( ucfirst( $matches[0] ) );
 				}
 			break;
 
-			//default return all services
+			//default return API_Con_Error
 			default:
-				# code...
+				return new API_Con_Error( 'Invalid param $type: ' . $type );
 				break;
 		}
 
@@ -191,11 +234,15 @@ class API_Con_Manager{
 	public static function get_user_connections(){
 
 		$user = wp_get_current_user();
-		return get_user_meta(
+		$res = get_user_meta(
 			$user->ID, 
-			API_Con_Model::$meta_keys['user_connections'], 
-			array()
+			API_Con_Model::$meta_keys['user_connections'],
+			true
 		);
+
+		if ( !$res )
+			return array();
+		return $res;
 	}
 
 	/**
@@ -205,6 +252,7 @@ class API_Con_Manager{
 	 * @return boolean Default false;
 	 */
 	public static function is_connected( API_Con_Service $service ){
+
 		return false;
 	}
 
@@ -226,14 +274,13 @@ class API_Con_Manager{
 
 	/**
 	 * Activate / Deactivate services
-	 * @param array  $services An array of service names
+	 * @param array  $services An array of service objects
 	 * @param enum $action   activate|deactivate
 	 * @return  boolean
 	 */
 	public static function set_service_states( array $services, $action ){
 
 		$db_services = (array) API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
-		
     	if ( $action == 'activate' ){
     		$update = 'active';
     		$delete = 'inactive';
@@ -241,7 +288,7 @@ class API_Con_Manager{
     		$update = 'inactive';
     		$delete = 'active';
     	}else
-    		return false;
+    		return new API_Con_Error( 'invalid action for API_Con_Manager::set_service_states' );
 
     	//rebuild services[]
 		foreach ( $services as $service ) {
@@ -254,7 +301,10 @@ class API_Con_Manager{
 				continue;
 			$db_services[ $update ][] = $service->name;
 		}
+		$db_services['inactive'] = array_values( $db_services['inactive'] );	//reset array keys
+		$db_services['active'] = array_values( $db_services['active'] );
 
+		//set new services[]
 		$db_services[$update] = array_unique( $db_services[$update] );
 		return API_Con_Model::set(
 			API_Con_Model::$meta_keys['services'],
@@ -276,11 +326,22 @@ class API_Con_Manager{
 	}
 
 	/**
-	 * Register the dashboard menus
-	 * @return  array Returns admin slug, sub menu slug, API_Con_Dash_Service
+	 * Register the dashboard menus.
+	 * @return  array Returns admin slug, settings slug, options slug
 	 */
 	public function action_admin_menu(){
+
 		$dash = new API_Con_Dash_Service();
+		$connections = new API_Con_Dash_Connections();
+
+		//connections
+		$con_page = add_menu_page(
+			'API Connection Manager - My Connections',
+			'My Connections',
+			'read',
+			'api-con-connections',
+			array(&$connections, 'get_page')
+		);
 
 		//dashboard
 		$menu = add_menu_page(
@@ -292,7 +353,7 @@ class API_Con_Manager{
 		);
 
 		//services
-		$submenu = add_submenu_page(
+		$services = add_submenu_page(
 			'api-con-manager',
 			'API Con Services',
 			'Services',
@@ -302,7 +363,7 @@ class API_Con_Manager{
 			);
 
 		//options
-		$submenu = add_submenu_page(
+		$options = add_submenu_page(
 			'api-con-manager',
 			'API Con Options',
 			'Options',
@@ -311,14 +372,7 @@ class API_Con_Manager{
 			array(&$dash, 'get_page_options')
 			);
 
-		return array( $menu, $submenu, $services );
-	}
-
-	/**
-	 * Print the main API Con dashboard page
-	 */
-	public function get_page(){
-		print '<h1>API Connection Manager</h1>';
+		return array( $menu, $services, $options );
 	}
 
 	/**
@@ -332,13 +386,15 @@ class API_Con_Manager{
 	public function response_listener( $dto = null ){
 
 		//if used outside wp_ajax, make sure API_Con_DTO is passed
-		if ( $dto && !is_string( $dto ) )
-			if ( !get_class( $dto ) == 'API_Con_DTO' )
+		if ( $dto && (!get_class( $dto ) == 'API_Con_DTO') )
 				return new API_Con_Error( 'API_Con_Manager::response_listener() takes API_Con_DTO as a parameter' );
 
 		//construct DTO
 		if ( !$dto )
 			$dto = new API_Con_DTO( $_REQUEST );
+		$action = @$dto->data['api-con-action'] ?
+			$dto->data['api-con-action'] :
+			null;
 
 		/**
 		 * Security.
@@ -348,30 +404,32 @@ class API_Con_Manager{
 			'request_token',
 			'service_login',
 		);
-		if ( !in_array( @$dto->data['api-con-action'], $valid_actions ) )
+		if ( !in_array( $action, $valid_actions ) )
 			return new API_Con_Error( 'Invalid request' );
 		//end Security
-		
+
 		//get service and callback
 		if ( @$_SESSION['api-con-manager-callback']['service'] )
 			$service = API_Con_Manager::get_service( $_SESSION['api-con-manager-callback']['service'] );
 		else
 			$service = API_Con_Manager::get_service( $dto->data['service'] );
-		$callback = @$_SESSION['api-con-manager-callback']['callback'];
-		unset($_SESSION['api-con-manager-callback']);
 
-		//run action method
+		//do action
 		$method = $dto->data['api-con-action'];
-		$this->$method( $dto, $service );
+		$res = $this->$method( $dto, $service );
+
+		//if not service_login request, see if callback in $_SESSION
+		if ( $action != 'service_login' ){
+			$callback = @$_SESSION['api-con-manager-callback']['callback'];
+			unset( $_SESSION['api-con-manager-callback'] );
+		}
 
 		//do callbacks?
 		if ( $callback )
 			API_Con_Manager::do_callback( $callback, $dto, $service );
-
+		
 		//error report | return
-		if ( is_wp_error($dto) )
-			die( 'Error in method ' . $method . ': ' . $dto->get_error_message() );
-		return $dto;
+		return $res;
 	}
 
 	/**
@@ -402,7 +460,8 @@ class API_Con_Manager{
 			
 		//get token
 		$token = $service->request_token( $dto );
-		if ( is_wp_error($token) )
+		
+		if ( is_wp_error( $token ) )
 			return $token;
 
 		//try connect user
@@ -416,7 +475,7 @@ class API_Con_Manager{
 
 	/**
 	 * Redirects to remote authorization server. Callback transient record id is 
-	 * taken from $dto->data['transid'].
+	 * taken from $dto->data['transid'] and stored as a session.
 	 * @uses  $_SESSION['api-con-manager-callback'] Stores service and callback.
 	 * @uses  API_Con_Model::get_transient_by_id() To get callback value.
 	 * @uses  API_Con_Service::get_authorize_url() The url to redirect to
@@ -429,7 +488,7 @@ class API_Con_Manager{
 		//vars
 		$_SESSION['api-con-manager-callback'] = array(
 			'service' => $service->name,
-			'callback' => API_Con_Model::get_transient_by_id( $dto->data['transid'] )
+			'callback' => API_Con_Model::get_transient_by_id( $dto->data['transid'] ),
 		);
 
 		$service = API_Con_Manager::get_service( $dto->data['service'] );

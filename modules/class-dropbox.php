@@ -26,5 +26,9 @@ if( !class_exists( 'API_Con_Module_Dropbox' ) ):
 				'options' => array( 'key', 'secret' )
 			), __CLASS__ );
 		}
+
+		function get_uid( $data=false ){
+			;
+		}
 	}
 endif;
