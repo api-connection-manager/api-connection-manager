@@ -1,5 +1,7 @@
 ##Wordpress API Connection Manager
 
+[![Build Status](http://david-coombes.com:8080/jenkins/buildStatus/icon?job=API-Connection-Manager-v1.0)](http://david-coombes.com:8080/jenkins/job/API-Connection-Manager-v1.0/)
+
 The API Connection Manager provides an API for developers to easily access 
 third party resources, such as Facebook, Google, Twitter etc.
 
