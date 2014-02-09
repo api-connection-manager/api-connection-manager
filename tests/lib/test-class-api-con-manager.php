@@ -33,6 +33,9 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		update_user_meta( $this->user, API_Con_Model::$meta_keys['user_connections'], null );
 	}
 
+	/**
+	 * @group foo
+	 */
 	function test_connect_user(){
 
 		$this->assertInstanceOf(
@@ -41,11 +44,14 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		);
 
 		$token = new OAuthToken( 'token-key', null );
-		$connections_test = array( $this->service->name => $token );
+		$connections_test = array( 
+			$this->service->name => array( null, $token )
+		);
 		$this->service->token = $token;
 
 		$connections = API_Con_Manager::connect_user( $this->service );
 		$user_connections = get_user_meta( $this->user->ID, API_Con_Model::$meta_keys['user_connections'], true );
+		
 		$this->assertEquals(
 			$connections_test,
 			$connections,
