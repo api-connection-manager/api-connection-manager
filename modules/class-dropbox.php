@@ -20,10 +20,11 @@ if( !class_exists( 'API_Con_Module_Dropbox' ) ):
 
 			//construct parent
 			parent::__construct( array(
-				'auth_type' => 'oauth2',
-				'auth_url' => 'https://www.dropbox.com/1/oauth2/authorize',
-				'endpoint' => 'https://api.dropbox.com/1',
-				'options' => array( 'key', 'secret' )
+				'auth_type'	=> 'oauth2',
+				'auth_url'	=> 'https://www.dropbox.com/1/oauth2/authorize',
+				'button'	=> 'dropbox-29x29.png',
+				'endpoint'	=> 'https://api.dropbox.com/1',
+				'options'	=> array( 'key', 'secret' )
 			), __CLASS__ );
 		}
 
