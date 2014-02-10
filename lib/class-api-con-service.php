@@ -122,7 +122,7 @@ abstract class API_Con_Service{
 
 		//use button
 		if ( $this->button )
-			$text = '<img src="' . plugins_url('/api-connection-manager/modules/' . $this->button) . '"/>';
+			$text = '<img src="' . API_Con_Manager::get_module_url() . '/' . $this->button . '"/>';
 
 		if ( !$text )
 			$text = $this->name;

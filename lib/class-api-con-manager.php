@@ -152,6 +152,10 @@ class API_Con_Manager{
 		return dirname( __FILE__ ) . '/../modules';
 	}
 
+	public static function get_module_url(){
+		return plugins_url() . '/api-connection-manager/modules';
+	}
+
 	/**
 	 * Factory method to get service object
 	 * @param  string $name The service name
