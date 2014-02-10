@@ -90,7 +90,7 @@ class API_Con_Manager{
 	 * @return mixed           Returns the callback call.
 	 */
 	public static function do_callback( $callback, $dto, $service ){
-		
+
 		if ( is_array( $callback ) ){
 			$class_name = $callback[0];
 			$method = $callback[1];
@@ -457,7 +457,7 @@ class API_Con_Manager{
 	 * API_Con_Error if issue.
 	 */
 	private function request_token( API_Con_DTO $dto, API_Con_Service $service ){
-			
+		
 		//get token
 		$token = $service->request_token( $dto );
 		

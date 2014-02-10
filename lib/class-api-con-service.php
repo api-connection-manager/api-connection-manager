@@ -120,6 +120,31 @@ abstract class API_Con_Service{
 	 */
 	public function get_login_link( $callback, $text=false, $transient_time=3600 ){
 
+		//use button
+		if ( $this->button )
+			$text = '<img src="' . plugins_url('/api-connection-manager/modules/' . $this->button) . '"/>';
+
+		if ( !$text )
+			$text = $this->name;
+
+		//return htm link | API_Con_Error
+		if( !is_wp_error( $trans_id ) )
+			return '<a href="' 
+				. $this->get_login_url( $callback )
+				. '" target="_new">'
+				. $text
+				. '</a>';
+		else
+			return $trans_id;
+	}
+
+	/**
+	 * Return the login url
+	 * @param array $extra_params Optional. Any extra query params.
+	 * @return string the full `URI` to login this service
+	 */
+	public function get_login_url( $callback ){
+
 		//generate unique key for callback transient
 		$key = API_Con_Model::$meta_keys['transient'][0];
 		$x=0;
@@ -140,35 +165,10 @@ abstract class API_Con_Service{
 			$transient_time
 		);
 
-		//use button
-		if ( $this->button )
-			$text = '<img src="' . plugins_url('/api-connection-manager/modules/' . $this->button) . '"/>';
-
-		if ( !$text )
-			$text = $this->name;
-
-		//return htm link | API_Con_Error
-		if( !is_wp_error( $trans_id ) )
-			return '<a href="' 
-				. $this->get_login_url( array('transid' => $trans_id) )
-				. '" target="_new">'
-				. $text
-				. '</a>';
-		else
-			return $trans_id;
-	}
-
-	/**
-	 * Return the login url
-	 * @param array $extra_params Optional. Any extra query params.
-	 * @return string the full `URI` to login this service
-	 */
-	public function get_login_url( $extra_params=array() ){
 		$ret = admin_url( 'admin-ajax.php' ) 
-			. '?action=api-con-manager&amp;api-con-action=service_login&amp;service=' 
-			. $this->name;
-		if( count( $extra_params ) )
-			$ret .= '&amp;' . http_build_query( $extra_params );
+			. '?action=api-con-manager&amp;api-con-action=service_login&amp;'
+			. 'service=' 		. $this->name
+			. '&amp;transid='	. $trans_id;
 
 		return $ret;
 	}
