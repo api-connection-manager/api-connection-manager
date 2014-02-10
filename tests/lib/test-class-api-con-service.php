@@ -35,7 +35,7 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 	function test_get_login_link(){
 		global $wpdb;
 
-		$link = $this->obj->get_login_link( array('FooClass','callback') );
+		$link = $this->obj->get_login_link( array('FooClass','callback'), $this->obj->name );
 		$id = $wpdb->insert_id;
 
 		//check callback was set
@@ -49,7 +49,7 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 
 		//check link return
 		$link_foo = 			'<a href="' 
-				. $this->obj->get_login_url( array('transid' => $id) )
+				. $this->obj->get_login_url( null, $id )
 				. '" target="_new">'
 				. $this->obj->name
 				. '</a>';
@@ -58,11 +58,13 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 	}
 
 	function test_get_login_url(){
+		global $wpdb;
+
 		$this->obj->name = 'dropbox';
 		//http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&amp;api-con-action=service_login&amp;service=dropbox&amp;foo=bar
-		$test = admin_url('admin-ajax.php') . '?action=api-con-manager&amp;api-con-action=service_login&amp;service=' . $this->obj->name . '&amp;foo=bar';
-		$res = $this->obj->get_login_url(array('foo'=>'bar'));
-		$this->assertEquals( $test, $res );
+		$actual = $this->obj->get_login_url(array('foo'=>'bar'));
+		$expected = admin_url('admin-ajax.php') . '?action=api-con-manager&amp;api-con-action=service_login&amp;service=' . $this->obj->name . '&amp;transid=' . $wpdb->insert_id;
+		$this->assertEquals( $expected, $actual );
 	}
 
 	function test_get_options(){
@@ -91,17 +93,5 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 
 		$service_options = API_Con_Model::get( API_Con_Model::$meta_keys['service_options'] );
 		$options = $service_options[ $this->obj->name ];
-	}
-
-	function test_request(){
-
-		$res = $this->obj->request('http://example-foo.com/bar?x=z');
-		$this->assertInstanceOf('API_Con_Error', $res);
-
-		//service not connected, login url returned
-		$this->assertEquals( 
-			'<a href="http://example.org/wp-admin/admin-ajax.php?action=api-con-manager&amp;api-con-action=service_login&amp;service=Dropbox" target="_new">Login to Dropbox</a>',
-			$res->get_error_message()
-		);
 	}
 }

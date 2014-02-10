@@ -167,9 +167,10 @@ class API_Con_Manager{
 			return new API_Con_Error( 'No service name specified' );
 
 		//load file
-		$service_path = dirname( __FILE__ ) . '/../modules/class-' . strtolower( $name ) . '.php';
-		if ( !file_exists( $service_path ) )
+		$service_path = API_Con_Manager::get_module_dir() . '/class-' . strtolower( $name ) . '.php';
+		if ( !file_exists( $service_path ) ){
 			return new API_Con_Error( 'Can\'t find module for ' . $name );
+		}
 		else
 			require_once( $service_path );
 
@@ -216,9 +217,14 @@ class API_Con_Manager{
 				while ( false !== ( $file = readdir( $handle ) ) ) {
 					if ( $file == '.' || $file == '..' )
 						continue;
-					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
-					$services[] = API_Con_Manager::get_service( ucfirst( $matches[0] ) );
+
+					preg_match( '/^class-(.+)\.php/i', $file, $matches );
+					if(!count($matches))
+						continue;
+
+					$services[] = API_Con_Manager::get_service( ucfirst( $matches[1] ) );
 				}
+
 			break;
 
 			//default return API_Con_Error
