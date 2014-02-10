@@ -153,6 +153,7 @@ class API_Con_Manager{
 	}
 
 	public static function get_module_url(){
+
 		return plugins_url() . '/api-connection-manager/modules';
 	}
 
@@ -520,8 +521,9 @@ class API_Con_Manager{
 		if ( is_wp_error($url) )
 			die( $url->get_error_message() );
 
-		//redirect & die
-		wp_redirect( $url );
+		//redirect & die - wp_redirect() will format the authorize url so can't
+		//be used here
+		header( 'Location: ' . $url, true);
 		die();
 	}
 }
