@@ -82,14 +82,16 @@ abstract class API_Con_Service{
 
 		switch ( $this->auth_type ){
 			case 'oauth2':
-				
-				$url = $this->auth_url . '?' . http_build_query(
-					array(
-						'client_id' => $consumer->key,
-						'response_type' => 'code',
-						'redirect_uri' => $this->get_redirect_url(),
-					)
-				);
+					
+					$params = array(
+							'client_id' => $consumer->key,
+							'response_type' => 'code',
+							'redirect_uri' => $this->get_redirect_url(),
+						);
+					if ( $this->options['scope'] )
+						$params['scope'] = $this->options['scope'];
+
+					$url = $this->auth_url . '?' . http_build_query( $params );
 
 				break;
 			
