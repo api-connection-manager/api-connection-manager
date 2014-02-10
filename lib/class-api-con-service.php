@@ -14,6 +14,8 @@ abstract class API_Con_Service{
 	public $auth_type = 'custom';
 	/** @var string The authorize url. @see API_Con_Service::get_authorize_url() */
 	public $auth_url;
+	/** @var string The filename for login image. Image must be in modules folders */
+	public $button;
 	/** @var string The client key/id */
 	public $key;
 	/** @var string The name of this service. Declared in factory method API_Con_Manager::get_service() */
@@ -111,32 +113,17 @@ abstract class API_Con_Service{
 	 * recoreds must be deleted after x amount of time and have unique key.
 	 * @see  API_Con_Model::set_transient()
 	 * @see  API_Con_Manager::_response_listener()
-	 * @todo  write unit tests
 	 * @param mixed $callback The callback function, or array(class, method)
+	 * @param string $text Default false. Text for login link, will default to
+	 * image, if no image will display service name.
 	 * @param integer $transient_time Default 3600. Transient timeout in seconds
 	 * @return string The html anchor link
 	 */
 	public function get_login_link( $callback, $text=false, $transient_time=3600 ){
 
-		//generate unique key for callback transient
-		$key = API_Con_Model::$meta_keys['transient'][0];
-		$x=0;
-		if( API_Con_Model::get_transient( $key . '-' . $x ) )
-			while( API_Con_Model::get_transient( $key . '-' . $x ) )
-				$x++;
-		$key .= '-' . $x;
-
-		//force callback classname, instead of object reference
-		if ( is_array($callback) )
-			if ( is_object($callback[0]) )
-				$callback[0] = get_class($callback[0]);
-
-		//set transient
-		$trans_id = API_Con_Model::set_transient(
-			$key, 
-			$callback,
-			$transient_time
-		);
+		//use button
+		if ( $this->button && !$text )
+			$text = '<img src="' . API_Con_Manager::get_module_url() . '/' . $this->button . '"/>';
 
 		if ( !$text )
 			$text = $this->name;
@@ -144,7 +131,7 @@ abstract class API_Con_Service{
 		//return htm link | API_Con_Error
 		if( !is_wp_error( $trans_id ) )
 			return '<a href="' 
-				. $this->get_login_url( array('transid' => $trans_id) )
+				. $this->get_login_url( $callback )
 				. '" target="_new">'
 				. $text
 				. '</a>';
@@ -155,14 +142,38 @@ abstract class API_Con_Service{
 	/**
 	 * Return the login url
 	 * @param array $extra_params Optional. Any extra query params.
+	 * @param integer $trans_id Default false. Pass if a transient recored has
+	 * already been setup. Leave empty otherwise.
 	 * @return string the full `URI` to login this service
 	 */
-	public function get_login_url( $extra_params=array() ){
+	public function get_login_url( $callback, $trans_id=false ){
+
+		//generate unique key for callback transient
+		if ( !$trans_id ){
+			$key = API_Con_Model::$meta_keys['transient'][0];
+			$x=0;
+			if( API_Con_Model::get_transient( $key . '-' . $x ) )
+				while( API_Con_Model::get_transient( $key . '-' . $x ) )
+					$x++;
+			$key .= '-' . $x;
+
+			//force callback classname, instead of object reference
+			if ( is_array($callback) )
+				if ( is_object($callback[0]) )
+					$callback[0] = get_class($callback[0]);
+
+			//set transient
+			$trans_id = API_Con_Model::set_transient(
+				$key, 
+				$callback,
+				$transient_time
+			);
+		}
+
 		$ret = admin_url( 'admin-ajax.php' ) 
-			. '?action=api-con-manager&amp;api-con-action=service_login&amp;service=' 
-			. $this->name;
-		if( count( $extra_params ) )
-			$ret .= '&amp;' . http_build_query( $extra_params );
+			. '?action=api-con-manager&amp;api-con-action=service_login&amp;'
+			. 'service=' 		. $this->name
+			. '&amp;transid='	. $trans_id;
 
 		return $ret;
 	}
@@ -261,6 +272,7 @@ abstract class API_Con_Service{
 	 * Make a request to the remote api.
 	 * If not connected will return API_Con_Error with the html anchor for the 
 	 * login link as message.
+	 * @todo  write unit tests
 	 * @param  string $url    endpoint
 	 * @param  array  $params parameters to be sent
 	 * @param  string $method Default GET
@@ -280,7 +292,7 @@ abstract class API_Con_Service{
 			!API_Con_Manager::is_connected( $this ) &&
 			$check_connect
 		)
-			return new API_Con_Error( '<a href="' . $this->get_login_url() . '" target="_new">Login to ' . $this->name . '</a>' );
+			return new API_Con_Error( 'API Con: Can\'t make request, not connected to ' . $this->name );
 
 		//auth_type params
 		switch ($this->auth_type) {

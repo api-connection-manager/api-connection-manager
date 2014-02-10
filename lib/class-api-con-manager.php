@@ -90,7 +90,7 @@ class API_Con_Manager{
 	 * @return mixed           Returns the callback call.
 	 */
 	public static function do_callback( $callback, $dto, $service ){
-		
+
 		if ( is_array( $callback ) ){
 			$class_name = $callback[0];
 			$method = $callback[1];
@@ -152,6 +152,10 @@ class API_Con_Manager{
 		return dirname( __FILE__ ) . '/../modules';
 	}
 
+	public static function get_module_url(){
+		return plugins_url() . '/api-connection-manager/modules';
+	}
+
 	/**
 	 * Factory method to get service object
 	 * @param  string $name The service name
@@ -163,9 +167,10 @@ class API_Con_Manager{
 			return new API_Con_Error( 'No service name specified' );
 
 		//load file
-		$service_path = dirname( __FILE__ ) . '/../modules/class-' . strtolower( $name ) . '.php';
-		if ( !file_exists( $service_path ) )
+		$service_path = API_Con_Manager::get_module_dir() . '/class-' . strtolower( $name ) . '.php';
+		if ( !file_exists( $service_path ) ){
 			return new API_Con_Error( 'Can\'t find module for ' . $name );
+		}
 		else
 			require_once( $service_path );
 
@@ -212,9 +217,14 @@ class API_Con_Manager{
 				while ( false !== ( $file = readdir( $handle ) ) ) {
 					if ( $file == '.' || $file == '..' )
 						continue;
-					preg_match( '/[^class-](.+)[^\.php]/i', $file, $matches );
-					$services[] = API_Con_Manager::get_service( ucfirst( $matches[0] ) );
+
+					preg_match( '/^class-(.+)\.php/i', $file, $matches );
+					if(!count($matches))
+						continue;
+
+					$services[] = API_Con_Manager::get_service( ucfirst( $matches[1] ) );
 				}
+
 			break;
 
 			//default return API_Con_Error
@@ -457,7 +467,7 @@ class API_Con_Manager{
 	 * API_Con_Error if issue.
 	 */
 	private function request_token( API_Con_DTO $dto, API_Con_Service $service ){
-			
+		
 		//get token
 		$token = $service->request_token( $dto );
 		

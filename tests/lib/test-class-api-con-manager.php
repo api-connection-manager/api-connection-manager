@@ -15,7 +15,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		$this->obj = new API_Con_Manager();
 		$this->service = API_Con_Manager::get_service( 'facebook' );
 		$this->service->set_options( array( 'key'=>'foo', 'secret'=>'bar' ) );
-		$this->services = array( 'Dropbox', 'Facebook', 'Github');
+		$this->services = array( 'Dropbox', 'Facebook', 'Github', 'Google');
 		$this->user = @wp_signon( array(
 			'user_login' => 'admin',
 			'user_password' => 'password'
@@ -26,16 +26,13 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		API_Con_Model::set(
 			API_Con_Model::$meta_keys['services'],
 			array(
-				'active' => array( $this->services[0], $this->services[1] ),
+				'active' => array( $this->services[0], $this->services[1], $this->services[3] ),
 				'inactive' => array( $this->services[2] )
 			)
 		);
 		update_user_meta( $this->user, API_Con_Model::$meta_keys['user_connections'], null );
 	}
 
-	/**
-	 * @group foo
-	 */
 	function test_connect_user(){
 
 		$this->assertInstanceOf(
@@ -133,15 +130,23 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 			$inactive[] = $service->name;
 		$db = API_Con_Model::get(API_Con_Model::$meta_keys['services']);
 		$db['all'] = array_merge($active, $inactive);
-		sort( $installed );
-		sort( $active );
-		sort( $inactive );
-		asort($db);
 
 		//run tests
-		$this->assertEquals( $db['active'], $active, "API_Con_Manager::get_services['active'] failed");
-		$this->assertEquals( $db['inactive'], $inactive, "API_Con_Manager::get_services['inactive'] failed");
-		$this->assertEquals( $db['all'], $installed, "API_Con_Manager::get_services['installed'] failed");
+		$this->assertEquals( 
+			sort( $db['active'] ),
+			sort( $active ),
+			"API_Con_Manager::get_services['active'] failed"
+		);
+		$this->assertEquals(
+			sort( $db['inactive'] ),
+			sort( $inactive ),
+			"API_Con_Manager::get_services['inactive'] failed"
+		);
+		$this->assertEquals( 
+			sort($db['all']),
+			sort($installed),
+			"API_Con_Manager::get_services['installed'] failed"
+		);
 		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::get_services('foo') );
 	}
 
@@ -170,7 +175,7 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		API_Con_Manager::set_service_states( $inactive, 'deactivate' );
 		$all = API_Con_Model::get( API_Con_Model::$meta_keys['services'] );
 
-		$this->assertEquals( array('Github'), $all['active'] );
+		$this->assertEquals( array('Google', 'Github'), $all['active'] );
 		$this->assertEquals( array('Dropbox','Facebook'), $all['inactive']);
 		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::set_service_states( array('foo'), 'deactivate') );
 		$this->assertInstanceOf( 'API_Con_Error', API_Con_Manager::set_service_states( array('foo'), 'bar') );
