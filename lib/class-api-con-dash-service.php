@@ -218,7 +218,7 @@ class API_Con_Dash_Service extends WP_List_Table{
     public function get_page_options(){
 
     	$action = @$_GET['action'];
-    	$html = array();
+    	$html = array('<div>Redirect URl: ' . API_Con_Manager::get_redirect_url() . '</div>');
 
     	if ( $action && method_exists($this, $action ) )
     		$this->$action();
@@ -314,7 +314,7 @@ class API_Con_Dash_Service extends WP_List_Table{
 			return;
 		
 		$ret = '<div class="api-con-dash-hidden" id="api-con-dash-inline-' . $item->name . '">
-			<p>Redirect URL:<br/> <b>' . $service->get_redirect_url() . '</b></p>';
+			<p>Redirect URL:<br/> <b>' . API_Con_Manager::get_redirect_url() . '</b></p>';
 
 		foreach ( $options as $key => $val ){
 			$ret .= '<label for="' . $key . '">' . $key . '</label>';

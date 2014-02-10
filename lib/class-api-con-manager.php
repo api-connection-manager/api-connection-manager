@@ -140,7 +140,7 @@ class API_Con_Manager{
 		if ( !$options['key'] || !$options['secret'] )
 			return new API_Con_Error( 'Service missing client key or client secret' );
 
-		return new OAuthConsumer( $options['key'], $options['secret'], $service->get_redirect_url() );
+		return new OAuthConsumer( $options['key'], $options['secret'], API_Con_Manager::get_redirect_url() );
 	}
 
 	/**
@@ -155,6 +155,16 @@ class API_Con_Manager{
 	public static function get_module_url(){
 		return plugins_url() . '/api-connection-manager/modules';
 	}
+
+	/**
+	 * Get api-con redirect url for this site
+	 * @return string
+	 */
+	public static function get_redirect_url(){
+
+		return admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
+	}
+
 
 	/**
 	 * Factory method to get service object
@@ -415,7 +425,7 @@ class API_Con_Manager{
 			'service_login',
 		);
 		if ( !in_array( $action, $valid_actions ) )
-			return new API_Con_Error( 'Invalid request' );
+			die( 'Invalid request to API_Con_Manager::response_listener()' );
 		//end Security
 
 		//get service and callback

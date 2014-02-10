@@ -52,7 +52,7 @@ abstract class API_Con_Service{
 			@$this->$field = $val;
 
 		//set protected/private fields
-		$this->redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
+		$this->redirect_url = API_Con_Manager::get_redirect_url();
 	}
 
 	/**
@@ -86,13 +86,13 @@ abstract class API_Con_Service{
 					$params = array(
 							'client_id' => $consumer->key,
 							'response_type' => 'code',
-							'redirect_uri' => $this->get_redirect_url(),
+							'redirect_uri' => $this->redirect_url,
 						);
 					if ( $this->options['scope'] )
 						$params['scope'] = $this->options['scope'];
 
 					$url = $this->auth_url . '?' . http_build_query( $params );
-
+					
 				break;
 			
 			default:
@@ -190,15 +190,6 @@ abstract class API_Con_Service{
 	}
 
 	/**
-	 * Get redirect url for this service
-	 * @return string
-	 */
-	public function get_redirect_url(){
-
-		return $this->redirect_url;
-	}
-
-	/**
 	 * Request an access token.
 	 * @param  API_Con_DTO $dto The data transport object containing the code value
 	 * @param  array $params Aditional params to send
@@ -214,7 +205,7 @@ abstract class API_Con_Service{
    		$params = array(
 			'client_id' => $consumer->key,
 			'client_secret' => $consumer->secret,
-			'redirect_uri' => $this->get_redirect_url(),
+			'redirect_uri' => $this->redirect_url,
 			'code' => $code,
 		);
 

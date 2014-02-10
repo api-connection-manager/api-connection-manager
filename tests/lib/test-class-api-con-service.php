@@ -23,7 +23,7 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 			array(
 				'client_id' => $consumer->key,
 				'response_type' => 'code',
-				'redirect_uri' => $this->obj->get_redirect_url(),
+				'redirect_uri' => API_Con_Manager::get_redirect_url(),
 			)
 		);
 		
@@ -81,12 +81,6 @@ class API_Con_ServiceTest extends WP_UnitTestCase{
 			$service_options[$this->obj->name],
 			$res[$this->obj->name]
 		);
-	}
-
-	function test_get_redirect_url(){
-		$test = $this->obj->get_redirect_url();
-		$redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
-		$this->assertEquals( $test, $redirect_url );
 	}
 
 	function test_load_options(){
