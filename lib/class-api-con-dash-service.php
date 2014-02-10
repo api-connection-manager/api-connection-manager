@@ -219,11 +219,11 @@ class API_Con_Dash_Service extends WP_List_Table{
 
     	$action = @$_GET['action'];
     	$html = array();
-    	$services = API_Con_Manager::get_services( 'active' );
 
     	if ( $action && method_exists($this, $action ) )
     		$this->$action();
 
+    	$services = API_Con_Manager::get_services( 'active' );
 
     	foreach( $services as $service ){
     		$form = '<form method="get">
