@@ -20,11 +20,12 @@ if( !class_exists( 'API_Con_Module_Github' ) ):
 
 			//construct parent
 			parent::__construct( array(
-				'auth_type' => 'oauth2',
-				'auth_url' => 'https://github.com/login/oauth/authorize',
-				'endpoint' => 'https://api.dropbox.com/1',
-				'options' => array('key','secret'),
-				'token_url' => 'https://github.com/login/oauth/access_token'
+				'auth_type'	=> 'oauth2',
+				'auth_url'	=> 'https://github.com/login/oauth/authorize',
+				'button'	=> 'github-29x29.png',
+				'endpoint'	=> 'https://api.dropbox.com/1',
+				'options'	=> array('key','secret'),
+				'token_url'	=> 'https://github.com/login/oauth/access_token'
 			), __CLASS__ );
 		}
 
