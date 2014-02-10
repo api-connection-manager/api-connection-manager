@@ -504,6 +504,9 @@ class API_Con_Manager{
 		$service = API_Con_Manager::get_service( $dto->data['service'] );
 		$url = $service->get_authorize_url();
 
+		if ( is_wp_error($url) )
+			die( $url->get_error_message() );
+
 		//redirect & die
 		wp_redirect( $url );
 		die();
