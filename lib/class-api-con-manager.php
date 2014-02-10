@@ -162,7 +162,7 @@ class API_Con_Manager{
 	 */
 	public static function get_redirect_url(){
 
-		return admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
+		return admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&amp;api-con-action=request_token';
 	}
 
 
