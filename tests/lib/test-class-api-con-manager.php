@@ -103,6 +103,12 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		);
 	}
 
+	function test_get_redirect_url(){
+		$test = API_Con_Manager::get_redirect_url();
+		$redirect_url = admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
+		$this->assertEquals( $test, $redirect_url );
+	}
+
 	function test_get_service() {
 		$this->assertInstanceOf(
 			'API_Con_Service',
@@ -198,6 +204,9 @@ class API_Con_ManagerTest extends WP_UnitTestCase {
 		) );
 	}
 
+	/**
+	 * @group foo
+	 */
 	function test_response_listener(){
 		
 		//assert dto is passed		

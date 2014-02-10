@@ -21,10 +21,10 @@ if( !class_exists( 'API_Con_Module_Google' ) ):
 			//construct parent
 			parent::__construct( array(
 				'auth_type'	=> 'oauth2',
-				'auth_url'	=> '',
+				'auth_url'	=> 'https://accounts.google.com/o/oauth2/auth',
 				'button'	=> 'google-29x29.png',
 				'endpoint'	=> '',
-				'options'	=> array( 'key', 'secret' )
+				'options'	=> array( 'key', 'secret', 'scope' )
 			), __CLASS__ );
 		}
 

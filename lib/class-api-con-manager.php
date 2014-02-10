@@ -140,7 +140,7 @@ class API_Con_Manager{
 		if ( !$options['key'] || !$options['secret'] )
 			return new API_Con_Error( 'Service missing client key or client secret' );
 
-		return new OAuthConsumer( $options['key'], $options['secret'], $service->get_redirect_url() );
+		return new OAuthConsumer( $options['key'], $options['secret'], API_Con_Manager::get_redirect_url() );
 	}
 
 	/**
@@ -153,8 +153,19 @@ class API_Con_Manager{
 	}
 
 	public static function get_module_url(){
+
 		return plugins_url() . '/api-connection-manager/modules';
 	}
+
+	/**
+	 * Get api-con redirect url for this site
+	 * @return string
+	 */
+	public static function get_redirect_url(){
+
+		return admin_url( 'admin-ajax.php' ) . '?action=api-con-manager&api-con-action=request_token';
+	}
+
 
 	/**
 	 * Factory method to get service object
@@ -398,10 +409,13 @@ class API_Con_Manager{
 		//if used outside wp_ajax, make sure API_Con_DTO is passed
 		if ( $dto && (!get_class( $dto ) == 'API_Con_DTO') )
 				return new API_Con_Error( 'API_Con_Manager::response_listener() takes API_Con_DTO as a parameter' );
-
+		
 		//construct DTO
 		if ( !$dto )
 			$dto = new API_Con_DTO( $_REQUEST );
+		else{
+			$return = true;
+		}
 		$action = @$dto->data['api-con-action'] ?
 			$dto->data['api-con-action'] :
 			null;
@@ -415,7 +429,7 @@ class API_Con_Manager{
 			'service_login',
 		);
 		if ( !in_array( $action, $valid_actions ) )
-			return new API_Con_Error( 'Invalid request' );
+				return new API_Con_Error( 'Invalid request to API_Con_Manager::response_listener()' );
 		//end Security
 
 		//get service and callback
@@ -504,8 +518,12 @@ class API_Con_Manager{
 		$service = API_Con_Manager::get_service( $dto->data['service'] );
 		$url = $service->get_authorize_url();
 
-		//redirect & die
-		wp_redirect( $url );
+		if ( is_wp_error($url) )
+			die( $url->get_error_message() );
+
+		//redirect & die - wp_redirect() will format the authorize url so can't
+		//be used here
+		header( 'Location: ' . $url, true);
 		die();
 	}
 }
